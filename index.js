@@ -10,9 +10,13 @@ program.version('0.0.0');
 program.option('-p, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-w, --watch <dir>' ,'watch DIR for changes');
+program.option('-r, --respawn'     ,'restart process after exit');
 program.option('-d, --daemonize'   ,'daemonize process; immune to hangups');
 program.option('-l, --log <file>'  ,'output logs to FILE');
 program.option('-d, --error <file>','output stderr to FILE');
+
+var killing = 0;
+var actives = [];
 
 var colors_max = 5;
 var colors = [
@@ -41,7 +45,8 @@ function pad(string,n){
 
 function log(key,proc,string){
     string.split(/\n/).forEach(function(line){
-        if (line=='') return;
+        
+        if (line.trim().length==0) return;
         
         var stamp = (new Date().toLocaleTimeString()) + ": " + key;
         
@@ -57,11 +62,25 @@ function error(){
     console.warn( fmt.apply(null,arguments).bold.red );
 }
 
-function run(key,process){
+function killall(){
+    if(killing==1){
+        error("Killing All Processes");
+    }
+    killing++;
+    for(i in actives){
+        actives[i].kill('SIGINT');
+    }
+}
+
+function run(key,process,onExit,n){
+    
+    if(n>1) log(key,process,fmt("Restarting %d Times".bold,n));
     
     var proc = prog.spawn(process.command,process.args,{
         env: process.env
     });
+    
+    actives.push(proc);
     
     proc.stdout.on('data',function(data){
         log(key,process,data.toString());
@@ -70,7 +89,20 @@ function run(key,process){
     proc.stderr.on('data',function(data){
         log(key,process,data.toString().bold);
     });
-
+    
+    proc.on('close',function(code){
+        if(code==0){
+            log(key,process,"Exited Successfully");
+        }else{
+            log(key,process,"Exited Abnormally");
+        }
+    });
+    
+    proc.on('exit',function(code){
+        if(onExit(code)){
+            run(key,process,onExit,n+1)
+        }
+    });
 }
 
 // Parse Procfile
@@ -104,7 +136,7 @@ function procs(procdata){
     return processes;
 }
 
-function start(procs,requirements,envs){
+function start(procs,requirements,envs,onExit){
     var j = 0;
     for(key in requirements){
         var n = parseInt(requirements[key]);
@@ -120,7 +152,7 @@ function start(procs,requirements,envs){
                 env     : envs
             }
             
-            run(key+"."+(i+1),p);
+            run(key+"."+(i+1),p,onExit,0);
             
             j++;
             
@@ -169,6 +201,14 @@ function parseRequirements(req){
     return requirements;
 }
 
+function userkill(){
+    warn('Process Interrupted by User');
+    killall();
+}
+
+process.on('SIGHUP',userkill);
+process.on('SIGINT',userkill);
+
 program
 .command('start')
 .action(function(){
@@ -186,8 +226,15 @@ program
             req[key] = 1;
         }
     }
-    
-    start(proc,req,envs);
+    var onExit = function(code){
+        if(code==0 && program.respawn && killing==0){
+            return true;
+        }else{
+            if(code!=0) { killall(); }
+            return false;
+        }
+    }
+    start(proc,req,envs,onExit);
 });
 
 program
