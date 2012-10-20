@@ -104,7 +104,7 @@ function procs(procdata){
     return processes;
 }
 
-function start(procs,requirements){
+function start(procs,requirements,envs){
     var j = 0;
     for(key in requirements){
         var n = parseInt(requirements[key]);
@@ -117,7 +117,7 @@ function start(procs,requirements){
                 command : procs[key].command,
                 args    : procs[key].args,
                 color   : colors[color_val],
-                env     : ""
+                env     : envs
             }
             
             run(key+"."+(i+1),p);
@@ -187,7 +187,7 @@ program
         }
     }
     
-    start(proc,req);
+    start(proc,req,envs);
 });
 
 program
