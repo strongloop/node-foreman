@@ -1,0 +1,20 @@
+{
+  "name": "tradesman",
+  "version": "0.0.0",
+  "description": "Used with Foreman",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Jacob Groundwater",
+  "license": "BSD",
+  "bin": {
+    "tradesman": "index.js"
+  },
+  "dependencies": {
+    "colors": "~0.6.0-1",
+    "commander": "~1.0.5",
+    "async": "~0.1.22"
+  }
+}
