@@ -44,7 +44,9 @@ with a few Node specific changes.</p>
 
 <p>Create a <code>Procfile</code> in the form of:</p>
 
-<pre><code>web: node server.js
+<pre><code>web: node web_server.js
+api: node api_server.js
+log: node log_server.js
 </code></pre>
 
 <p>Optionally create a <code>.env</code> file to pre-load environmental variables:</p>
