@@ -14,7 +14,9 @@ program.option('-r, --respawn'     ,'restart process after exit');
 program.option('-d, --daemonize'   ,'daemonize process; immune to hangups');
 program.option('-l, --log <file>'  ,'output logs to FILE');
 program.option('-d, --error <file>','output stderr to FILE');
+program.option('-n, --no-nvm'      ,'disable node version manager');
 
+var padding = 25;
 var killing = 0;
 var actives = [];
 
@@ -43,6 +45,11 @@ function pad(string,n){
     return o + " | ";
 }
 
+function info(key,proc,string){
+    var stamp = (new Date().toLocaleTimeString()) + ": " + key;
+    console.log(proc.color(pad(stamp,padding)),string.white.bold);
+}
+
 function log(key,proc,string){
     string.split(/\n/).forEach(function(line){
         
@@ -50,7 +57,7 @@ function log(key,proc,string){
         
         var stamp = (new Date().toLocaleTimeString()) + ": " + key;
         
-        console.log(proc.color(pad(stamp,20)),proc.color(line));
+        console.log(proc.color(pad(stamp,padding)),proc.color(line));
     });
 }
 
@@ -92,9 +99,9 @@ function run(key,process,onExit,n){
     
     proc.on('close',function(code){
         if(code==0){
-            log(key,process,"Exited Successfully");
+            info(key,process,"Exited Successfully");
         }else{
-            log(key,process,"Exited Abnormally");
+            info(key,process,"Exited Abnormally");
         }
     });
     
@@ -160,7 +167,7 @@ function start(procs,requirements,envs,onExit){
     }
 }
 
-function loadProc(path,callback){
+function loadProc(path){
     var data = fs.readFileSync(program.procfile);
     return procs(data);
 }
@@ -174,15 +181,16 @@ function KeyValue(data){
     return env;
 }
 
-function loadEnvs(path,callback){
-    var data;
+function loadEnvs(path){
     try{
-        env = fs.readFileSync(program.env);
+        var data = fs.readFileSync(path);
         var env;
         try{
             env = JSON.parse(data);
+            console.log("Loaded ENV File as JSON");
         }catch(e){
             env = KeyValue(data);
+            console.log("Loaded ENV File as Key=Value");
         }
         return env;
     }catch(e){
@@ -234,6 +242,15 @@ program
             return false;
         }
     }
+    
+    // NVM
+    var path  = "/usr/local/bin:/usr/bin:/bin:"
+        path += "/usr/local/sbin:/usr/sbin:/sbin"
+    if(program.nvm){
+        path = process.env.NVM_BIN + ":" + path;
+    }
+    envs.PATH = path;
+    
     start(proc,req,envs,onExit);
 });
 
@@ -254,3 +271,5 @@ if(program.watch)
     warn("FileWatch Not Yet Implemented");
 if(program.daemonize)
     warn("Daemonize Not Yet Implemented");
+
+if(program.args.length==0) program.help();
