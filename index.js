@@ -152,6 +152,7 @@ function procs(procdata){
 }
 
 function start(procs,requirements,envs,onExit){
+    
     var j = 0;
     var k = 0;
     var port = parseInt(program.port);
@@ -160,7 +161,7 @@ function start(procs,requirements,envs,onExit){
         
         for(i=0;i<n;i++){
             
-            var color_val = j % colors_max;
+            var color_val = j+k % colors_max;
             
             var p = {
                 command : procs[key].command,
@@ -223,6 +224,7 @@ function loadEnvs(path){
         
     }catch(e){
         warn("No ENV file found");
+        return {};
     }
 }
 
