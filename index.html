@@ -55,7 +55,7 @@ log: node log_server.js
 MYSQL_PASS=cryptonite
 </code></pre>
 
-<p>The <code>.env</code> file may alternatively be a valid JSON document:</p>
+<p>The equivalent <code>.env</code> file may alternatively be a valid JSON document:</p>
 
 <pre><code>{
     "mysql":{
@@ -65,8 +65,10 @@ MYSQL_PASS=cryptonite
 }
 </code></pre>
 
-<p>The above JSON document will be flattened into env variables, by concatenating the nested
-values with an underscore.</p>
+<p>The above JSON document will be flattened into env variables by 
+concatenating the nested values with an underscore.
+Environmental variables are passed in fully capitalized.
+There is no need to specify which type of file you wish to use.</p>
 
 <p>Start your process with <code>nf</code> (node-foreman):</p>
 
@@ -79,10 +81,11 @@ values with an underscore.</p>
 
 <p>Your module directory should end up looking like the following:</p>
 
-<pre><code>.env
-package.js
-server.js
-Procfile
+<pre><code>/
+├─ .env
+├─ package.js
+├─ server.js
+├─ Procfile
 </code></pre>
 
 <h3>Advanced Usage</h3>
@@ -101,7 +104,7 @@ Procfile
 <p>Each job will be started as its own process, receiving a different <code>PORT</code>
 environmental variable. 
 The port number for processes of the same type will be offset by 1.
-The port number for processes of different type will be offset by 100.</p>
+The port number for processes of different types will be offset by 100.</p>
 
 <pre><code>$ nf start web=2,api=2
 
@@ -118,6 +121,12 @@ however it can export an Upstart job for use in production.
 The Upstart file has <em>no</em> dependency on Node Foreman.</p>
 
 <pre><code>$ nf export upstart -a JOBNAME /etc/init
+</code></pre>
+
+<p>Start and stop your jobs with</p>
+
+<pre><code>$ sudo start JOBNAME
+$ sudo stop JOBNAME
 </code></pre>
       </section>
     </div>
