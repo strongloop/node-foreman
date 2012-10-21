@@ -22,7 +22,7 @@ Optionally create a `.env` file to pre-load environmental variables:
     MYSQL_NAME=superman
     MYSQL_PASS=cryptonite
 
-The `.env` file may alternatively be a valid JSON document:
+The equivalent `.env` file may alternatively be a valid JSON document:
 
     {
         "mysql":{
@@ -31,8 +31,10 @@ The `.env` file may alternatively be a valid JSON document:
         }
     }
 
-The above JSON document will be flattened into env variables, by concatenating the nested
-values with an underscore.
+The above JSON document will be flattened into env variables by 
+concatenating the nested values with an underscore.
+Environmental variables are passed in fully capitalized.
+There is no need to specify which type of file you wish to use.
 
 Start your process with `nf` (node-foreman):
 
@@ -44,10 +46,11 @@ Start your process with `nf` (node-foreman):
 
 Your module directory should end up looking like the following:
 
-    .env
-    package.js
-    server.js
-    Procfile
+    /
+    ├─ .env
+    ├─ package.js
+    ├─ server.js
+    ├─ Procfile
 
 ### Advanced Usage
 
@@ -64,7 +67,7 @@ Node Foreman lets you start multiple jobs of the same type:
 Each job will be started as its own process, receiving a different `PORT`
 environmental variable. 
 The port number for processes of the same type will be offset by 1.
-The port number for processes of different type will be offset by 100.
+The port number for processes of different types will be offset by 100.
 
     $ nf start web=2,api=2
     
@@ -81,4 +84,8 @@ The Upstart file has _no_ dependency on Node Foreman.
 
     $ nf export upstart -a JOBNAME /etc/init
 
+Start and stop your jobs with
+
+    $ sudo start JOBNAME
+    $ sudo stop JOBNAME
 
