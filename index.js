@@ -9,12 +9,9 @@ var fs      = require('fs');
 program.version('0.0.0');
 program.option('-p, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
-program.option('-w, --watch <dir>' ,'watch DIR for changes');
 program.option('-r, --respawn'     ,'restart process after exit');
-program.option('-d, --daemonize'   ,'daemonize process; immune to hangups');
-program.option('-l, --log <file>'  ,'output logs to FILE');
-program.option('-d, --error <file>','output stderr to FILE');
 program.option('-n, --no-nvm'      ,'disable node version manager');
+program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 
 var padding = 25;
 var killing = 0;
@@ -59,6 +56,10 @@ function log(key,proc,string){
         
         console.log(proc.color(pad(stamp,padding)),proc.color(line));
     });
+}
+
+function alert(){
+    console.log( fmt.apply(null,arguments).bold.green );
 }
 
 function warn(){
@@ -145,6 +146,7 @@ function procs(procdata){
 
 function start(procs,requirements,envs,onExit){
     var j = 0;
+    var port = parseInt(program.port);
     for(key in requirements){
         var n = parseInt(requirements[key]);
         
@@ -159,6 +161,8 @@ function start(procs,requirements,envs,onExit){
                 env     : envs
             }
             
+            p.env.PORT = port+j;
+            
             run(key+"."+(i+1),p,onExit,0);
             
             j++;
@@ -168,8 +172,12 @@ function start(procs,requirements,envs,onExit){
 }
 
 function loadProc(path){
-    var data = fs.readFileSync(program.procfile);
-    return procs(data);
+    try{
+        var data = fs.readFileSync(program.procfile);
+        return procs(data);
+    }catch(e){
+        error("No Procfile found in Current Directory - See nf --help");
+    }
 }
 
 function KeyValue(data){
@@ -187,10 +195,10 @@ function loadEnvs(path){
         var env;
         try{
             env = JSON.parse(data);
-            console.log("Loaded ENV File as JSON");
+            alert("Loaded ENV %s File as JSON Format",path);
         }catch(e){
             env = KeyValue(data);
-            console.log("Loaded ENV File as Key=Value");
+            alert("Loaded ENV %s File as KEY=VALUE Format",path);
         }
         return env;
     }catch(e){
@@ -219,9 +227,13 @@ process.on('SIGINT',userkill);
 
 program
 .command('start')
+.description('Start the jobs in the Procfile')
 .action(function(){
-    var envs = loadEnvs(program.env);
     var proc = loadProc(program.procfile);
+    
+    if(!proc) return;
+    
+    var envs = loadEnvs(program.env);
     
     var req;
     if(program.args.length==2){
@@ -235,7 +247,7 @@ program
         }
     }
     var onExit = function(code){
-        if(code==0 && program.respawn && killing==0){
+        if(program.respawn && killing==0){
             return true;
         }else{
             if(code!=0) { killall(); }
@@ -259,17 +271,7 @@ program
 .action(function(){
     error("Method Not Yet Implementedd".red);
 });
-program
-.command('stop')
-.action(function(){
-    error("Method Not Yet Implementedd".red);
-});;
 
 program.parse(process.argv);
-
-if(program.watch) 
-    warn("FileWatch Not Yet Implemented");
-if(program.daemonize)
-    warn("Daemonize Not Yet Implemented");
 
 if(program.args.length==0) program.help();
