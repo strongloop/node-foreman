@@ -3,6 +3,7 @@
 var program = require('commander');
 var colors  = require('colors');
 var util    = require('util');
+var path    = require('path');
 var prog    = require('child_process');
 var fs      = require('fs');
 var mu      = require('mu2');
@@ -209,7 +210,17 @@ function loadEnvs(path){
             env = KeyValue(data);
             alert("Loaded ENV %s File as KEY=VALUE Format",path);
         }
+        
+        // NVM
+        var path  = "/usr/local/bin:/usr/bin:/bin:"
+            path += "/usr/local/sbin:/usr/sbin:/sbin"
+        if(program.nvm){
+            path = process.env.NVM_BIN + ":" + path;
+        }
+        env.PATH = path;
+        
         return env;
+        
     }catch(e){
         warn("No ENV file found");
     }
@@ -270,14 +281,6 @@ program
         }
     }
     
-    // NVM
-    var path  = "/usr/local/bin:/usr/bin:/bin:"
-        path += "/usr/local/sbin:/usr/sbin:/sbin"
-    if(program.nvm){
-        path = process.env.NVM_BIN + ":" + path;
-    }
-    envs.PATH = path;
-    
     start(proc,req,envs,onExit);
 });
 
@@ -291,6 +294,7 @@ function upstart(conf){
     .on('end',function(){
         var path = program.out + "/" + conf.application + ".conf";
         fs.writeFileSync(path,out);
+        alert('Wrote  : ',path);
     });
 }
 
@@ -304,6 +308,7 @@ function upstart_app(conf){
     .on('end',function(){
         var path = program.out + "/" + conf.application + "-" + conf.process + ".conf";
         fs.writeFileSync(path,out);
+        alert('Wrote  : ',path);
     });
 }
 
@@ -317,6 +322,7 @@ function upstart_app_n(conf){
     .on('end',function(){
         var path = program.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
         fs.writeFileSync(path,out);
+        alert('Wrote  : ',path);
     });
 }
 
@@ -335,12 +341,22 @@ program
         application : program.app,
         cwd         : process.cwd(),
         user        : program.user,
-        envs : [
-            {key:"key1",value:"value1"},
-            {key:"key2",value:"value2"},
-            {key:"key3",value:"value3"}
-        ]
+        envs        : envs
     };
+    
+    fs.readdirSync(program.out).forEach(function(file){
+        var x = file.indexOf(program.app);
+        var y = file.indexOf(".conf");
+        if(x==0 && y>0){
+            var p = path.join(program.out,file);
+            warn("Unlink : %s".yellow.bold,p);
+            fs.unlinkSync(p);
+        }
+    });
+    
+    var baseport = program.port;
+    var baseport_i = 0;
+    var baseport_j = 0;
     
     for(key in req){
         
@@ -365,12 +381,28 @@ program
                 conf[_] = c[_];
             }
             
+            conf.envs.PORT = baseport + baseport_i + baseport_j*100;
+            
+            var envl = [];
+            for(key in envs){
+                envl.push({
+                    key: key,
+                    value: envs[key]
+                })
+            }
+            
+            conf.envs = envl;
+            
             upstart_app_n(conf);
+            
+            baseport_i++;
             
         }
         
         upstart_app(c);
-    
+        
+        baseport_i=0;
+        baseport_j++;
     }
     
     upstart(config);
