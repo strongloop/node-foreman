@@ -37,7 +37,7 @@ with a few Node specific changes.</p>
 
 <p>Install the command line tool</p>
 
-<pre><code>npm install -g foreman
+<pre><code>$ npm install -g foreman
 </code></pre>
 
 <h2>Usage</h2>
@@ -53,20 +53,61 @@ with a few Node specific changes.</p>
 MYSQL_PASS=cryptonite
 </code></pre>
 
+<p>The <code>.env</code> file may alternatively be a valid JSON document:</p>
+
+<pre><code>{
+    "mysql":{
+        "name": "superman",
+        "pass": "cryptonite"
+    }
+}
+</code></pre>
+
+<p>The above JSON document will be flattened into env variables, by concatenating the nested
+values with an underscore.</p>
+
 <p>Start your process with <code>nf</code> (node-foreman):</p>
 
-<pre><code>nf start
+<pre><code>$ nf start
+
+18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
+18:51:13: api.1     |  Api Server started listening on 0.0.0.0:5100
+18:51:13: log.1     |  Log Server started listening on 0.0.0.0:5200
+</code></pre>
+
+<p>Your module directory should end up looking like the following:</p>
+
+<pre><code>.env
+package.js
+server.js
+Procfile
 </code></pre>
 
 <h3>Advanced Usage</h3>
 
 <p>Node Foreman lets you start multiple jobs of the same type:</p>
 
-<pre><code>nf start web=5
+<pre><code>$ nf start web=5
+
+18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
+18:51:12: web.2     |  Web Server started listening on 0.0.0.0:5001
+18:51:12: web.3     |  Web Server started listening on 0.0.0.0:5002
+18:51:12: web.4     |  Web Server started listening on 0.0.0.0:5003
+18:51:12: web.5     |  Web Server started listening on 0.0.0.0:5004
 </code></pre>
 
 <p>Each job will be started as its own process, receiving a different <code>PORT</code>
-environmental variable.</p>
+environmental variable. 
+The port number for processes of the same type will be offset by 1.
+The port number for processes of different type will be offset by 100.</p>
+
+<pre><code>$ nf start web=2,api=2
+
+18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
+18:51:12: web.2     |  Web Server started listening on 0.0.0.0:5001
+18:51:12: api.1     |  Api Server started listening on 0.0.0.0:5100
+18:51:12: api.2     |  Api Server started listening on 0.0.0.0:5101
+</code></pre>
 
 <h2>Export</h2>
 
@@ -74,7 +115,7 @@ environmental variable.</p>
 however it can export an Upstart job for use in production.
 The Upstart file has <em>no</em> dependency on Node Foreman.</p>
 
-<pre><code>nf export upstart -a JOBNAME /etc/init
+<pre><code>$ nf export upstart -a JOBNAME /etc/init
 </code></pre>
       </section>
     </div>
