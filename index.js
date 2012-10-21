@@ -26,10 +26,10 @@ var actives = [];
 
 var colors_max = 5;
 var colors = [
-    function(x){return x.magenta},
     function(x){return x.cyan},
     function(x){return x.yellow},
     function(x){return x.green},
+    function(x){return x.magenta},
     function(x){return x.blue},
     function(x){return x.white}
 ];
@@ -50,7 +50,7 @@ function pad(string,n){
 }
 
 function info(key,proc,string){
-    var stamp = (new Date().toLocaleTimeString()) + ": " + key;
+    var stamp = (new Date().toLocaleTimeString()) + " " + key;
     console.log(proc.color(pad(stamp,padding)),string.white.bold);
 }
 
@@ -59,9 +59,9 @@ function log(key,proc,string){
         
         if (line.trim().length==0) return;
         
-        var stamp = (new Date().toLocaleTimeString()) + ": " + key;
+        var stamp = (new Date().toLocaleTimeString()) + " " + key;
         
-        console.log(proc.color(pad(stamp,padding)),proc.color(line));
+        console.log(proc.color(pad(stamp,padding)),line);
     });
 }
 
@@ -285,6 +285,8 @@ program
     
     start(proc,req,envs,onExit);
 });
+
+// Upstart Export //
 
 function upstart(conf){
     var out = "";
