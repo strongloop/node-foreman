@@ -146,6 +146,7 @@ function procs(procdata){
 
 function start(procs,requirements,envs,onExit){
     var j = 0;
+    var k = 0;
     var port = parseInt(program.port);
     for(key in requirements){
         var n = parseInt(requirements[key]);
@@ -161,13 +162,15 @@ function start(procs,requirements,envs,onExit){
                 env     : envs
             }
             
-            p.env.PORT = port+j;
+            p.env.PORT = port + j + k*100;
             
             run(key+"."+(i+1),p,onExit,0);
             
             j++;
             
         }
+        j=0;
+        k++;
     }
 }
 
