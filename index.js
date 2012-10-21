@@ -5,6 +5,9 @@ var colors  = require('colors');
 var util    = require('util');
 var prog    = require('child_process');
 var fs      = require('fs');
+var mu      = require('mu2');
+
+mu.root = __dirname + '/upstart'
 
 program.version('0.0.0');
 program.option('-p, --procfile <file>', 'load profile FILE','Procfile');
@@ -12,6 +15,9 @@ program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-r, --respawn'     ,'restart process after exit');
 program.option('-n, --no-nvm'      ,'disable node version manager');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
+program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
+program.option('-u, --user <name>' ,'export upstart user as NAME',process.getuid());
+program.option('-o, --out <dir>'   ,'write upstart files to DIR','.');
 
 var padding = 25;
 var killing = 0;
@@ -225,6 +231,21 @@ function userkill(){
     killall();
 }
 
+function getreqs(args,proc){
+    var req;
+    if(args.length>0){
+        // Run Specific Procs
+        req = parseRequirements(args);
+    }else{
+        // All
+        req = {};
+        for(key in proc){
+            req[key] = 1;
+        }
+    }
+    return req;
+}
+
 process.on('SIGHUP',userkill);
 process.on('SIGINT',userkill);
 
@@ -238,17 +259,8 @@ program
     
     var envs = loadEnvs(program.env);
     
-    var req;
-    if(program.args.length==2){
-        // Run Specific Procs
-        req = parseRequirements(program.args[0]);
-    }else{
-        // All
-        req = {};
-        for(key in proc){
-            req[key] = 1;
-        }
-    }
+    var req = getreqs(program.args[0],proc);
+    
     var onExit = function(code){
         if(program.respawn && killing==0){
             return true;
@@ -269,10 +281,100 @@ program
     start(proc,req,envs,onExit);
 });
 
+function upstart(conf){
+    var out = "";
+    mu
+    .compileAndRender('nodefly.conf', conf)
+    .on('data', function (data) {
+        out += data;
+    })
+    .on('end',function(){
+        var path = program.out + "/" + conf.application + ".conf";
+        fs.writeFileSync(path,out);
+    });
+}
+
+function upstart_app(conf){
+    var out = "";
+    mu
+    .compileAndRender('nodefly-APP.conf', conf)
+    .on('data', function (data) {
+        out += data;
+    })
+    .on('end',function(){
+        var path = program.out + "/" + conf.application + "-" + conf.process + ".conf";
+        fs.writeFileSync(path,out);
+    });
+}
+
+function upstart_app_n(conf){
+    var out = "";
+    mu
+    .compileAndRender('nodefly-APP-N.conf', conf)
+    .on('data', function (data) {
+        out += data;
+    })
+    .on('end',function(){
+        var path = program.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
+        fs.writeFileSync(path,out);
+    });
+}
+
 program
 .command('export')
 .action(function(){
-    error("Method Not Yet Implementedd".red);
+    
+    var procs = loadProc(program.procfile);
+    
+    if(!procs) return;
+    
+    var envs = loadEnvs(program.env);
+    var req  = getreqs(program.args[1],procs);
+    
+    var config = {
+        application : program.app,
+        cwd         : process.cwd(),
+        user        : program.user,
+        envs : [
+            {key:"key1",value:"value1"},
+            {key:"key2",value:"value2"},
+            {key:"key3",value:"value3"}
+        ]
+    };
+    
+    for(key in req){
+        
+        var c = {};
+        var proc = procs[key];
+        
+        c.process=key;
+        c.command=proc.command;
+        
+        for(_ in config){
+            c[_] = config[_];
+        }
+        
+        var n = req[key];
+        
+        for(i=1;i<=n;i++){
+            
+            var conf = {};
+            conf.number = i;
+            
+            for(_ in c){
+                conf[_] = c[_];
+            }
+            
+            upstart_app_n(conf);
+            
+        }
+        
+        upstart_app(c);
+    
+    }
+    
+    upstart(config);
+    
 });
 
 program.parse(process.argv);
