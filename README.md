@@ -40,12 +40,12 @@ concatenating the nested values with an underscore.
 Environmental variables are passed in fully capitalized.
 
 
-{
-    "mysql":{
-        "name": "superman",     # => MYSQL_NAME=superman
-        "pass": "cryptonite"    # => MYSQL_PASS=cryptonite
+    {
+        "mysql":{
+            "name": "superman",     # => MYSQL_NAME=superman
+            "pass": "cryptonite"    # => MYSQL_PASS=cryptonite
+        }
     }
-}
 
 There is no need to specify which type of file you wish to use.
 
