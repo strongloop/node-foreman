@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
-  "repository": "",
   "author": "Jacob Groundwater",
   "license": "BSD",
   "bin": {
@@ -13,5 +12,9 @@
     "colors": "~0.6.0-1",
     "commander": "~1.0.5",
     "mu2": "~0.5.17"
+  },
+  "repository" : { 
+    "type" : "git",
+    "url"  : "https://github.com/NodeFly/node-foreman.git"
   }
 }
