@@ -1,7 +1,13 @@
 # Node Foreman
 
-Node Foreman is a Node.js version of the popular Foreman tool,
+Node Foreman is a Node.js version of the popular 
+[Foreman](http://ddollar.github.com/foreman/) tool,
 with a few Node specific changes.
+
+> Foreman is a manager for Procfile-based applications. 
+> Its aim is to abstract away the details of the Procfile 
+> format, and allow you to either run your application 
+> directly or export it to some other process management format.
 
 ## Install
 
