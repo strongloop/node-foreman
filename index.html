@@ -42,12 +42,16 @@ with a few Node specific changes.</p>
 
 <h2>Usage</h2>
 
+<h3>Procfile</h3>
+
 <p>Create a <code>Procfile</code> in the form of:</p>
 
 <pre><code>web: node web_server.js
 api: node api_server.js
 log: node log_server.js
 </code></pre>
+
+<h3>Environmental Variables</h3>
 
 <p>Optionally create a <code>.env</code> file to pre-load environmental variables:</p>
 
@@ -67,10 +71,20 @@ MYSQL_PASS=cryptonite
 
 <p>The above JSON document will be flattened into env variables by 
 concatenating the nested values with an underscore.
-Environmental variables are passed in fully capitalized.
-There is no need to specify which type of file you wish to use.</p>
+Environmental variables are passed in fully capitalized.</p>
 
-<p>Start your process with <code>nf</code> (node-foreman):</p>
+<p>{
+    "mysql":{
+        "name": "superman",     # =&gt; MYSQL_NAME=superman
+        "pass": "cryptonite"    # =&gt; MYSQL_PASS=cryptonite
+    }
+}</p>
+
+<p>There is no need to specify which type of file you wish to use.</p>
+
+<h3>Basic Usage</h3>
+
+<p>To start your processes use <code>nf</code> (node-foreman):</p>
 
 <pre><code>$ nf start
 
@@ -114,7 +128,7 @@ The port number for processes of different types will be offset by 100.</p>
 18:51:12: api.2     |  Api Server started listening on 0.0.0.0:5101
 </code></pre>
 
-<h2>Export</h2>
+<h2>Export to Production</h2>
 
 <p>Node Foreman is designed to be in a development environment,
 however it can export an Upstart job for use in production.
