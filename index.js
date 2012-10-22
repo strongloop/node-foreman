@@ -218,11 +218,9 @@ function loadEnvs(path){
             env = flattenJSON(JSON.parse(data),"",{});
             Alert("Loaded ENV %s File as JSON Format",path);
         }catch(e){
-            console.log(e);
             env = KeyValue(data);
             Alert("Loaded ENV %s File as KEY=VALUE Format",path);
         }
-        console.log(env);
         // NVM
         var path  = "/usr/local/bin:/usr/bin:/bin:"
             path += "/usr/local/sbin:/usr/sbin:/sbin"
