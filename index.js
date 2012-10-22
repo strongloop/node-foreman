@@ -190,23 +190,39 @@ function KeyValue(data){
     var env = {};
     data.toString().split(/\n/).forEach(function(line){
         var items = line.split('=');
-        env[items[0]] = items[1];
+        env[items[0].toUpperCase()] = items[1];
     });
+    return env;
+}
+
+var prefix_delim = "_";
+function flattenJSON(json,prefix,env){
+    
+    for(key in json){
+        var item = json[key];
+        if (typeof item == 'object'){
+            flattenJSON(item,key.toUpperCase() + prefix_delim,env);
+        }else{
+            env[prefix + key.toUpperCase()] = json[key];
+        }
+    };
     return env;
 }
 
 function loadEnvs(path){
     try{
         var data = fs.readFileSync(path);
+        
         var env;
         try{
-            env = JSON.parse(data);
+            env = flattenJSON(JSON.parse(data),"",{});
             Alert("Loaded ENV %s File as JSON Format",path);
         }catch(e){
+            console.log(e);
             env = KeyValue(data);
             Alert("Loaded ENV %s File as KEY=VALUE Format",path);
         }
-        
+        console.log(env);
         // NVM
         var path  = "/usr/local/bin:/usr/bin:/bin:"
             path += "/usr/local/sbin:/usr/sbin:/sbin"
