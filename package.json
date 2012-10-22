@@ -1,6 +1,6 @@
 {
   "name": "foreman",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
   "author": "Jacob Groundwater",
