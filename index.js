@@ -12,7 +12,7 @@ var events  = require('events');
 mu.root = __dirname + '/upstart'
 
 program.version('0.0.0');
-program.option('-p, --procfile <file>', 'load profile FILE','Procfile');
+program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-n, --no-nvm'      ,'disable node version manager');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
@@ -55,11 +55,11 @@ function info(key,proc,string){
 
 function log(key,proc,string){
     string.split(/\n/).forEach(function(line){
-        
+
         if (line.trim().length==0) return;
-        
+
         var stamp = (new Date().toLocaleTimeString()) + " " + key;
-        
+
         console.log(proc.color(pad(stamp,padding)),line);
     });
 }
@@ -82,21 +82,21 @@ emitter.once('killall',function(){
 })
 
 function run(key,process,n){
-    
+
     if(n>1) log(key,process,fmt("Restarting %d Times".bold,n));
-    
+
     var proc = prog.spawn(process.command,process.args,{
         env: process.env
     });
-    
+
     proc.stdout.on('data',function(data){
         log(key,process,data.toString());
     });
-    
+
     proc.stderr.on('data',function(data){
         log(key,process,data.toString());
     });
-    
+
     proc.on('close',function(code){
         if(code==0){
             info(key,process,"Exited Successfully");
@@ -104,73 +104,73 @@ function run(key,process,n){
             info(key,process,"Exited Abnormally");
         }
     });
-    
+
     proc.on('exit',function(code){
         emitter.emit('killall');
     });
-    
+
     emitter.on('killall',function(){
         proc.kill();
     });
-    
+
 }
 
 // Parse Procfile
 function procs(procdata){
-    
+
     var i=0;
     var processes = {};
-    
+
     procdata.toString().split(/\n/).forEach(function(line){
         var tuple = line.trim().split(":");
-        
+
         if(tuple.length!=2) return;
-        
+
         var prockey = tuple[0].trim();
         var command = tuple[1].trim();
-        
+
         var comm = command.split(/\s/);
         var args = comm.splice(1,comm.length);
-        
+
         var process = {
             command : comm[0],
             args    : args
         };
-        
+
         processes[prockey]=process;
-        
+
         i++;
-        
+
     });
-    
+
     return processes;
 }
 
 function start(procs,requirements,envs){
-    
+
     var j = 0;
     var k = 0;
     var port = parseInt(program.port);
     for(key in requirements){
         var n = parseInt(requirements[key]);
-        
+
         for(i=0;i<n;i++){
-            
+
             var color_val = j+k % colors_max;
-            
+
             var p = {
                 command : procs[key].command,
                 args    : procs[key].args,
                 color   : colors[color_val],
                 env     : envs
             }
-            
+
             p.env.PORT = port + j + k*100;
-            
+
             run(key+"."+(i+1),p,0);
-            
+
             j++;
-            
+
         }
         j=0;
         k++;
@@ -198,7 +198,7 @@ function KeyValue(data){
 
 var prefix_delim = "_";
 function flattenJSON(json,prefix,env){
-    
+
     for(key in json){
         var item = json[key];
         if (typeof item == 'object'){
@@ -213,7 +213,7 @@ function flattenJSON(json,prefix,env){
 function loadEnvs(path){
     try{
         var data = fs.readFileSync(path);
-        
+
         var env;
         try{
             env = flattenJSON(JSON.parse(data),"",{});
@@ -229,9 +229,9 @@ function loadEnvs(path){
             path = process.env.NVM_BIN + ":" + path;
         }
         env.PATH = path;
-        
+
         return env;
-        
+
     }catch(e){
         Warn("No ENV file found");
         return {};
@@ -274,12 +274,12 @@ program
 .description('Start the jobs in the Procfile')
 .action(function(){
     var proc = loadProc(program.procfile);
-    
+
     if(!proc) return;
-    
+
     var envs = loadEnvs(program.env);
     var reqs = getreqs(program.args[0],proc);
-    
+
     start(proc,reqs,envs);
 });
 
@@ -330,21 +330,21 @@ function upstart_app_n(conf){
 program
 .command('export')
 .action(function(){
-    
+
     var procs = loadProc(program.procfile);
-    
+
     if(!procs) return;
-    
+
     var envs = loadEnvs(program.env);
     var req  = getreqs(program.args[0],procs);
-    
+
     var config = {
         application : program.app,
         cwd         : process.cwd(),
         user        : program.user,
         envs        : envs
     };
-    
+
     fs.readdirSync(program.out).forEach(function(file){
         var x = file.indexOf(program.app);
         var y = file.indexOf(".conf");
@@ -354,36 +354,36 @@ program
             fs.unlinkSync(p);
         }
     });
-    
+
     var baseport = program.port;
     var baseport_i = 0;
     var baseport_j = 0;
-    
+
     for(key in req){
-        
+
         var c = {};
         var proc = procs[key];
-        
+
         c.process=key;
         c.command=proc.command + " " + proc.args.join(' ');
-        
+
         for(_ in config){
             c[_] = config[_];
         }
-        
+
         var n = req[key];
-        
+
         for(i=1;i<=n;i++){
-            
+
             var conf = {};
             conf.number = i;
-            
+
             for(_ in c){
                 conf[_] = c[_];
             }
-            
+
             conf.envs.PORT = baseport + baseport_i + baseport_j*100;
-            
+
             var envl = [];
             for(key in envs){
                 envl.push({
@@ -391,23 +391,23 @@ program
                     value: envs[key]
                 })
             }
-            
+
             conf.envs = envl;
-            
+
             upstart_app_n(conf);
-            
+
             baseport_i++;
-            
+
         }
-        
+
         upstart_app(c);
-        
+
         baseport_i=0;
         baseport_j++;
     }
-    
+
     upstart(config);
-    
+
 });
 
 program.parse(process.argv);
