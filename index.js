@@ -288,7 +288,7 @@ program
 function upstart(conf){
     var out = "";
     mu
-    .compileAndRender('nodefly.conf', conf)
+    .compileAndRender('foreman.conf', conf)
     .on('data', function (data) {
         out += data;
     })
@@ -302,7 +302,7 @@ function upstart(conf){
 function upstart_app(conf){
     var out = "";
     mu
-    .compileAndRender('nodefly-APP.conf', conf)
+    .compileAndRender('foreman-APP.conf', conf)
     .on('data', function (data) {
         out += data;
     })
@@ -316,7 +316,7 @@ function upstart_app(conf){
 function upstart_app_n(conf){
     var out = "";
     mu
-    .compileAndRender('nodefly-APP-N.conf', conf)
+    .compileAndRender('foreman-APP-N.conf', conf)
     .on('data', function (data) {
         out += data;
     })
