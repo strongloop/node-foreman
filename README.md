@@ -97,7 +97,28 @@ Node Foreman is designed to be in a development environment,
 however it can export an Upstart job for use in production.
 The Upstart file has _no_ dependency on Node Foreman.
 
-    $ nf export upstart -a JOBNAME -o /etc/init
+    $ nf export
+    Loaded ENV .env File as JSON Format
+    Wrote  :  ./foreman-web-1.conf
+    Wrote  :  ./foreman-web.conf
+    Wrote  :  ./foreman-api-1.conf
+    Wrote  :  ./foreman-api.conf
+    Wrote  :  ./foreman-log-1.conf
+    Wrote  :  ./foreman-log.conf
+    Wrote  :  ./foreman.conf
+
+You can inspect your upstart files before placing them in the right
+directory, or have foreman do it for you:
+
+    $ sudo nf export -o /etc/init
+    Loaded ENV .env File as JSON Format
+    Wrote  :  /etc/init/foreman-api-1.conf
+    Wrote  :  /etc/init/foreman-web.conf
+    Wrote  :  /etc/init/foreman-api.conf
+    Wrote  :  /etc/init/foreman-log.conf
+    Wrote  :  /etc/init/foreman-log-1.conf
+    Wrote  :  /etc/init/foreman-web-1.conf
+    Wrote  :  /etc/init/foreman.conf
 
 Start and stop your jobs with
 
@@ -110,7 +131,7 @@ listed in the .env file.
 You can specify the type and number of processes exported using 
 the `type=num` syntax:
 
-    $ nf export upstart -a JOBNAME -o /etc/init web=2,api=2
+    $ nf export -a JOBNAME -o /etc/init web=2,api=2
 
 Use `-u <USER>` to have the exported job run as `USER`.
 Note that if you need to bind to privileged ports, you _must_
