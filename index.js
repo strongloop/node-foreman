@@ -18,7 +18,7 @@ program.option('-n, --no-nvm'      ,'disable node version manager');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
 program.option('-u, --user <name>' ,'export upstart user as NAME',process.getuid());
-program.option('-o, --out <dir>'   ,'write upstart files to DIR','.');
+program.option('-o, --out <dir>'   ,'export upstart files to DIR','.');
 
 var padding = 25;
 var killing = 0;
@@ -64,23 +64,23 @@ function log(key,proc,string){
     });
 }
 
-function alert(){
+function Alert(){
     console.log( fmt.apply(null,arguments).bold.green );
 }
 
-function warn(){
+function Warn(){
     console.warn( fmt.apply(null,arguments).bold.yellow );
 }
 
-function error(){
+function Error(){
     console.error( fmt.apply(null,arguments).bold.red );
 }
 
-var actives = [];
 var emitter = new events.EventEmitter();
 emitter.once('killall',function(){
-    error("Killing All Processes");
+    Error("Killing All Processes");
 })
+
 function run(key,process,n){
     
     if(n>1) log(key,process,fmt("Restarting %d Times".bold,n));
@@ -88,8 +88,6 @@ function run(key,process,n){
     var proc = prog.spawn(process.command,process.args,{
         env: process.env
     });
-    
-    actives.push(proc);
     
     proc.stdout.on('data',function(data){
         log(key,process,data.toString());
@@ -184,7 +182,7 @@ function loadProc(path){
         var data = fs.readFileSync(program.procfile);
         return procs(data);
     }catch(e){
-        error("No Procfile found in Current Directory - See nf --help");
+        Error("No Procfile found in Current Directory - See nf --help");
     }
 }
 
@@ -203,10 +201,10 @@ function loadEnvs(path){
         var env;
         try{
             env = JSON.parse(data);
-            alert("Loaded ENV %s File as JSON Format",path);
+            Alert("Loaded ENV %s File as JSON Format",path);
         }catch(e){
             env = KeyValue(data);
-            alert("Loaded ENV %s File as KEY=VALUE Format",path);
+            Alert("Loaded ENV %s File as KEY=VALUE Format",path);
         }
         
         // NVM
@@ -220,7 +218,7 @@ function loadEnvs(path){
         return env;
         
     }catch(e){
-        warn("No ENV file found");
+        Warn("No ENV file found");
         return {};
     }
 }
@@ -234,11 +232,6 @@ function parseRequirements(req){
         requirements[key] = val;
     });
     return requirements;
-}
-
-function userkill(){
-    warn('Interrupted by User');
-    emitter.emit('killall');
 }
 
 function getreqs(args,proc){
@@ -256,8 +249,10 @@ function getreqs(args,proc){
     return req;
 }
 
-process.on('SIGHUP',userkill);
-process.on('SIGINT',userkill);
+process.on('SIGINT',function userkill(){
+    Warn('Interrupted by User');
+    emitter.emit('killall');
+});
 
 program
 .command('start')
@@ -268,10 +263,9 @@ program
     if(!proc) return;
     
     var envs = loadEnvs(program.env);
+    var reqs = getreqs(program.args[0],proc);
     
-    var req = getreqs(program.args[0],proc);
-    
-    start(proc,req,envs);
+    start(proc,reqs,envs);
 });
 
 // Upstart Export //
@@ -286,7 +280,7 @@ function upstart(conf){
     .on('end',function(){
         var path = program.out + "/" + conf.application + ".conf";
         fs.writeFileSync(path,out);
-        alert('Wrote  : ',path);
+        Alert('Wrote  : ',path);
     });
 }
 
@@ -300,7 +294,7 @@ function upstart_app(conf){
     .on('end',function(){
         var path = program.out + "/" + conf.application + "-" + conf.process + ".conf";
         fs.writeFileSync(path,out);
-        alert('Wrote  : ',path);
+        Alert('Wrote  : ',path);
     });
 }
 
@@ -314,7 +308,7 @@ function upstart_app_n(conf){
     .on('end',function(){
         var path = program.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
         fs.writeFileSync(path,out);
-        alert('Wrote  : ',path);
+        Alert('Wrote  : ',path);
     });
 }
 
@@ -341,7 +335,7 @@ program
         var y = file.indexOf(".conf");
         if(x==0 && y>0){
             var p = path.join(program.out,file);
-            warn("Unlink : %s".yellow.bold,p);
+            Warn("Unlink : %s".yellow.bold,p);
             fs.unlinkSync(p);
         }
     });
