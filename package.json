@@ -1,10 +1,12 @@
 {
   "name": "foreman",
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "homepage": "http://nodefly.github.com/node-foreman/",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
   "author": "Jacob Groundwater",
   "license": "BSD",
+  "keywords": ["foreman","upstart","commandline","env"],
   "bin": {
     "nf": "index.js"
   },
@@ -16,5 +18,13 @@
   "repository" : { 
     "type" : "git",
     "url"  : "https://github.com/NodeFly/node-foreman.git"
-  }
+  },
+  "bugs": { 
+    "url" : "https://github.com/NodeFly/node-foreman/issues",
+    "email" : "jacob@nodefly.com"
+  },
+  "engines" : { 
+    "node" : ">=0.6.9" 
+  },
+  "preferGlobal": true
 }
