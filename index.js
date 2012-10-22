@@ -359,8 +359,6 @@ program
     var baseport_i = 0;
     var baseport_j = 0;
     
-    console.log(procs)
-    
     for(key in req){
         
         var c = {};

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var env = process.env;
-
+console.log(env);
 console.log("Starting Server");
 console.log("Listening to Port", env.PORT);
 console.log("Listening to Address", env.BIND);
