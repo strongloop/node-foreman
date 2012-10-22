@@ -97,7 +97,7 @@ Node Foreman is designed to be in a development environment,
 however it can export an Upstart job for use in production.
 The Upstart file has _no_ dependency on Node Foreman.
 
-    $ nf export upstart -a JOBNAME /etc/init
+    $ nf export upstart -a JOBNAME -o /etc/init
 
 Start and stop your jobs with
 
