@@ -104,3 +104,16 @@ Start and stop your jobs with
     $ sudo start JOBNAME
     $ sudo stop JOBNAME
 
+The export will occur with whatever environmental variables are 
+listed in the .env file.
+
+You can specify the type and number of processes exported using 
+the `type=num` syntax:
+
+    $ nf export upstart -a JOBNAME -o /etc/init web=2,api=2
+
+Use `-u <USER>` to have the exported job run as `USER`.
+Note that if you need to bind to privileged ports, you _must_
+start as `root`. In such a case, we advise you to drop user
+permissions after binding.
+
