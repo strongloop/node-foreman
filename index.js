@@ -7,13 +7,13 @@ var path    = require('path');
 var prog    = require('child_process');
 var fs      = require('fs');
 var mu      = require('mu2');
+var events  = require('events');
 
 mu.root = __dirname + '/upstart'
 
 program.version('0.0.0');
 program.option('-p, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
-program.option('-r, --respawn'     ,'restart process after exit');
 program.option('-n, --no-nvm'      ,'disable node version manager');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
@@ -22,7 +22,6 @@ program.option('-o, --out <dir>'   ,'write upstart files to DIR','.');
 
 var padding = 25;
 var killing = 0;
-var actives = [];
 
 var colors_max = 5;
 var colors = [
@@ -74,20 +73,15 @@ function warn(){
 }
 
 function error(){
-    console.warn( fmt.apply(null,arguments).bold.red );
+    console.error( fmt.apply(null,arguments).bold.red );
 }
 
-function killall(){
-    if(killing==1){
-        error("Killing All Processes");
-    }
-    killing++;
-    for(i in actives){
-        actives[i].kill('SIGINT');
-    }
-}
-
-function run(key,process,onExit,n){
+var actives = [];
+var emitter = new events.EventEmitter();
+emitter.once('killall',function(){
+    error("Killing All Processes");
+})
+function run(key,process,n){
     
     if(n>1) log(key,process,fmt("Restarting %d Times".bold,n));
     
@@ -102,7 +96,7 @@ function run(key,process,onExit,n){
     });
     
     proc.stderr.on('data',function(data){
-        log(key,process,data.toString().bold);
+        log(key,process,data.toString());
     });
     
     proc.on('close',function(code){
@@ -114,10 +108,13 @@ function run(key,process,onExit,n){
     });
     
     proc.on('exit',function(code){
-        if(onExit(code)){
-            run(key,process,onExit,n+1)
-        }
+        emitter.emit('killall');
     });
+    
+    emitter.on('killall',function(){
+        proc.kill();
+    });
+    
 }
 
 // Parse Procfile
@@ -151,7 +148,7 @@ function procs(procdata){
     return processes;
 }
 
-function start(procs,requirements,envs,onExit){
+function start(procs,requirements,envs){
     
     var j = 0;
     var k = 0;
@@ -172,7 +169,7 @@ function start(procs,requirements,envs,onExit){
             
             p.env.PORT = port + j + k*100;
             
-            run(key+"."+(i+1),p,onExit,0);
+            run(key+"."+(i+1),p,0);
             
             j++;
             
@@ -240,8 +237,8 @@ function parseRequirements(req){
 }
 
 function userkill(){
-    warn('Process Interrupted by User');
-    killall();
+    warn('Interrupted by User');
+    emitter.emit('killall');
 }
 
 function getreqs(args,proc){
@@ -274,16 +271,7 @@ program
     
     var req = getreqs(program.args[0],proc);
     
-    var onExit = function(code){
-        if(program.respawn && killing==0){
-            return true;
-        }else{
-            if(code!=0) { killall(); }
-            return false;
-        }
-    }
-    
-    start(proc,req,envs,onExit);
+    start(proc,req,envs);
 });
 
 // Upstart Export //
