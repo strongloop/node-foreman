@@ -17,7 +17,7 @@ program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-n, --no-nvm'      ,'disable node version manager');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
-program.option('-u, --user <name>' ,'export upstart user as NAME',process.getuid());
+program.option('-u, --user <name>' ,'export upstart user as NAME','root');
 program.option('-o, --out <dir>'   ,'export upstart files to DIR','.');
 
 var padding = 25;
@@ -189,6 +189,7 @@ function loadProc(path){
 function KeyValue(data){
     var env = {};
     data.toString().split(/\n/).forEach(function(line){
+        if(line=='')return;
         var items = line.split('=');
         env[items[0].toUpperCase()] = items[1];
     });
@@ -250,7 +251,7 @@ function parseRequirements(req){
 
 function getreqs(args,proc){
     var req;
-    if(args.length>0){
+    if(args && args.length>0){
         // Run Specific Procs
         req = parseRequirements(args);
     }else{
@@ -335,7 +336,7 @@ program
     if(!procs) return;
     
     var envs = loadEnvs(program.env);
-    var req  = getreqs(program.args[1],procs);
+    var req  = getreqs(program.args[0],procs);
     
     var config = {
         application : program.app,
@@ -358,13 +359,15 @@ program
     var baseport_i = 0;
     var baseport_j = 0;
     
+    console.log(procs)
+    
     for(key in req){
         
         var c = {};
         var proc = procs[key];
         
         c.process=key;
-        c.command=proc.command;
+        c.command=proc.command + " " + proc.args.join(' ');
         
         for(_ in config){
             c[_] = config[_];
