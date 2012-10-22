@@ -135,7 +135,29 @@ The port number for processes of different types will be offset by 100.</p>
 however it can export an Upstart job for use in production.
 The Upstart file has <em>no</em> dependency on Node Foreman.</p>
 
-<pre><code>$ nf export upstart -a JOBNAME -o /etc/init
+<pre><code>$ nf export
+Loaded ENV .env File as JSON Format
+Wrote  :  ./foreman-web-1.conf
+Wrote  :  ./foreman-web.conf
+Wrote  :  ./foreman-api-1.conf
+Wrote  :  ./foreman-api.conf
+Wrote  :  ./foreman-log-1.conf
+Wrote  :  ./foreman-log.conf
+Wrote  :  ./foreman.conf
+</code></pre>
+
+<p>You can inspect your upstart files before placing them in the right
+directory, or have foreman do it for you:</p>
+
+<pre><code>$ sudo nf export -o /etc/init
+Loaded ENV .env File as JSON Format
+Wrote  :  /etc/init/foreman-api-1.conf
+Wrote  :  /etc/init/foreman-web.conf
+Wrote  :  /etc/init/foreman-api.conf
+Wrote  :  /etc/init/foreman-log.conf
+Wrote  :  /etc/init/foreman-log-1.conf
+Wrote  :  /etc/init/foreman-web-1.conf
+Wrote  :  /etc/init/foreman.conf
 </code></pre>
 
 <p>Start and stop your jobs with</p>
@@ -150,7 +172,7 @@ listed in the .env file.</p>
 <p>You can specify the type and number of processes exported using 
 the <code>type=num</code> syntax:</p>
 
-<pre><code>$ nf export upstart -a JOBNAME -o /etc/init web=2,api=2
+<pre><code>$ nf export -a JOBNAME -o /etc/init web=2,api=2
 </code></pre>
 
 <p>Use <code>-u &lt;USER&gt;</code> to have the exported job run as <code>USER</code>.
