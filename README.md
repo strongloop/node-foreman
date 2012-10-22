@@ -11,11 +11,15 @@ Install the command line tool
 
 ## Usage
 
+### Procfile
+
 Create a `Procfile` in the form of:
     
     web: node web_server.js
     api: node api_server.js
     log: node log_server.js
+
+### Environmental Variables
 
 Optionally create a `.env` file to pre-load environmental variables:
 
@@ -34,9 +38,20 @@ The equivalent `.env` file may alternatively be a valid JSON document:
 The above JSON document will be flattened into env variables by 
 concatenating the nested values with an underscore.
 Environmental variables are passed in fully capitalized.
+
+
+{
+    "mysql":{
+        "name": "superman",     # => MYSQL_NAME=superman
+        "pass": "cryptonite"    # => MYSQL_PASS=cryptonite
+    }
+}
+
 There is no need to specify which type of file you wish to use.
 
-Start your process with `nf` (node-foreman):
+### Basic Usage
+
+To start your processes use `nf` (node-foreman):
 
     $ nf start
     
@@ -76,7 +91,7 @@ The port number for processes of different types will be offset by 100.
     18:51:12: api.1     |  Api Server started listening on 0.0.0.0:5100
     18:51:12: api.2     |  Api Server started listening on 0.0.0.0:5101
 
-## Export
+## Export to Production
 
 Node Foreman is designed to be in a development environment,
 however it can export an Upstart job for use in production.
