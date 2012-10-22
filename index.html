@@ -143,6 +143,20 @@ The Upstart file has <em>no</em> dependency on Node Foreman.</p>
 <pre><code>$ sudo start JOBNAME
 $ sudo stop JOBNAME
 </code></pre>
+
+<p>The export will occur with whatever environmental variables are 
+listed in the .env file.</p>
+
+<p>You can specify the type and number of processes exported using 
+the <code>type=num</code> syntax:</p>
+
+<pre><code>$ nf export upstart -a JOBNAME -o /etc/init web=2,api=2
+</code></pre>
+
+<p>Use <code>-u &lt;USER&gt;</code> to have the exported job run as <code>USER</code>.
+Note that if you need to bind to privileged ports, you <em>must</em>
+start as <code>root</code>. In such a case, we advise you to drop user
+permissions after binding.</p>
       </section>
     </div>
 
