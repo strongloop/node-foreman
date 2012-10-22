@@ -135,7 +135,7 @@ The port number for processes of different types will be offset by 100.</p>
 however it can export an Upstart job for use in production.
 The Upstart file has <em>no</em> dependency on Node Foreman.</p>
 
-<pre><code>$ nf export upstart -a JOBNAME /etc/init
+<pre><code>$ nf export upstart -a JOBNAME -o /etc/init
 </code></pre>
 
 <p>Start and stop your jobs with</p>
