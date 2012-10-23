@@ -240,16 +240,8 @@ function loadEnvs(path){
     
     var env = {};
     
-    // NVM
-    var path = process.env.PATH;
-    if(program.nvm){
-        path = process.env.NVM_BIN + ":" + path;
-    }
-    env.PATH = path;
-    
     try{
         var data = fs.readFileSync(path);
-
         var env;
         try{
             env = flattenJSON(JSON.parse(data),"",{});
@@ -261,6 +253,8 @@ function loadEnvs(path){
     }catch(e){
         Warn("No ENV file found");
     }
+    
+    env.PATH = process.env.PATH;
     
     return env;
 }
