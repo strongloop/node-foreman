@@ -23,6 +23,8 @@ program.option('-o, --out <dir>'   ,'export upstart files to DIR','.');
 var padding = 25;
 var killing = 0;
 
+// Utilities //
+
 var colors_max = 5;
 var colors = [
     function(x){return x.cyan},
@@ -37,7 +39,6 @@ function fmt(){
     return util.format.apply(null,arguments);
 }
 
-// Log Padding
 function pad(string,n){
     var l = string.length;
     var d = n - l;
@@ -47,6 +48,9 @@ function pad(string,n){
     }
     return o + " | ";
 }
+
+
+// Process Specific Loggers //
 
 function info(key,proc,string){
     var stamp = (new Date().toLocaleTimeString()) + " " + key;
@@ -64,6 +68,8 @@ function log(key,proc,string){
     });
 }
 
+// Foreman Loggers //
+
 function Alert(){
     console.log( fmt.apply(null,arguments).bold.green );
 }
@@ -76,15 +82,20 @@ function Error(){
     console.error( fmt.apply(null,arguments).bold.red );
 }
 
+// Foreman Event Bus/Emitter //
+
 var emitter = new events.EventEmitter();
 emitter.once('killall',function(){
     Error("Killing All Processes");
 })
 
-function run(key,process,n){
+// Run a Specific Process
+// - Key is a Process Name and Number
+// - Process is an object with the launch properties
+//
+// i.e. web=2 becomes the web.2 key
+function run(key,process){
 
-    if(n>1) log(key,process,fmt("Restarting %d Times".bold,n));
-    
     var proc = prog.spawn(process.command,process.args,{
         env: process.env
     });
@@ -146,6 +157,10 @@ function procs(procdata){
     return processes;
 }
 
+// Figure Out What to Start Based on Procfile Processes
+// And Requirements Passed as Command Line Arguments
+//
+// e.g. web=2,api=3 are requirements
 function start(procs,requirements,envs){
 
     var j = 0;
@@ -167,7 +182,7 @@ function start(procs,requirements,envs){
 
             p.env.PORT = port + j + k*100;
 
-            run(key+"."+(i+1),p,0);
+            run(key+"."+(i+1),p);
 
             j++;
 
@@ -177,6 +192,7 @@ function start(procs,requirements,envs){
     }
 }
 
+// Look for a Procfile at the Specified Location
 function loadProc(path){
     
     try{
@@ -194,6 +210,7 @@ function loadProc(path){
 
 }
 
+// Parse a Key=Value File Containing Environmental Variables
 function KeyValue(data){
     var env = {};
     data.toString().split(/\n/).forEach(function(line){
@@ -204,6 +221,7 @@ function KeyValue(data){
     return env;
 }
 
+// Parse a JSON Document Containing Environmental Variables
 var prefix_delim = "_";
 function flattenJSON(json,prefix,env){
 
@@ -273,6 +291,7 @@ function getreqs(args,proc){
     return req;
 }
 
+// Kill All Child Processes on SIGINT
 process.on('SIGINT',function userkill(){
     Warn('Interrupted by User');
     emitter.emit('killall');
@@ -347,7 +366,8 @@ program
 
     var envs = loadEnvs(program.env);
     var req  = getreqs(program.args[0],procs);
-
+    
+    // Variables for Upstart Template
     var config = {
         application : program.app,
         cwd         : process.cwd(),
@@ -355,6 +375,8 @@ program
         envs        : envs
     };
     
+    // Check for Upstart User
+    // friendly warning - does not stop export
     var user_exists = false;
     fs.readFileSync('/etc/passwd')
     .toString().split(/\n/).forEach(function(line){
@@ -362,9 +384,10 @@ program
             user_exists = true;
         }
     })
-    
     if(!user_exists) Warn(fmt("User %s Does Not Exist on System",config.user));
     
+    // Remove Old Upstart Files
+    // Must Match App Name and Out Directory
     fs.readdirSync(program.out).forEach(function(file){
         var x = file.indexOf(program.app);
         var y = file.indexOf(".conf");
@@ -374,11 +397,13 @@ program
             fs.unlinkSync(p);
         }
     });
-
+    
     var baseport = program.port;
     var baseport_i = 0;
     var baseport_j = 0;
-
+    
+    // This is ugly because of shitty support for array copying
+    // Cleanup is definitely required
     for(key in req){
 
         var c = {};
@@ -413,19 +438,22 @@ program
             }
 
             conf.envs = envl;
-
+            
+            // Write the APP-PROCESS-N.conf File
             upstart_app_n(conf);
 
             baseport_i++;
 
         }
 
+        // Write the APP-Process.conf File
         upstart_app(c);
 
         baseport_i=0;
         baseport_j++;
     }
 
+    // Write the APP.conf File
     upstart(config);
 
 });
