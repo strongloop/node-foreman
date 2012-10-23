@@ -84,19 +84,19 @@ emitter.once('killall',function(){
 function run(key,process,n){
 
     if(n>1) log(key,process,fmt("Restarting %d Times".bold,n));
-
+    
     var proc = prog.spawn(process.command,process.args,{
         env: process.env
     });
-
+    
     proc.stdout.on('data',function(data){
         log(key,process,data.toString());
     });
-
+    
     proc.stderr.on('data',function(data){
         log(key,process,data.toString());
     });
-
+    
     proc.on('close',function(code){
         if(code==0){
             info(key,process,"Exited Successfully");
@@ -104,11 +104,11 @@ function run(key,process,n){
             info(key,process,"Exited Abnormally");
         }
     });
-
+    
     proc.on('exit',function(code){
         emitter.emit('killall');
     });
-
+    
     emitter.on('killall',function(){
         proc.kill();
     });
@@ -178,17 +178,20 @@ function start(procs,requirements,envs){
 }
 
 function loadProc(path){
+    
     try{
         var data = fs.readFileSync(program.procfile);
         return procs(data);
     }catch(e){
         if(fs.existsSync('package.json')){
-            data = "main: npm start";
             Alert("package.json file found - trying 'npm start'")
+            return procs("default: npm start");
         }else{
             Error("No Procfile found in Current Directory - See nf --help");
+            return;
         }
     }
+
 }
 
 function KeyValue(data){
@@ -216,6 +219,16 @@ function flattenJSON(json,prefix,env){
 }
 
 function loadEnvs(path){
+    
+    var env = {};
+    
+    // NVM
+    var path = process.env.PATH;
+    if(program.nvm){
+        path = process.env.NVM_BIN + ":" + path;
+    }
+    env.PATH = path;
+    
     try{
         var data = fs.readFileSync(path);
 
@@ -227,20 +240,11 @@ function loadEnvs(path){
             env = KeyValue(data);
             Alert("Loaded ENV %s File as KEY=VALUE Format",path);
         }
-        // NVM
-        var path  = "/usr/local/bin:/usr/bin:/bin:"
-            path += "/usr/local/sbin:/usr/sbin:/sbin"
-        if(program.nvm){
-            path = process.env.NVM_BIN + ":" + path;
-        }
-        env.PATH = path;
-
-        return env;
-
     }catch(e){
         Warn("No ENV file found");
-        return {};
     }
+    
+    return env;
 }
 
 function parseRequirements(req){
@@ -278,13 +282,14 @@ program
 .command('start')
 .description('Start the jobs in the Procfile')
 .action(function(){
+    
     var proc = loadProc(program.procfile);
-
+    
     if(!proc) return;
-
+    
     var envs = loadEnvs(program.env);
     var reqs = getreqs(program.args[0],proc);
-
+    
     start(proc,reqs,envs);
 });
 
