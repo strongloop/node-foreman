@@ -354,7 +354,17 @@ program
         user        : program.user,
         envs        : envs
     };
-
+    
+    var user_exists = false;
+    fs.readFileSync('/etc/passwd')
+    .toString().split(/\n/).forEach(function(line){
+        if(line.match(/^[^:]*/)[0] == config.user){
+            user_exists = true;
+        }
+    })
+    
+    if(!user_exists) Warn(fmt("User %s Does Not Exist on System",config.user));
+    
     fs.readdirSync(program.out).forEach(function(file){
         var x = file.indexOf(program.app);
         var y = file.indexOf(".conf");
