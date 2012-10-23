@@ -182,7 +182,12 @@ function loadProc(path){
         var data = fs.readFileSync(program.procfile);
         return procs(data);
     }catch(e){
-        Error("No Procfile found in Current Directory - See nf --help");
+        if(fs.existsSync('package.json')){
+            data = "main: npm start";
+            Alert("package.json file found - trying 'npm start'")
+        }else{
+            Error("No Procfile found in Current Directory - See nf --help");
+        }
     }
 }
 
