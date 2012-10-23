@@ -294,6 +294,16 @@ function getreqs(args,proc){
     return req;
 }
 
+function calculatePadding(reqs){
+    var padding = 0;
+    for(key in reqs){
+        var num = reqs[key];
+        var len = key.length + num.toString().length;
+        if (len>padding) padding=len;
+    }
+    return padding + 10;
+}
+
 // Kill All Child Processes on SIGINT
 process.on('SIGINT',function userkill(){
     Warn('Interrupted by User');
@@ -311,6 +321,8 @@ program
     
     var envs = loadEnvs(program.env);
     var reqs = getreqs(program.args[0],proc);
+    
+    padding = calculatePadding(reqs);
     
     start(proc,reqs,envs);
 });
