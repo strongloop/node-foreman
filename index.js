@@ -273,7 +273,13 @@ function parseRequirements(req){
     req.toString().split(',').forEach(function(item){
         var tup = item.trim().split('=');
         var key = tup[0];
-        var val = parseInt(tup[1]);
+        var val;
+        if(tup.length>1){
+            val = parseInt(tup[1]);
+        }else{
+            val = 1;
+        }
+        
         requirements[key] = val;
     });
     return requirements;
