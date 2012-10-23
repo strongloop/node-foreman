@@ -180,7 +180,12 @@ function start(procs,requirements,envs){
         for(i=0;i<n;i++){
 
             var color_val = j+k % colors_max;
-
+            
+            if (!procs[key]){
+                Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
+                continue;
+            }
+            
             var p = {
                 command : procs[key].command,
                 args    : procs[key].args,
@@ -429,6 +434,11 @@ program
         var c = {};
         var proc = procs[key];
 
+        if (!proc){
+            Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
+            continue;
+        }
+        
         c.process=key;
         c.command=proc.command + " " + proc.args.join(' ');
 
