@@ -14,7 +14,6 @@ mu.root = __dirname + '/upstart'
 program.version('0.0.4');
 program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
-program.option('-n, --no-nvm'      ,'disable node version manager');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
 program.option('-u, --user <name>' ,'export upstart user as NAME','root');
