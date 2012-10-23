@@ -133,16 +133,25 @@ function procs(procdata){
     var processes = {};
 
     procdata.toString().split(/\n/).forEach(function(line){
+        if(line=='') return;
+        
         var tuple = line.trim().split(":");
 
-        if(tuple.length!=2) return;
+        if(tuple.length!=2)
+            return Warn('Syntax Error in Procfile: Line %d',i+1);
 
         var prockey = tuple[0].trim();
         var command = tuple[1].trim();
-
+        
+        if(prockey=='')
+            return Warn('Syntax Error in Procfile, Line %d: No Prockey Found',i+1);
+        
+        if(command=='')
+            return Warn('Syntax Error in Procfile, Line %d: No Command Found',i+1);
+        
         var comm = command.split(/\s/);
         var args = comm.splice(1,comm.length);
-
+        
         var process = {
             command : comm[0],
             args    : args
