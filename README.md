@@ -167,7 +167,7 @@ Note that if you need to bind to privileged ports, you _must_
 start as `root`. In such a case, we advise you to drop user
 permissions after binding.
 
-## [Scalability][#scalability]
+## Scalability
 
 Node.js applications scale by creating multiple processes that either 
 share a socket, or sit behind a load balancer.
