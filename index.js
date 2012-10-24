@@ -15,6 +15,7 @@ program.version('0.0.4');
 program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
+program.option('-s, --showenvs'    ,'show ENV variables on start',false);
 program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
 program.option('-u, --user <name>' ,'export upstart user as NAME','root');
 program.option('-o, --out <dir>'   ,'export upstart files to DIR','.');
@@ -330,6 +331,13 @@ program
     if(!proc) return;
     
     var envs = loadEnvs(program.env);
+	
+	if(program.showenvs){
+		for(key in envs){
+			Alert("env %s=%s",key,envs[key]);
+		}
+	}
+	
     var reqs = getreqs(program.args[0],proc);
     
     padding = calculatePadding(reqs);
