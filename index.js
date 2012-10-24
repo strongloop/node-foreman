@@ -391,6 +391,7 @@ function upstart_app_n(conf){
 
 program
 .command('export')
+.description('Export to an upstart job independent of foreman')
 .action(function(){
 
     var procs = loadProc(program.procfile);
