@@ -17,17 +17,46 @@ Install the command line tool
 
 ## Usage
 
+Node Foreman can be run with as little as `nf start`, as long as `npm start` has been defined.
+For more complicated applications you will want to define a `Procfile` for your various server
+processes and and a `.env` file to preload environmental variables.
+
+Your module directory should end up looking like the following:
+
+    /
+    ├─ .env
+    ├─ package.js
+    ├─ server.js # or whatever you call your application
+    ├─ Procfile
+
+Once your Procfile is defined, run your application with `nf start`:
+
+    $ nf start
+    
+    18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
+    18:51:13: api.1     |  Api Server started listening on 0.0.0.0:5100
+    18:51:13: log.1     |  Log Server started listening on 0.0.0.0:5200
+
+Node Foreman _always_ start in the foreground and expects your applications
+to do the same. If your processes exit, Node Foreman will assume an error
+has ocurred and shut your application down.
+
+Instead of daemonizing, you should use `nf export` to ready your application
+for production.
+
 ### Procfile
 
-Create a `Procfile` in the form of:
+The `Procfile` format is a simple `key : command` format:
     
     web: node web_server.js
     api: node api_server.js
     log: node log_server.js
 
+Each line should contain a separate process.
+
 ### Environmental Variables
 
-Optionally create a `.env` file to pre-load environmental variables:
+Create a `.env` file to pre-load environmental variables with the format:
 
     MYSQL_NAME=superman
     MYSQL_PASS=cryptonite
@@ -45,7 +74,6 @@ The above JSON document will be flattened into env variables by
 concatenating the nested values with an underscore.
 Environmental variables are passed in fully capitalized.
 
-
     {
         "mysql":{
             "name": "superman",     # => MYSQL_NAME=superman
@@ -55,23 +83,18 @@ Environmental variables are passed in fully capitalized.
 
 There is no need to specify which type of file you wish to use.
 
-### Basic Usage
+#### Best Practices
 
-To start your processes use `nf` (node-foreman):
+Generally you should not check your `.env` file into version control.
+The `.env` file contain _only_ parameters that depend on where the application
+gets deployed. It should not contain anything related to _how_ the application
+is deployed.
 
-    $ nf start
-    
-    18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
-    18:51:13: api.1     |  Api Server started listening on 0.0.0.0:5100
-    18:51:13: log.1     |  Log Server started listening on 0.0.0.0:5200
+For example, good candiates for the `.env` file are MySQL connection information,
+port bindings, and other passwords.
 
-Your module directory should end up looking like the following:
-
-    /
-    ├─ .env
-    ├─ package.js
-    ├─ server.js
-    ├─ Procfile
+Bad candidates are default configurations that do not contain any location-specific
+information.
 
 ### Advanced Usage
 
@@ -143,4 +166,31 @@ Use `-u <USER>` to have the exported job run as `USER`.
 Note that if you need to bind to privileged ports, you _must_
 start as `root`. In such a case, we advise you to drop user
 permissions after binding.
+
+## Scalability
+
+Node.js applications scale by creating multiple processes that either 
+share a socket, or sit behind a load balancer.
+Node Foreman can help you test the parallel capabilities of your application
+by spawning multiple processes behind a round-robin proxy automatically.
+
+	$ nf start -x 8888 web=5
+	[OKAY] Starting Proxy Server 8888 -> 5000-5004
+
+If your application gets its port number from `process.env.PORT` the proxy
+setup will ocurr automatically.
+
+## Security
+
+Node Foreman disallows applications from starting on privileged ports.
+It does however allow proxies to be bound to lower ports, such as port 80.
+
+If you require access to a privileged port, start Node Foreman with `sudo`:
+
+	$ sudo nf start -x 80 web=5
+	[OKAY] Starting Proxy Server 8888 -> 5000-5004
+
+Your applications will _still_ be started in user space, and the proxy will
+drop its privileges after binding to the privileged port.
+
 
