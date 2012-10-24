@@ -82,7 +82,7 @@ function Warn(){
 }
 
 function Error(){
-    console.error( '[FAIL] '.red + fmt.apply(null,arguments).bold.red );
+    console.error( '[FAIL] '.bold.red + fmt.apply(null,arguments).bold.red );
 }
 
 // Foreman Event Bus/Emitter //
