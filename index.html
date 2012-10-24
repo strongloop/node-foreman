@@ -50,18 +50,49 @@ directly or export it to some other process management format.</p>
 
 <h2>Usage</h2>
 
+<p>Node Foreman can be run with as little as <code>nf start</code>, as long as <code>npm start</code> has been defined.
+For more complicated applications you will want to define a <code>Procfile</code> for your various server
+processes and and a <code>.env</code> file to preload environmental variables.</p>
+
+<p>Your module directory should end up looking like the following:</p>
+
+<pre><code>/
+├─ .env
+├─ package.js
+├─ server.js # or whatever you call your application
+├─ Procfile
+</code></pre>
+
+<p>Once your Procfile is defined, run your application with <code>nf start</code>:</p>
+
+<pre><code>$ nf start
+
+18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
+18:51:13: api.1     |  Api Server started listening on 0.0.0.0:5100
+18:51:13: log.1     |  Log Server started listening on 0.0.0.0:5200
+</code></pre>
+
+<p>Node Foreman <em>always</em> start in the foreground and expects your applications
+to do the same. If your processes exit, Node Foreman will assume an error
+has ocurred and shut your application down.</p>
+
+<p>Instead of daemonizing, you should use <code>nf export</code> to ready your application
+for production.</p>
+
 <h3>Procfile</h3>
 
-<p>Create a <code>Procfile</code> in the form of:</p>
+<p>The <code>Procfile</code> format is a simple <code>key : command</code> format:</p>
 
 <pre><code>web: node web_server.js
 api: node api_server.js
 log: node log_server.js
 </code></pre>
 
+<p>Each line should contain a separate process.</p>
+
 <h3>Environmental Variables</h3>
 
-<p>Optionally create a <code>.env</code> file to pre-load environmental variables:</p>
+<p>Create a <code>.env</code> file to pre-load environmental variables with the format:</p>
 
 <pre><code>MYSQL_NAME=superman
 MYSQL_PASS=cryptonite
@@ -91,25 +122,18 @@ Environmental variables are passed in fully capitalized.</p>
 
 <p>There is no need to specify which type of file you wish to use.</p>
 
-<h3>Basic Usage</h3>
+<h4>Best Practices</h4>
 
-<p>To start your processes use <code>nf</code> (node-foreman):</p>
+<p>Generally you should not check your <code>.env</code> file into version control.
+The <code>.env</code> file contain <em>only</em> parameters that depend on where the application
+gets deployed. It should not contain anything related to <em>how</em> the application
+is deployed.</p>
 
-<pre><code>$ nf start
+<p>For example, good candiates for the <code>.env</code> file are MySQL connection information,
+port bindings, and other passwords.</p>
 
-18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
-18:51:13: api.1     |  Api Server started listening on 0.0.0.0:5100
-18:51:13: log.1     |  Log Server started listening on 0.0.0.0:5200
-</code></pre>
-
-<p>Your module directory should end up looking like the following:</p>
-
-<pre><code>/
-├─ .env
-├─ package.js
-├─ server.js
-├─ Procfile
-</code></pre>
+<p>Bad candidates are default configurations that do not contain any location-specific
+information.</p>
 
 <h3>Advanced Usage</h3>
 
@@ -187,6 +211,34 @@ the <code>type=num</code> syntax:</p>
 Note that if you need to bind to privileged ports, you <em>must</em>
 start as <code>root</code>. In such a case, we advise you to drop user
 permissions after binding.</p>
+
+<h2>Scalability</h2>
+
+<p>Node.js applications scale by creating multiple processes that either 
+share a socket, or sit behind a load balancer.
+Node Foreman can help you test the parallel capabilities of your application
+by spawning multiple processes behind a round-robin proxy automatically.</p>
+
+<pre><code>$ nf start -x 8888 web=5
+[OKAY] Starting Proxy Server 8888 -&gt; 5000-5004
+</code></pre>
+
+<p>If your application gets its port number from <code>process.env.PORT</code> the proxy
+setup will ocurr automatically.</p>
+
+<h2>Security</h2>
+
+<p>Node Foreman disallows applications from starting on privileged ports.
+It does however allow proxies to be bound to lower ports, such as port 80.</p>
+
+<p>If you require access to a privileged port, start Node Foreman with <code>sudo</code>:</p>
+
+<pre><code>$ sudo nf start -x 80 web=5
+[OKAY] Starting Proxy Server 8888 -&gt; 5000-5004
+</code></pre>
+
+<p>Your applications will <em>still</em> be started in user space, and the proxy will
+drop its privileges after binding to the privileged port.</p>
       </section>
     </div>
 
