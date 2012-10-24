@@ -361,7 +361,7 @@ function startProxies(reqs,proc){
 			Alert('Starting Proxy Server %s -> %d-%d',
 				port,
 				upstream_port,
-				upstream_port+upstream_size);
+				upstream_port+upstream_size-1);
 			
 			emitter.once('killall',function(){
 				Error('Killing Proxy Server on Port %s',port);
