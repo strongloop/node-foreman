@@ -228,7 +228,7 @@ function KeyValue(data){
     var env = {};
     data.toString().split(/\n/).forEach(function(line){
         if(line=='')return;
-        var items = line.split('=');
+        var items = line.split('=',1);
         env[items[0].toUpperCase()] = items[1];
     });
     return env;
@@ -275,7 +275,7 @@ function loadEnvs(path){
 function parseRequirements(req){
     var requirements = {};
     req.toString().split(',').forEach(function(item){
-        var tup = item.trim().split('=');
+        var tup = item.trim().split('=',1);
         var key = tup[0];
         var val;
         if(tup.length>1){
