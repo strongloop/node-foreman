@@ -6,25 +6,31 @@
   "main": "index.js",
   "author": "Jacob Groundwater",
   "license": "BSD",
-  "keywords": ["foreman","upstart","commandline","env"],
+  "keywords": [
+    "foreman",
+    "upstart",
+    "commandline",
+    "env"
+  ],
   "bin": {
     "nf": "index.js"
   },
   "dependencies": {
     "colors": "~0.6.0-1",
     "commander": "~1.0.5",
-    "mu2": "~0.5.17"
+    "mu2": "~0.5.17",
+    "http-proxy": "~0.8.4"
   },
-  "repository" : { 
-    "type" : "git",
-    "url"  : "https://github.com/NodeFly/node-foreman.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NodeFly/node-foreman.git"
   },
-  "bugs": { 
-    "url" : "https://github.com/NodeFly/node-foreman/issues",
-    "email" : "jacob@nodefly.com"
+  "bugs": {
+    "url": "https://github.com/NodeFly/node-foreman/issues",
+    "email": "jacob@nodefly.com"
   },
-  "engines" : { 
-    "node" : ">=0.6.9" 
+  "engines": {
+    "node": ">=0.6.9"
   },
   "preferGlobal": true
 }

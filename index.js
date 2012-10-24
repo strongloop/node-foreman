@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-var colors  = require('colors');
+var colors_ = require('colors');
 var util    = require('util');
 var path    = require('path');
 var prog    = require('child_process');
@@ -16,6 +16,7 @@ program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 program.option('-s, --showenvs'    ,'show ENV variables on start',false);
+program.option('-x, --proxy <port>','start a load balancing proxy on PORT');
 program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
 program.option('-u, --user <name>' ,'export upstart user as NAME','root');
 program.option('-o, --out <dir>'   ,'export upstart files to DIR','.');
@@ -25,14 +26,16 @@ var killing = 0;
 
 // Utilities //
 
-var colors_max = 5;
+var colors_max = 8;
 var colors = [
     function(x){return x.cyan},
     function(x){return x.yellow},
     function(x){return x.green},
     function(x){return x.magenta},
     function(x){return x.blue},
-    function(x){return x.white}
+    function(x){return x.white},
+	function(x){return x.red},
+	function(x){return x.grey}
 ];
 
 function fmt(){
@@ -71,15 +74,15 @@ function log(key,proc,string){
 // Foreman Loggers //
 
 function Alert(){
-    console.log( fmt.apply(null,arguments).bold.green );
+    console.log( '[OKAY] '.green + fmt.apply(null,arguments).green );
 }
 
 function Warn(){
-    console.warn( fmt.apply(null,arguments).bold.yellow );
+    console.warn( '[WARN] '.yellow + fmt.apply(null,arguments).yellow );
 }
 
 function Error(){
-    console.error( fmt.apply(null,arguments).bold.red );
+    console.error( '[FAIL] '.red + fmt.apply(null,arguments).bold.red );
 }
 
 // Foreman Event Bus/Emitter //
@@ -88,6 +91,7 @@ var emitter = new events.EventEmitter();
 emitter.once('killall',function(){
     Error("Killing All Processes");
 })
+emitter.setMaxListeners(50);
 
 // Run a Specific Process
 // - Key is a Process Name and Number
@@ -180,7 +184,7 @@ function start(procs,requirements,envs){
 
         for(i=0;i<n;i++){
 
-            var color_val = j+k % colors_max;
+            var color_val = (j+k) % colors_max;
             
             if (!procs[key]){
                 Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
@@ -276,7 +280,7 @@ function loadEnvs(path){
 function parseRequirements(req){
     var requirements = {};
     req.toString().split(',').forEach(function(item){
-        var tup = item.trim().split('=',1);
+        var tup = item.trim().split('=');
         var key = tup[0];
         var val;
         if(tup.length>1){
@@ -315,6 +319,60 @@ function calculatePadding(reqs){
     return padding + 10;
 }
 
+function startProxies(reqs,proc){
+	
+	if(program.proxy){
+		
+		var localhost = 'localhost';
+		var i=0;
+		
+		var ports = program.proxy.split(',');
+		for(key in reqs){(function(key){
+			
+			var j = i++;
+			
+			var port = ports[j];
+			
+			if(port<1024 && process.getuid()!=0)
+				return Error('Cannot Bind to Privileged Port %s Without Permission - Try \'sudo\'',port);
+			
+			if(!port) return Warn('No Downstream Port Defined for \'%s\' Proxy',key);
+			if(!(key in proc)) return Warn('Proxy Not Started for Undefined Key \'%s\'',key);
+			
+			var upstream_size = reqs[key];
+			var upstream_port = program.port + j*100;
+			
+			var proxy = prog.fork(__dirname + '/proxy.js',[],{
+				env: {
+					HOST: localhost,
+					PORT: port,
+					UPSTREAM_HOST: localhost,
+					UPSTREAM_PORT: upstream_port,
+					UPSTREAM_SIZE: upstream_size,
+					SUDO_USER: process.env.SUDO_USER
+				}
+			});
+			
+			Alert('Starting Proxy Server %s -> %d-%d',
+				port,
+				upstream_port,
+				upstream_port+upstream_size);
+			
+			emitter.once('killall',function(){
+				Error('Killing Proxy Server on Port %s',port);
+				proxy.kill();
+			})
+		
+			proxy.on('exit',function(){
+				emitter.emit('killall');
+			})
+			
+		})(key)}
+		
+	}
+	
+}
+
 // Kill All Child Processes on SIGINT
 process.on('SIGINT',function userkill(){
     Warn('Interrupted by User');
@@ -342,6 +400,10 @@ program
     
     padding = calculatePadding(reqs);
     
+	startProxies(reqs,proc);
+	
+	if(process.getuid()==0) process.setuid(process.env.SUDO_USER);
+	
     start(proc,reqs,envs);
 });
 
