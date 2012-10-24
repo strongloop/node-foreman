@@ -179,6 +179,11 @@ function start(procs,requirements,envs){
     var j = 0;
     var k = 0;
     var port = parseInt(program.port);
+	
+	if(port<1024)
+		return Error('Only Proxies Can Bind to Privileged Ports - '+
+			'Try \'sudo nf start -x %s %s\'',port,program.args[0]);
+	
     for(key in requirements){
         var n = parseInt(requirements[key]);
 
