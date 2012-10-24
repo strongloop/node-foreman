@@ -238,7 +238,7 @@ function KeyValue(data){
     var env = {};
     data.toString().split(/\n/).forEach(function(line){
         if(line=='')return;
-        var items = line.split('=',1);
+        var items = line.split('=',2);
         env[items[0].toUpperCase()] = items[1];
     });
     return env;
