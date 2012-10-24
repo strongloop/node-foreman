@@ -388,6 +388,20 @@ function startProxies(reqs,proc){
 	
 }
 
+function startForward(port){
+	var proc = prog.fork(__dirname + '/forward.js',[],{
+		env: {
+			PROXY_PORT: port,
+			SUDO_USER : process.env.SUDO_USER
+		}
+	});
+	Alert('Forward Proxy Started in Port %d',port);
+	emitter.once('killall',function(){
+		Error('Killing Forward Proxy Server on Port %d',port);
+		proc.kill();
+	})
+}
+
 // Kill All Child Processes on SIGINT
 process.on('SIGINT',function userkill(){
     Warn('Interrupted by User');
@@ -399,6 +413,7 @@ program
 .usage('[Options] [Processes] e.g. web=1,log=2,api')
 .option('-s, --showenvs'    ,'show ENV variables on start',false)
 .option('-x, --proxy <port>','start a load balancing proxy on PORT')
+.option('-f, --forward <port>','start a forward proxy')
 .option('-t, --trim <N>'    ,'trim logs to N characters',0)
 .description('Start the jobs in the Procfile')
 .action(function(_command){
@@ -420,6 +435,7 @@ program
     
     padding = calculatePadding(reqs);
     
+	if(program.forward) startForward(program.forward);
 	startProxies(reqs,proc);
 	
 	if(process.getuid()==0) process.setuid(process.env.SUDO_USER);
