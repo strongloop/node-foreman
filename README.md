@@ -177,6 +177,9 @@ by spawning multiple processes behind a round-robin proxy automatically.
 	$ nf start -x 8888 web=5
 	[OKAY] Starting Proxy Server 8888 -> 5000-5004
 
+Access your application from port `8888` and the connections will be balanced
+across the servers started from ports `5000` - `5004`.
+
 If your application gets its port number from `process.env.PORT` the proxy
 setup will ocurr automatically.
 
@@ -188,7 +191,9 @@ It does however allow proxies to be bound to lower ports, such as port 80.
 If you require access to a privileged port, start Node Foreman with `sudo`:
 
 	$ sudo nf start -x 80 web=5
-	[OKAY] Starting Proxy Server 8888 -> 5000-5004
+	[OKAY] Starting Proxy Server 80 -> 5000-5004
+
+Your application will then be accessible via port 80.
 
 Your applications will _still_ be started in user space, and the proxy will
 drop its privileges after binding to the privileged port.
