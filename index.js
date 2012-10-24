@@ -345,7 +345,7 @@ function startProxies(reqs,proc){
 			if(!(key in proc)) return Warn('Proxy Not Started for Undefined Key \'%s\'',key);
 			
 			var upstream_size = reqs[key];
-			var upstream_port = program.port + j*100;
+			var upstream_port = parseInt(program.port) + j*100;
 			
 			var proxy = prog.fork(__dirname + '/proxy.js',[],{
 				env: {
@@ -499,7 +499,7 @@ program
         }
     });
     
-    var baseport = program.port;
+    var baseport = parseInt(program.port);
     var baseport_i = 0;
     var baseport_j = 0;
     
