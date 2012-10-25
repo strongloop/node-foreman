@@ -20,6 +20,7 @@ program.option('-x, --proxy <port>','start a load balancing proxy on PORT');
 program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
 program.option('-u, --user <name>' ,'export upstart user as NAME','root');
 program.option('-o, --out <dir>'   ,'export upstart files to DIR','.');
+program.option('-t, --trim <N>'    ,'trim logs to N characters',0)
 
 var padding = 25;
 var killing = 0;
@@ -55,6 +56,14 @@ function pad(string,n){
 
 // Process Specific Loggers //
 
+function trim(line,n){
+	var end = '';
+	if(line.length > n){
+		end = '…'
+	}
+	return line.substr(0,n) + end;
+}
+
 function info(key,proc,string){
     var stamp = (new Date().toLocaleTimeString()) + " " + key;
     console.log(proc.color(pad(stamp,padding)),string.white.bold);
@@ -66,7 +75,13 @@ function log(key,proc,string){
         if (line.trim().length==0) return;
 
         var stamp = (new Date().toLocaleTimeString()) + " " + key;
-
+		
+		if(program.trim>0){
+			line = trim(line,program.trim);
+		}else if(program.trim==0){
+			line = trim(line,process.stdout.columns - padding - 5);
+		}
+		
         console.log(proc.color(pad(stamp,padding)),line);
     });
 }
