@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 var http = require('http');
 var env = process.env;
 
