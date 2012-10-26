@@ -16,6 +16,7 @@ program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 
+var command;
 var padding = 25;
 var killing = 0;
 
@@ -70,9 +71,9 @@ function log(key,proc,string){
 
         var stamp = (new Date().toLocaleTimeString()) + " " + key;
 		
-		if(program.trim>0){
-			line = trim(line,program.trim);
-		}else if(program.trim==0){
+		if(command.trim>0){
+			line = trim(line,command.trim);
+		}else if(command.trim==0){
 			line = trim(line,process.stdout.columns - padding - 5);
 		}
 		
@@ -335,12 +336,12 @@ function calculatePadding(reqs){
 
 function startProxies(reqs,proc){
 	
-	if(program.proxy){
+	if(command.proxy){
 		
 		var localhost = 'localhost';
 		var i=0;
 		
-		var ports = program.proxy.split(',');
+		var ports = command.proxy.split(',');
 		for(key in reqs){(function(key){
 			
 			var j = i++;
@@ -400,15 +401,16 @@ program
 .option('-x, --proxy <port>','start a load balancing proxy on PORT')
 .option('-t, --trim <N>'    ,'trim logs to N characters',0)
 .description('Start the jobs in the Procfile')
-.action(function(){
-    
+.action(function(_command){
+	command = _command;
+	
     var proc = loadProc(program.procfile);
     
     if(!proc) return;
     
     var envs = loadEnvs(program.env);
 	
-	if(program.showenvs){
+	if(command.showenvs){
 		for(key in envs){
 			Alert("env %s=%s",key,envs[key]);
 		}
@@ -435,7 +437,7 @@ function upstart(conf){
         out += data;
     })
     .on('end',function(){
-        var path = program.out + "/" + conf.application + ".conf";
+        var path = command.out + "/" + conf.application + ".conf";
         fs.writeFileSync(path,out);
         Alert('Wrote  : ',path);
     });
@@ -449,7 +451,7 @@ function upstart_app(conf){
         out += data;
     })
     .on('end',function(){
-        var path = program.out + "/" + conf.application + "-" + conf.process + ".conf";
+        var path = command.out + "/" + conf.application + "-" + conf.process + ".conf";
         fs.writeFileSync(path,out);
         Alert('Wrote  : ',path);
     });
@@ -463,7 +465,7 @@ function upstart_app_n(conf){
         out += data;
     })
     .on('end',function(){
-        var path = program.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
+        var path = command.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
         fs.writeFileSync(path,out);
         Alert('Wrote  : ',path);
     });
@@ -475,8 +477,9 @@ program
 .option('-u, --user <name>' ,'export upstart user as NAME','root')
 .option('-o, --out <dir>'   ,'export upstart files to DIR','.')
 .description('Export to an upstart job independent of foreman')
-.action(function(){
-
+.action(function(_command){
+	command = _command;
+	
     var procs = loadProc(program.procfile);
 
     if(!procs) return;
@@ -486,9 +489,9 @@ program
     
     // Variables for Upstart Template
     var config = {
-        application : program.app,
+        application : command.app,
         cwd         : process.cwd(),
-        user        : program.user,
+        user        : command.user,
         envs        : envs
     };
     
@@ -505,11 +508,11 @@ program
     
     // Remove Old Upstart Files
     // Must Match App Name and Out Directory
-    fs.readdirSync(program.out).forEach(function(file){
+    fs.readdirSync(command.out).forEach(function(file){
         var x = file.indexOf(program.app);
         var y = file.indexOf(".conf");
         if(x==0 && y>0){
-            var p = path.join(program.out,file);
+            var p = path.join(command.out,file);
             Warn("Unlink : %s".yellow.bold,p);
             fs.unlinkSync(p);
         }
