@@ -396,7 +396,7 @@ process.on('SIGINT',function userkill(){
 
 program
 .command('start')
-.usage('[Processes] e.g. web=1,log=2,api')
+.usage('[Options] [Processes] e.g. web=1,log=2,api')
 .option('-s, --showenvs'    ,'show ENV variables on start',false)
 .option('-x, --proxy <port>','start a load balancing proxy on PORT')
 .option('-t, --trim <N>'    ,'trim logs to N characters',0)
