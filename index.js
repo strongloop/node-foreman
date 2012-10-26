@@ -11,15 +11,10 @@ var events  = require('events');
 
 mu.root = __dirname + '/upstart'
 
-program.version('0.0.6');
+program.version('0.0.7');
 program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
 program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
-program.option('-s, --showenvs'    ,'show ENV variables on start',false);
-program.option('-x, --proxy <port>','start a load balancing proxy on PORT');
-program.option('-a, --app <name>'  ,'export upstart application as NAME','foreman');
-program.option('-u, --user <name>' ,'export upstart user as NAME','root');
-program.option('-o, --out <dir>'   ,'export upstart files to DIR','.');
 
 var padding = 25;
 var killing = 0;
@@ -55,6 +50,14 @@ function pad(string,n){
 
 // Process Specific Loggers //
 
+function trim(line,n){
+	var end = '';
+	if(line.length > n){
+		end = '…'
+	}
+	return line.substr(0,n) + end;
+}
+
 function info(key,proc,string){
     var stamp = (new Date().toLocaleTimeString()) + " " + key;
     console.log(proc.color(pad(stamp,padding)),string.white.bold);
@@ -66,7 +69,13 @@ function log(key,proc,string){
         if (line.trim().length==0) return;
 
         var stamp = (new Date().toLocaleTimeString()) + " " + key;
-
+		
+		if(program.trim>0){
+			line = trim(line,program.trim);
+		}else if(program.trim==0){
+			line = trim(line,process.stdout.columns - padding - 5);
+		}
+		
         console.log(proc.color(pad(stamp,padding)),line);
     });
 }
@@ -386,6 +395,10 @@ process.on('SIGINT',function userkill(){
 
 program
 .command('start')
+.usage('[Processes] e.g. web=1,log=2,api')
+.option('-s, --showenvs'    ,'show ENV variables on start',false)
+.option('-x, --proxy <port>','start a load balancing proxy on PORT')
+.option('-t, --trim <N>'    ,'trim logs to N characters',0)
 .description('Start the jobs in the Procfile')
 .action(function(){
     
@@ -458,6 +471,9 @@ function upstart_app_n(conf){
 
 program
 .command('export')
+.option('-a, --app <name>'  ,'export upstart application as NAME','foreman')
+.option('-u, --user <name>' ,'export upstart user as NAME','root')
+.option('-o, --out <dir>'   ,'export upstart files to DIR','.')
 .description('Export to an upstart job independent of foreman')
 .action(function(){
 

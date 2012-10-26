@@ -44,6 +44,12 @@ has ocurred and shut your application down.
 Instead of daemonizing, you should use `nf export` to ready your application
 for production.
 
+For more information try any of the following:
+
+	$ nf --help
+	$ nf start --help
+	$ nf export --help
+
 ### Procfile
 
 The `Procfile` format is a simple `key : command` format:
