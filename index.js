@@ -249,7 +249,7 @@ function KeyValue(data){
     data.toString().split(/\n/).forEach(function(line){
         if(line=='')return;
         var items = line.split('=',2);
-        env[items[0].toUpperCase()] = items[1];
+        env[items[0]] = items[1];
     });
     return env;
 }
