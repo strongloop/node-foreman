@@ -435,7 +435,8 @@ program
     
     padding = calculatePadding(reqs);
     
-	if(program.forward) startForward(program.forward);
+	if(command.forward) startForward(command.forward);
+	
 	startProxies(reqs,proc);
 	
 	if(process.getuid()==0) process.setuid(process.env.SUDO_USER);
