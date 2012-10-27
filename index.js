@@ -285,7 +285,7 @@ function loadEnvs(path){
         var env;
         try{
             env = flattenJSON(JSON.parse(data),"",{});
-            cons.cons.Alert("Loaded ENV %s File as JSON Format",path);
+            cons.Alert("Loaded ENV %s File as JSON Format",path);
         }catch(e){
             env = KeyValue(data);
             cons.Alert("Loaded ENV %s File as KEY=VALUE Format",path);
