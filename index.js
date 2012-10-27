@@ -34,72 +34,79 @@ var colors = [
 	function(x){return x.grey}
 ];
 
-function fmt(){
-    return util.format.apply(null,arguments);
-}
-
-function pad(string,n){
-    var l = string.length;
-    var d = n - l;
-    var o = string;
-    for(i=l;i<n;i++){
-        o += " "
-    }
-    return o + " | ";
-}
-
-
-// Process Specific Loggers //
-
-function trim(line,n){
-	var end = '';
-	if(line.length > n){
-		end = '…'
+var Console = function(){
+	
+	this.fmt = function fmt(){
+	    return util.format.apply(null,arguments);
 	}
-	return line.substr(0,n) + end;
-}
 
-function info(key,proc,string){
-    var stamp = (new Date().toLocaleTimeString()) + " " + key;
-    console.log(proc.color(pad(stamp,padding)),string.white.bold);
-}
+	this.pad = function pad(string,n){
+	    var l = string.length;
+	    var d = n - l;
+	    var o = string;
+	    for(i=l;i<n;i++){
+	        o += " "
+	    }
+	    return o + " | ";
+	}
 
-function log(key,proc,string){
-    string.split(/\n/).forEach(function(line){
 
-        if (line.trim().length==0) return;
+	// Process Specific Loggers //
 
-        var stamp = (new Date().toLocaleTimeString()) + " " + key;
-		
-		if(command.trim>0){
-			line = trim(line,command.trim);
-		}else if(command.trim==0){
-			line = trim(line,process.stdout.columns - padding - 5);
+	this.trim = function trim(line,n){
+		var end = '';
+		if(line.length > n){
+			end = '…'
 		}
+		return line.substr(0,n) + end;
+	}
+
+	this.info = function info(key,proc,string){
+	    var stamp = (new Date().toLocaleTimeString()) + " " + key;
+	    console.log(proc.color(this.pad(stamp,padding)),string.white.bold);
+	}
+
+	this.log = function log(key,proc,string){
+		var self = this;
+	    string.split(/\n/).forEach(function(line){
+
+	        if (line.trim().length==0) return;
+
+	        var stamp = (new Date().toLocaleTimeString()) + " " + key;
 		
-        console.log(proc.color(pad(stamp,padding)),line);
-    });
+			if(command.trim>0){
+				line = self.trim(line,command.trim);
+			}else if(command.trim==0){
+				line = self.trim(line,process.stdout.columns - padding - 5);
+			}
+		
+	        console.log(proc.color(self.pad(stamp,padding)),line);
+	    });
+	}
+
+	// Foreman Loggers //
+
+	this.Alert = function Alert(){
+	    console.log( '[OKAY] '.green + cons.fmt.apply(null,arguments).green );
+	}
+
+	this.Warn = function Warn(){
+	    console.warn( '[WARN] '.yellow + cons.fmt.apply(null,arguments).yellow );
+	}
+
+	this.Error = function Error(){
+	    console.error( '[FAIL] '.bold.red + cons.fmt.apply(null,arguments).bold.red );
+	}
+
 }
 
-// Foreman Loggers //
-
-function Alert(){
-    console.log( '[OKAY] '.green + fmt.apply(null,arguments).green );
-}
-
-function Warn(){
-    console.warn( '[WARN] '.yellow + fmt.apply(null,arguments).yellow );
-}
-
-function Error(){
-    console.error( '[FAIL] '.bold.red + fmt.apply(null,arguments).bold.red );
-}
+var cons = new Console();
 
 // Foreman Event Bus/Emitter //
 
 var emitter = new events.EventEmitter();
 emitter.once('killall',function(){
-    Error("Killing All Processes");
+    cons.Error("Killing All Processes");
 })
 emitter.setMaxListeners(50);
 
@@ -115,18 +122,18 @@ function run(key,process){
     });
     
     proc.stdout.on('data',function(data){
-        log(key,process,data.toString());
+        cons.log(key,process,data.toString());
     });
     
     proc.stderr.on('data',function(data){
-        log(key,process,data.toString());
+        cons.log(key,process,data.toString());
     });
     
     proc.on('close',function(code){
         if(code==0){
-            info(key,process,"Exited Successfully");
+            cons.info(key,process,"Exited Successfully");
         }else{
-            info(key,process,"Exited Abnormally");
+            cons.info(key,process,"Exited Abnormally");
         }
     });
     
@@ -152,16 +159,16 @@ function procs(procdata){
         var tuple = line.trim().split(":");
 
         if(tuple.length!=2)
-            return Warn('Syntax Error in Procfile: Line %d',i+1);
+            return cons.Warn('Syntax Error in Procfile: Line %d',i+1);
 
         var prockey = tuple[0].trim();
         var command = tuple[1].trim();
         
         if(prockey=='')
-            return Warn('Syntax Error in Procfile, Line %d: No Prockey Found',i+1);
+            return cons.Warn('Syntax Error in Procfile, Line %d: No Prockey Found',i+1);
         
         if(command=='')
-            return Warn('Syntax Error in Procfile, Line %d: No Command Found',i+1);
+            return cons.Warn('Syntax Error in Procfile, Line %d: No Command Found',i+1);
         
         var comm = command.split(/\s/);
         var args = comm.splice(1,comm.length);
@@ -191,7 +198,7 @@ function start(procs,requirements,envs){
     var port = parseInt(program.port);
 	
 	if(port<1024)
-		return Error('Only Proxies Can Bind to Privileged Ports - '+
+		return cons.Error('Only Proxies Can Bind to Privileged Ports - '+
 			'Try \'sudo nf start -x %s %s\'',port,program.args[0]);
 	
     for(key in requirements){
@@ -202,7 +209,7 @@ function start(procs,requirements,envs){
             var color_val = (j+k) % colors_max;
             
             if (!procs[key]){
-                Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
+                cons.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
                 continue;
             }
             
@@ -233,10 +240,10 @@ function loadProc(path){
         return procs(data);
     }catch(e){
         if(fs.existsSync('package.json')){
-            Alert("package.json file found - trying 'npm start'")
+            cons.Alert("package.json file found - trying 'npm start'")
             return procs("default: npm start");
         }else{
-            Error("No Procfile found in Current Directory - See nf --help");
+            cons.Error("No Procfile found in Current Directory - See nf --help");
             return;
         }
     }
@@ -278,13 +285,13 @@ function loadEnvs(path){
         var env;
         try{
             env = flattenJSON(JSON.parse(data),"",{});
-            Alert("Loaded ENV %s File as JSON Format",path);
+            cons.cons.Alert("Loaded ENV %s File as JSON Format",path);
         }catch(e){
             env = KeyValue(data);
-            Alert("Loaded ENV %s File as KEY=VALUE Format",path);
+            cons.Alert("Loaded ENV %s File as KEY=VALUE Format",path);
         }
     }catch(e){
-        Warn("No ENV file found");
+        cons.Warn("No ENV file found");
     }
     
     env.PATH = process.env.PATH;
@@ -349,10 +356,10 @@ function startProxies(reqs,proc){
 			var port = ports[j];
 			
 			if(port<1024 && process.getuid()!=0)
-				return Error('Cannot Bind to Privileged Port %s Without Permission - Try \'sudo\'',port);
+				return cons.Error('Cannot Bind to Privileged Port %s Without Permission - Try \'sudo\'',port);
 			
-			if(!port) return Warn('No Downstream Port Defined for \'%s\' Proxy',key);
-			if(!(key in proc)) return Warn('Proxy Not Started for Undefined Key \'%s\'',key);
+			if(!port) return cons.Warn('No Downstream Port Defined for \'%s\' Proxy',key);
+			if(!(key in proc)) return cons.Warn('Proxy Not Started for Undefined Key \'%s\'',key);
 			
 			var upstream_size = reqs[key];
 			var upstream_port = parseInt(program.port) + j*100;
@@ -368,13 +375,13 @@ function startProxies(reqs,proc){
 				}
 			});
 			
-			Alert('Starting Proxy Server %s -> %d-%d',
+			cons.Alert('Starting Proxy Server %s -> %d-%d',
 				port,
 				upstream_port,
 				upstream_port+upstream_size-1);
 			
 			emitter.once('killall',function(){
-				Error('Killing Proxy Server on Port %s',port);
+				cons.Error('Killing Proxy Server on Port %s',port);
 				proxy.kill();
 			})
 		
@@ -395,16 +402,16 @@ function startForward(port){
 			SUDO_USER : process.env.SUDO_USER
 		}
 	});
-	Alert('Forward Proxy Started in Port %d',port);
+	cons.Alert('Forward Proxy Started in Port %d',port);
 	emitter.once('killall',function(){
-		Error('Killing Forward Proxy Server on Port %d',port);
+		cons.Error('Killing Forward Proxy Server on Port %d',port);
 		proc.kill();
 	})
 }
 
 // Kill All Child Processes on SIGINT
 process.on('SIGINT',function userkill(){
-    Warn('Interrupted by User');
+    cons.Warn('Interrupted by User');
     emitter.emit('killall');
 });
 
@@ -427,7 +434,7 @@ program
 	
 	if(command.showenvs){
 		for(key in envs){
-			Alert("env %s=%s",key,envs[key]);
+			cons.Alert("env %s=%s",key,envs[key]);
 		}
 	}
 	
@@ -456,7 +463,7 @@ function upstart(conf){
     .on('end',function(){
         var path = command.out + "/" + conf.application + ".conf";
         fs.writeFileSync(path,out);
-        Alert('Wrote  : ',path);
+        cons.Alert('Wrote  : ',path);
     });
 }
 
@@ -470,7 +477,7 @@ function upstart_app(conf){
     .on('end',function(){
         var path = command.out + "/" + conf.application + "-" + conf.process + ".conf";
         fs.writeFileSync(path,out);
-        Alert('Wrote  : ',path);
+        cons.Alert('Wrote  : ',path);
     });
 }
 
@@ -484,7 +491,7 @@ function upstart_app_n(conf){
     .on('end',function(){
         var path = command.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
         fs.writeFileSync(path,out);
-        Alert('Wrote  : ',path);
+        cons.Alert('Wrote  : ',path);
     });
 }
 
@@ -521,7 +528,7 @@ program
             user_exists = true;
         }
     })
-    if(!user_exists) Warn(fmt("User %s Does Not Exist on System",config.user));
+    if(!user_exists) cons.Warn(cons.fmt("User %s Does Not Exist on System",config.user));
     
     // Remove Old Upstart Files
     // Must Match App Name and Out Directory
@@ -530,7 +537,7 @@ program
         var y = file.indexOf(".conf");
         if(x==0 && y>0){
             var p = path.join(command.out,file);
-            Warn("Unlink : %s".yellow.bold,p);
+            cons.Warn("Unlink : %s".yellow.bold,p);
             fs.unlinkSync(p);
         }
     });
@@ -547,7 +554,7 @@ program
         var proc = procs[key];
 
         if (!proc){
-            Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
+            cons.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
             continue;
         }
         
