@@ -15,6 +15,19 @@ Install the command line tool
 
     $ npm install -g foreman
 
+### How to Contribute
+
+I encourage anyone and everyone to help.
+If you have a specific change in mind, open an issue; we can talk about it there.
+
+If you would like to make a code change, go ahead. 
+Fork the repository, open a pull request. 
+Do this early, and talk about the change you want to make. 
+Maybe we can work together on it.
+
+Refactor Refactor Refactor!
+You are free to add features, or just help clean things up.
+
 ## Usage
 
 Node Foreman can be run with as little as `nf start`, as long as `npm start` has been defined.
@@ -190,6 +203,8 @@ If your application gets its port number from `process.env.PORT` the proxy
 setup will ocurr automatically.
 
 ## Security
+
+_This Section is Alpha_
 
 Node Foreman disallows applications from starting on privileged ports.
 It does however allow proxies to be bound to lower ports, such as port 80.

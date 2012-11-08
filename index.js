@@ -63,6 +63,11 @@ var Console = function(){
 
 	this.info = function info(key,proc,string){
 	    var stamp = (new Date().toLocaleTimeString()) + " " + key;
+	    console.log(proc.color(this.pad(stamp,padding)),string.white);
+	}
+	
+	this.Info = function info(key,proc,string){
+	    var stamp = (new Date().toLocaleTimeString()) + " " + key;
 	    console.log(proc.color(this.pad(stamp,padding)),string.white.bold);
 	}
 
@@ -89,9 +94,9 @@ var Console = function(){
 	this.Alert = function Alert(){
 	    console.log( '[OKAY] '.green + cons.fmt.apply(null,arguments).green );
 	}
-
-	this.Warn = function Warn(){
-	    console.warn( '[WARN] '.yellow + cons.fmt.apply(null,arguments).yellow );
+	
+	this.Warn = function Warn(prefix){
+	    console.warn('[WARN] '.yellow + cons.fmt.apply(null,arguments).yellow );
 	}
 
 	this.Error = function Error(){
@@ -133,7 +138,7 @@ function run(key,process){
         if(code==0){
             cons.info(key,process,"Exited Successfully");
         }else{
-            cons.info(key,process,"Exited Abnormally");
+            cons.Info(key,process,"Exited Abnormally");
         }
     });
     
@@ -341,7 +346,7 @@ function calculatePadding(reqs){
     return padding + 10;
 }
 
-function startProxies(reqs,proc){
+function startProxies(reqs,proc,command){
 	
 	if(command.proxy){
 		
@@ -410,7 +415,8 @@ function startForward(port){
 }
 
 // Kill All Child Processes on SIGINT
-process.on('SIGINT',function userkill(){
+process.once('SIGINT',function userkill(){
+	console.log()
     cons.Warn('Interrupted by User');
     emitter.emit('killall');
 });
@@ -423,8 +429,9 @@ program
 .option('-f, --forward <port>','start a forward proxy')
 .option('-t, --trim <N>'    ,'trim logs to N characters',0)
 .description('Start the jobs in the Procfile')
-.action(function(_command){
-	command = _command;
+.action(function(command_left,command_right){
+	
+	command = command_right || command_left;
 	
     var proc = loadProc(program.procfile);
     
@@ -444,7 +451,7 @@ program
     
 	if(command.forward) startForward(command.forward);
 	
-	startProxies(reqs,proc);
+	startProxies(reqs,proc,command);
 	
 	if(process.getuid()==0) process.setuid(process.env.SUDO_USER);
 	
