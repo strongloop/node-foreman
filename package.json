@@ -1,6 +1,6 @@
 {
   "name": "foreman",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "homepage": "http://nodefly.github.com/node-foreman/",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
@@ -10,7 +10,8 @@
     "foreman",
     "upstart",
     "commandline",
-    "env"
+    "env",
+	"Procfile"
   ],
   "bin": {
     "nf": "index.js"
