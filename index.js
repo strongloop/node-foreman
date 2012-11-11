@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+var util    = require('util')
 var ppath   = require('path')
 var program = require('commander');
 var colors_ = require('colors');
@@ -381,10 +382,14 @@ function startProxies(reqs,proc,command){
 				}
 			});
 			
-			cons.Alert('Starting Proxy Server %s -> %d-%d',
-				port,
-				upstream_port,
-				upstream_port+upstream_size-1);
+			var port_targets;
+			if(upstream_size==1){
+				port_targets = util.format('%d',   upstream_port);
+			}else{
+				port_targets = util.format('(%d-%d)',upstream_port, upstream_port+upstream_size-1)
+			}
+			
+			cons.Alert('Starting Proxy Server %s -> %s', port, port_targets);
 			
 			emitter.once('killall',function(){
 				cons.Error('Killing Proxy Server on Port %s',port);
