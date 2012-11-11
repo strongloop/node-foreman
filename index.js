@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+var ppath   = require('path')
 var program = require('commander');
 var colors_ = require('colors');
 var util    = require('util');
@@ -470,7 +471,7 @@ function upstart(conf){
     .on('end',function(){
         var path = command.out + "/" + conf.application + ".conf";
         fs.writeFileSync(path,out);
-        cons.Alert('Wrote  : ',path);
+        cons.Alert('Wrote  :',ppath.normalize(path));
     });
 }
 
@@ -484,7 +485,7 @@ function upstart_app(conf){
     .on('end',function(){
         var path = command.out + "/" + conf.application + "-" + conf.process + ".conf";
         fs.writeFileSync(path,out);
-        cons.Alert('Wrote  : ',path);
+        cons.Alert('Wrote  :',ppath.normalize(path));
     });
 }
 
@@ -498,7 +499,7 @@ function upstart_app_n(conf){
     .on('end',function(){
         var path = command.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
         fs.writeFileSync(path,out);
-        cons.Alert('Wrote  : ',path);
+        cons.Alert('Wrote  :',ppath.normalize(path));
     });
 }
 
@@ -508,8 +509,9 @@ program
 .option('-u, --user <name>' ,'export upstart user as NAME','root')
 .option('-o, --out <dir>'   ,'export upstart files to DIR','.')
 .description('Export to an upstart job independent of foreman')
-.action(function(_command){
-	command = _command;
+.action(function(command_left,command_right){
+	
+	command = command_right || command_left;
 	
     var procs = loadProc(program.procfile);
 
@@ -540,7 +542,7 @@ program
     // Remove Old Upstart Files
     // Must Match App Name and Out Directory
     fs.readdirSync(command.out).forEach(function(file){
-        var x = file.indexOf(program.app);
+        var x = file.indexOf(command.app);
         var y = file.indexOf(".conf");
         if(x==0 && y>0){
             var p = path.join(command.out,file);
