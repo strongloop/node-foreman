@@ -98,10 +98,15 @@ program
     cons.padding  = calculatePadding(reqs);
 	
 	if(command.wrap){
-	    cons.wrapline = process.stdout.columns - cons.padding - 7
+		cons.wrapline = process.stdout.columns - cons.padding - 7
 		cons.trimline = 0
+		cons.Alert('Wrapping Console Output to %d Columns',cons.wrapline)
 	}else{
 		cons.trimline = command.trim || process.stdout.columns - cons.padding - 5
+		if(cons.trimline>0){
+			cons.Alert('Trimming Console Output to %d Columns',cons.trimline)
+			cons.Alert('Disable Trimming With \'--trim 0\' or Try \'--wrap\'')
+		}
 	}
 	
 	if(command.forward) startForward(command.forward,emitter);
