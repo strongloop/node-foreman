@@ -26,17 +26,9 @@ var killing = 0;
 
 // Utilities //
 
-var colors_max = 8;
-var colors = [
-    function(x){return x.cyan},
-    function(x){return x.yellow},
-    function(x){return x.green},
-    function(x){return x.magenta},
-    function(x){return x.blue},
-    function(x){return x.white},
-	function(x){return x.red},
-	function(x){return x.grey}
-];
+var _colors    = require('./lib/colors')
+var colors_max = _colors.colors_max
+var colors     = _colors.colors
 
 var cons = new lib.Console(padding);
 
