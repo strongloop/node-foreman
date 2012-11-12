@@ -56,16 +56,7 @@ var loadEnvs    = _envs.loadEnvs
 var _requirements     = require('./lib/requirements')
 var parseRequirements = _requirements.parseRequirements
 var getreqs           = _requirements.getreqs
-
-function calculatePadding(reqs){
-    var padding = 0;
-    for(key in reqs){
-        var num = reqs[key];
-        var len = key.length + num.toString().length;
-        if (len>padding) padding=len;
-    }
-    return padding + 10;
-}
+var calculatePadding  = _requirements.calculatePadding
 
 var startProxies = require('./lib/proxy').startProxies
 
