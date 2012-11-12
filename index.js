@@ -11,7 +11,7 @@ var fs      = require('fs');
 var mu      = require('mu2');
 var events  = require('events');
 
-var lib     = require('./lib')
+var lib     = require('./lib/console')
 
 mu.root = __dirname + '/upstart'
 
