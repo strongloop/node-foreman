@@ -21,7 +21,6 @@ program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 
 var command;
-var padding = 25;
 var killing = 0;
 
 // Utilities //
@@ -95,7 +94,7 @@ program
 	
     var reqs = getreqs(program.args[0],proc);
     
-    padding = calculatePadding(reqs);
+    cons.padding = calculatePadding(reqs);
     
 	if(command.forward) startForward(command.forward,emitter);
 	
