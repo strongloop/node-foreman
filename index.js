@@ -60,19 +60,7 @@ var calculatePadding  = _requirements.calculatePadding
 
 var startProxies = require('./lib/proxy').startProxies
 
-function startForward(port){
-	var proc = prog.fork(__dirname + '/forward.js',[],{
-		env: {
-			PROXY_PORT: port,
-			SUDO_USER : process.env.SUDO_USER
-		}
-	});
-	cons.Alert('Forward Proxy Started in Port %d',port);
-	emitter.once('killall',function(){
-		cons.Error('Killing Forward Proxy Server on Port %d',port);
-		proc.kill();
-	})
-}
+var startForward = require('./lib/forward').startForward
 
 // Kill All Child Processes on SIGINT
 process.once('SIGINT',function userkill(){
@@ -109,7 +97,7 @@ program
     
     padding = calculatePadding(reqs);
     
-	if(command.forward) startForward(command.forward);
+	if(command.forward) startForward(command.forward,emitter);
 	
 	startProxies(reqs,proc,command,emitter,program.port);
 	
