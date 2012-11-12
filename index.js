@@ -75,6 +75,7 @@ program
 .option('-x, --proxy <port>','start a load balancing proxy on PORT')
 .option('-f, --forward <port>','start a forward proxy')
 .option('-t, --trim <N>'    ,'trim logs to N characters',0)
+.option('-w, --wrap'        ,'wrap logs (negates trim)',false)
 .description('Start the jobs in the Procfile')
 .action(function(command_left,command_right){
 	
@@ -94,8 +95,15 @@ program
 	
     var reqs = getreqs(program.args[0],proc);
     
-    cons.padding = calculatePadding(reqs);
-    
+    cons.padding  = calculatePadding(reqs);
+	
+	if(command.wrap){
+	    cons.wrapline = process.stdout.columns - cons.padding - 7
+		cons.trimline = 0
+	}else{
+		cons.trimline = command.trim || process.stdout.columns - cons.padding - 5
+	}
+	
 	if(command.forward) startForward(command.forward,emitter);
 	
 	startProxies(reqs,proc,command,emitter,program.port);
