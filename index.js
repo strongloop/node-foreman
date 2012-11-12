@@ -30,7 +30,7 @@ var _colors    = require('./lib/colors')
 var colors_max = _colors.colors_max
 var colors     = _colors.colors
 
-var cons = new lib.Console(padding);
+var cons = lib.Console;
 
 // Foreman Event Bus/Emitter //
 
@@ -387,49 +387,11 @@ program
     start(proc,reqs,envs);
 });
 
-// Upstart Export //
+var _upstart = require('./lib/upstart')
+var upstart_app_n = _upstart.upstart_app_n
+var upstart_app   = _upstart.upstart_app
+var upstart       = _upstart.upstart
 
-function upstart(conf){
-    var out = "";
-    mu
-    .compileAndRender('foreman.conf', conf)
-    .on('data', function (data) {
-        out += data;
-    })
-    .on('end',function(){
-        var path = command.out + "/" + conf.application + ".conf";
-        fs.writeFileSync(path,out);
-        cons.Alert('Wrote  :',ppath.normalize(path));
-    });
-}
-
-function upstart_app(conf){
-    var out = "";
-    mu
-    .compileAndRender('foreman-APP.conf', conf)
-    .on('data', function (data) {
-        out += data;
-    })
-    .on('end',function(){
-        var path = command.out + "/" + conf.application + "-" + conf.process + ".conf";
-        fs.writeFileSync(path,out);
-        cons.Alert('Wrote  :',ppath.normalize(path));
-    });
-}
-
-function upstart_app_n(conf){
-    var out = "";
-    mu
-    .compileAndRender('foreman-APP-N.conf', conf)
-    .on('data', function (data) {
-        out += data;
-    })
-    .on('end',function(){
-        var path = command.out + "/" + conf.application + "-" + conf.process + "-" + conf.number + ".conf";
-        fs.writeFileSync(path,out);
-        cons.Alert('Wrote  :',ppath.normalize(path));
-    });
-}
 
 program
 .command('export')
@@ -526,21 +488,21 @@ program
             conf.envs = envl;
             
             // Write the APP-PROCESS-N.conf File
-            upstart_app_n(conf);
+            upstart_app_n(conf,command.out);
 
             baseport_i++;
 
         }
 
         // Write the APP-Process.conf File
-        upstart_app(c);
+        upstart_app(c,command.out);
 
         baseport_i=0;
         baseport_j++;
     }
 
     // Write the APP.conf File
-    upstart(config);
+    upstart(config,command.out);
 
 });
 
