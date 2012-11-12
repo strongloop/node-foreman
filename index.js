@@ -102,54 +102,10 @@ function loadProc(path){
 
 }
 
-// Parse a Key=Value File Containing Environmental Variables
-function KeyValue(data){
-    var env = {};
-    data.toString().split(/\n/).forEach(function(line){
-        if(line=='')return;
-        var items = line.split('=',2);
-        env[items[0]] = items[1];
-    });
-    return env;
-}
-
-// Parse a JSON Document Containing Environmental Variables
-var prefix_delim = "_";
-function flattenJSON(json,prefix,env){
-
-    for(key in json){
-        var item = json[key];
-        if (typeof item == 'object'){
-            flattenJSON(item,key.toUpperCase() + prefix_delim,env);
-        }else{
-            env[prefix + key.toUpperCase()] = json[key];
-        }
-    };
-    return env;
-}
-
-function loadEnvs(path){
-    
-    var env = {};
-    
-    try{
-        var data = fs.readFileSync(path);
-        var env;
-        try{
-            env = flattenJSON(JSON.parse(data),"",{});
-            cons.Alert("Loaded ENV %s File as JSON Format",path);
-        }catch(e){
-            env = KeyValue(data);
-            cons.Alert("Loaded ENV %s File as KEY=VALUE Format",path);
-        }
-    }catch(e){
-        cons.Warn("No ENV file found");
-    }
-    
-    env.PATH = process.env.PATH;
-    
-    return env;
-}
+var _envs       = require('./lib/envs')
+var KeyValue    = _envs.KeyValue
+var flattenJSON = _envs.flattenJSON
+var loadEnvs    = _envs.loadEnvs
 
 function parseRequirements(req){
     var requirements = {};
