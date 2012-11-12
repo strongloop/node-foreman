@@ -35,7 +35,7 @@ var cons = lib.Console;
 
 var emitter = new events.EventEmitter();
 emitter.once('killall',function(){
-    cons.Error("Killing All Processes");
+    cons.Done("Killing All Processes");
 })
 emitter.setMaxListeners(50);
 
