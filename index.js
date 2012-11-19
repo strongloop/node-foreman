@@ -49,7 +49,6 @@ var loadProc  = _procfile.loadProc
 
 var _envs       = require('./lib/envs')
 var KeyValue    = _envs.KeyValue
-var flattenJSON = _envs.flattenJSON
 var loadEnvs    = _envs.loadEnvs
 
 var _requirements     = require('./lib/requirements')
