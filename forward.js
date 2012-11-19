@@ -1,27 +1,39 @@
+var url  = require('url')
 var http = require('http');
 var httpProxy = require('http-proxy');
 
-function startForward(proxyPort){
-
+function startForward(proxyPort,proxyHost){
+	
 	var proxy = httpProxy.createServer(function (req, res, proxy) {
 		
-		var match = req.headers.host.match(/:(\d+)/)
-		var port  = match ? match[1] : 80;
+		var _url  = url.parse(req.url)
+		
+		var dest  = _url.hostname
+		var port  = _url.port || 80
 		var host  = '127.0.0.1';
 		
-		var target = {
-			host: host,
-			port: port
-		}
+		var target
+		if(proxyHost=='<ANY>' || proxyHost == dest){
 		
-		var urlmatch = req.url.match(/http:\/\/[^/]*:?[0-9]*(\/.*)$/);
+			target = {
+				host: host,
+				port: port
+			}
 		
-		if(urlmatch){
-			req.url = urlmatch[1];
+			var urlmatch = req.url.match(/http:\/\/[^/]*:?[0-9]*(\/.*)$/);
+		
+			if(urlmatch){
+				req.url = urlmatch[1];
+			}else{
+				req.url = '/';
+			}
+			
 		}else{
-			req.url = '/';
+			target = {
+				host: dest,
+				port: port
+			}
 		}
-		
 		proxy.proxyRequest(req,res,target);
 		
 	});
@@ -32,4 +44,4 @@ function startForward(proxyPort){
 	
 };
 
-startForward(process.env.PROXY_PORT);
+startForward(process.env.PROXY_PORT,process.env.PROXY_HOST);

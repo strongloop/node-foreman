@@ -57,7 +57,6 @@ var getreqs           = _requirements.getreqs
 var calculatePadding  = _requirements.calculatePadding
 
 var startProxies = require('./lib/proxy').startProxies
-
 var startForward = require('./lib/forward').startForward
 
 // Kill All Child Processes on SIGINT
@@ -73,6 +72,7 @@ program
 .option('-s, --showenvs'    ,'show ENV variables on start',false)
 .option('-x, --proxy <port>','start a load balancing proxy on PORT')
 .option('-f, --forward <port>','start a forward proxy')
+.option('-h, --hostname <HOSTNAME>','set forward proxy to HOSTNAME',null)
 .option('-t, --trim <N>'    ,'trim logs to N characters',0)
 .option('-w, --wrap'        ,'wrap logs (negates trim)',false)
 .description('Start the jobs in the Procfile')
@@ -104,11 +104,10 @@ program
 		cons.trimline = command.trim || process.stdout.columns - cons.padding - 5
 		if(cons.trimline>0){
 			cons.Alert('Trimming Console Output to %d Columns',cons.trimline)
-			cons.Alert('Disable Trimming With \'--trim 0\' or Try \'--wrap\'')
 		}
 	}
 	
-	if(command.forward) startForward(command.forward,emitter);
+	if(command.forward) startForward(command.forward,command.hostname,emitter)
 	
 	startProxies(reqs,proc,command,emitter,program.port);
 	
