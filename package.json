@@ -1,6 +1,6 @@
 {
   "name": "foreman",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "homepage": "http://nodefly.github.com/node-foreman/",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
@@ -17,10 +17,10 @@
     "nf": "index.js"
   },
   "dependencies": {
-    "colors": "~0.6.0-1",
-    "commander": "~1.0.5",
-    "mu2": "~0.5.17",
-    "http-proxy": "~0.8.4"
+    "colors": "latest",
+    "commander": "latest",
+    "mu2": "latest",
+    "http-proxy": "latest"
   },
   "repository": {
     "type": "git",
