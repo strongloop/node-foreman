@@ -6,14 +6,7 @@ var events  = require('events');
 var fs      = require('fs');
 
 var program = require('commander');
-var colors_ = require('colors');
-
-// Utilities //
-
-var _colors    = require('./lib/colors')
-var colors_max = _colors.colors_max
-var colors     = _colors.colors
-var cons       = require('./lib/console').Console
+var display = require('./lib/console').Console
 
 program.version('0.0.8');
 program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
@@ -26,7 +19,7 @@ var command;
 
 var emitter = new events.EventEmitter();
 emitter.once('killall',function(){
-    cons.Done("Killing All Processes");
+    display.Done("Killing All Processes");
 })
 emitter.setMaxListeners(50);
 
@@ -53,7 +46,7 @@ var startForward = require('./lib/forward').startForward
 // Kill All Child Processes on SIGINT
 process.once('SIGINT',function userkill(){
 	console.log()
-    cons.Warn('Interrupted by User');
+    display.Warn('Interrupted by User');
     emitter.emit('killall');
 });
 
@@ -79,22 +72,22 @@ program
 	
 	if(command.showenvs){
 		for(key in envs){
-			cons.Alert("env %s=%s",key,envs[key]);
+			display.Alert("env %s=%s",key,envs[key]);
 		}
 	}
 	
     var reqs = getreqs(program.args[0],proc);
     
-    cons.padding  = calculatePadding(reqs);
+    display.padding  = calculatePadding(reqs);
 	
 	if(command.wrap){
-		cons.wrapline = process.stdout.columns - cons.padding - 7
-		cons.trimline = 0
-		cons.Alert('Wrapping Console Output to %d Columns',cons.wrapline)
+		display.wrapline = process.stdout.columns - display.padding - 7
+		display.trimline = 0
+		display.Alert('Wrapping display Output to %d Columns',display.wrapline)
 	}else{
-		cons.trimline = command.trim || process.stdout.columns - cons.padding - 5
-		if(cons.trimline>0){
-			cons.Alert('Trimming Console Output to %d Columns',cons.trimline)
+		display.trimline = command.trim || process.stdout.columns - display.padding - 5
+		if(display.trimline>0){
+			display.Alert('Trimming display Output to %d Columns',display.trimline)
 		}
 	}
 	
@@ -147,7 +140,7 @@ program
             user_exists = true;
         }
     })
-    if(!user_exists) cons.Warn(cons.fmt("User %s Does Not Exist on System",config.user));
+    if(!user_exists) display.Warn(display.fmt("User %s Does Not Exist on System",config.user));
     
     // Remove Old Upstart Files
     // Must Match App Name and Out Directory
@@ -156,7 +149,7 @@ program
         var y = file.indexOf(".conf");
         if(x==0 && y>0){
             var p = path.join(command.out,file);
-            cons.Warn("Unlink : %s".yellow.bold,p);
+            display.Warn("Unlink : %s".yellow.bold,p);
             fs.unlinkSync(p);
         }
     });
@@ -173,7 +166,7 @@ program
         var proc = procs[key];
 
         if (!proc){
-            cons.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
+            display.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
             continue;
         }
         
