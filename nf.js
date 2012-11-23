@@ -24,7 +24,6 @@ emitter.once('killall',function(){
 emitter.setMaxListeners(50);
 
 var _proc = require('./lib/proc')
-var run   = _proc.run
 var start = _proc.start
 
 var _procfile = require('./lib/procfile')
@@ -32,11 +31,9 @@ var procs     = _procfile.procs
 var loadProc  = _procfile.loadProc
 
 var _envs       = require('./lib/envs')
-var KeyValue    = _envs.KeyValue
 var loadEnvs    = _envs.loadEnvs
 
 var _requirements     = require('./lib/requirements')
-var parseRequirements = _requirements.parseRequirements
 var getreqs           = _requirements.getreqs
 var calculatePadding  = _requirements.calculatePadding
 

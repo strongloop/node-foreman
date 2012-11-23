@@ -14,7 +14,7 @@
 	"Procfile"
   ],
   "bin": {
-    "nf": "index.js"
+    "nf": "nf.js"
   },
   "dependencies": {
     "colors": "latest",
