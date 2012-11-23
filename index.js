@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-var util    = require('util')
-var ppath   = require('path')
-var program = require('commander');
-var colors_ = require('colors');
 var util    = require('util');
 var path    = require('path');
-var prog    = require('child_process');
-var fs      = require('fs');
-var mu      = require('mu2');
 var events  = require('events');
+var fs      = require('fs');
 
-var lib     = require('./lib/console')
+var program = require('commander');
+var colors_ = require('colors');
 
-mu.root = __dirname + '/upstart'
+// Utilities //
+
+var _colors    = require('./lib/colors')
+var colors_max = _colors.colors_max
+var colors     = _colors.colors
+var cons       = require('./lib/console').Console
 
 program.version('0.0.8');
 program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
@@ -21,15 +21,6 @@ program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
 program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
 
 var command;
-var killing = 0;
-
-// Utilities //
-
-var _colors    = require('./lib/colors')
-var colors_max = _colors.colors_max
-var colors     = _colors.colors
-
-var cons = lib.Console;
 
 // Foreman Event Bus/Emitter //
 
