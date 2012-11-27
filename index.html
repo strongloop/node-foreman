@@ -1,33 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
     <title>Node-foreman by NodeFly</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/NodeFly/node-foreman">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/NodeFly/node-foreman/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/NodeFly/node-foreman/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <header>
-      <div class="container">
-        <h1>Node-foreman</h1>
-        <h2>A Node.js Version of Foreman</h2>
+    <div class="wrapper">
 
-        <section id="downloads">
-          <a href="https://github.com/NodeFly/node-foreman/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/NodeFly/node-foreman/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/NodeFly/node-foreman" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
+      <section>
+        <div id="title">
+          <h1>Node-foreman</h1>
+          <p>A Node.js Version of Foreman</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/NodeFly">NodeFly</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
 
-    <div class="container">
-      <section id="main_content">
         <h1>Node Foreman</h1>
 
 <p>Node Foreman is a Node.js version of the popular 
@@ -75,7 +85,7 @@ processes and and a <code>.env</code> file to preload environmental variables.</
 
 <p><img src="//raw.github.com/NodeFly/node-foreman/master/assets/foreman-start.png" alt="Start Foreman"></p>
 
-<p>Node Foreman <em>always</em> start in the foreground and expects your applications
+<p>Node Foreman <em>always</em> starts in the foreground and expects your applications
 to do the same. If your processes exit, Node Foreman will assume an error
 has ocurred and shut your application down.</p>
 
@@ -204,23 +214,28 @@ Wrote  :  /etc/init/foreman.conf
 
 <p>Start and stop your jobs with</p>
 
-<pre><code>$ sudo start JOBNAME
-$ sudo stop JOBNAME
+<pre><code>$ sudo start foreman
+$ sudo stop foreman
 </code></pre>
 
 <p>The export will occur with whatever environmental variables are 
 listed in the .env file.</p>
 
+<h3>Advanced Exports</h3>
+
 <p>You can specify the type and number of processes exported using 
 the <code>type=num</code> syntax:</p>
 
-<pre><code>$ nf export -a JOBNAME -o /etc/init web=2,api=2
+<pre><code>$ nf export web=2,api=2
 </code></pre>
 
 <p>Use <code>-u &lt;USER&gt;</code> to have the exported job run as <code>USER</code>.
 Note that if you need to bind to privileged ports, you <em>must</em>
 start as <code>root</code>. In such a case, we advise you to drop user
 permissions after binding.</p>
+
+<p>If you want to call your upstart job something other than foreman,
+use <code>-a &lt;JOBNAME&gt;</code> and manage your jobs with <code>sudo start &lt;JOBNAME&gt;</code>.</p>
 
 <h2>Scalability</h2>
 
@@ -257,8 +272,9 @@ It does however allow proxies to be bound to lower ports, such as port 80.</p>
 <p>Your applications will <em>still</em> be started in user space, and the proxy will
 drop its privileges after binding to the privileged port.</p>
       </section>
-    </div>
 
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
