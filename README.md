@@ -162,21 +162,26 @@ directory, or have foreman do it for you:
 
 Start and stop your jobs with
 
-    $ sudo start JOBNAME
-    $ sudo stop JOBNAME
+    $ sudo start foreman
+    $ sudo stop foreman
 
 The export will occur with whatever environmental variables are 
 listed in the .env file.
 
+### Advanced Exports
+
 You can specify the type and number of processes exported using 
 the `type=num` syntax:
 
-    $ nf export -a JOBNAME -o /etc/init web=2,api=2
+    $ nf export web=2,api=2
 
 Use `-u <USER>` to have the exported job run as `USER`.
 Note that if you need to bind to privileged ports, you _must_
 start as `root`. In such a case, we advise you to drop user
 permissions after binding.
+
+If you want to call your upstart job something other than foreman,
+use `-a <JOBNAME>` and manage your jobs with `sudo start <JOBNAME>`.
 
 ## Scalability
 
