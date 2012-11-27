@@ -36,19 +36,11 @@ processes and and a `.env` file to preload environmental variables.
 
 Your module directory should end up looking like the following:
 
-    /
-    ├─ .env
-    ├─ package.js
-    ├─ server.js # or whatever you call your application
-    ├─ Procfile
+![List Foreman Directory](//raw.github.com/NodeFly/node-foreman/master/assets/foreman-ls.png)
 
 Once your Procfile is defined, run your application with `nf start`:
 
-    $ nf start
-    
-    18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
-    18:51:13: api.1     |  Api Server started listening on 0.0.0.0:5100
-    18:51:13: log.1     |  Log Server started listening on 0.0.0.0:5200
+![Start Foreman](//raw.github.com/NodeFly/node-foreman/master/assets/foreman-start.png)
 
 Node Foreman _always_ start in the foreground and expects your applications
 to do the same. If your processes exit, Node Foreman will assume an error
