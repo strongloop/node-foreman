@@ -48,6 +48,19 @@ directly or export it to some other process management format.</p>
 <pre><code>$ npm install -g foreman
 </code></pre>
 
+<h3>How to Contribute</h3>
+
+<p>I encourage anyone and everyone to help.
+If you have a specific change in mind, open an issue; we can talk about it there.</p>
+
+<p>If you would like to make a code change, go ahead. 
+Fork the repository, open a pull request. 
+Do this early, and talk about the change you want to make. 
+Maybe we can work together on it.</p>
+
+<p>Refactor Refactor Refactor!
+You are free to add features, or just help clean things up.</p>
+
 <h2>Usage</h2>
 
 <p>Node Foreman can be run with as little as <code>nf start</code>, as long as <code>npm start</code> has been defined.
@@ -56,21 +69,11 @@ processes and and a <code>.env</code> file to preload environmental variables.</
 
 <p>Your module directory should end up looking like the following:</p>
 
-<pre><code>/
-├─ .env
-├─ package.js
-├─ server.js # or whatever you call your application
-├─ Procfile
-</code></pre>
+<p><img src="//raw.github.com/NodeFly/node-foreman/master/assets/foreman-ls.png" alt="List Foreman Directory"></p>
 
 <p>Once your Procfile is defined, run your application with <code>nf start</code>:</p>
 
-<pre><code>$ nf start
-
-18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
-18:51:13: api.1     |  Api Server started listening on 0.0.0.0:5100
-18:51:13: log.1     |  Log Server started listening on 0.0.0.0:5200
-</code></pre>
+<p><img src="//raw.github.com/NodeFly/node-foreman/master/assets/foreman-start.png" alt="Start Foreman"></p>
 
 <p>Node Foreman <em>always</em> start in the foreground and expects your applications
 to do the same. If your processes exit, Node Foreman will assume an error
@@ -78,6 +81,13 @@ has ocurred and shut your application down.</p>
 
 <p>Instead of daemonizing, you should use <code>nf export</code> to ready your application
 for production.</p>
+
+<p>For more information try any of the following:</p>
+
+<pre><code>$ nf --help
+$ nf start --help
+$ nf export --help
+</code></pre>
 
 <h3>Procfile</h3>
 
@@ -230,6 +240,8 @@ across the servers started from ports <code>5000</code> - <code>5004</code>.</p>
 setup will ocurr automatically.</p>
 
 <h2>Security</h2>
+
+<p><em>This Section is Alpha</em></p>
 
 <p>Node Foreman disallows applications from starting on privileged ports.
 It does however allow proxies to be bound to lower ports, such as port 80.</p>
