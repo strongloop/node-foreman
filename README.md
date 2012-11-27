@@ -42,7 +42,7 @@ Once your Procfile is defined, run your application with `nf start`:
 
 ![Start Foreman](//raw.github.com/NodeFly/node-foreman/master/assets/foreman-start.png)
 
-Node Foreman _always_ start in the foreground and expects your applications
+Node Foreman _always_ starts in the foreground and expects your applications
 to do the same. If your processes exit, Node Foreman will assume an error
 has ocurred and shut your application down.
 
