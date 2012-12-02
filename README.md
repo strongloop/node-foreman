@@ -15,6 +15,10 @@ Install the command line tool
 
     $ npm install -g foreman
 
+All of Foremans version dependencies have been set to use `latest`.
+If however you find a dependency should break it is possible to find out which dependency versions were last working with Foreman.
+The `npm-shrinkwrap.json` file is updated each time Foreman is published to npm.
+
 ### How to Contribute
 
 I encourage anyone and everyone to help.
@@ -104,9 +108,6 @@ is deployed.
 For example, good candiates for the `.env` file are MySQL connection information,
 port bindings, and other passwords.
 
-Bad candidates are default configurations that do not contain any location-specific
-information.
-
 ### Advanced Usage
 
 Node Foreman lets you start multiple jobs of the same type:
@@ -183,10 +184,11 @@ permissions after binding.
 If you want to call your upstart job something other than foreman,
 use `-a <JOBNAME>` and manage your jobs with `sudo start <JOBNAME>`.
 
-## Scalability
+## Proxy Servers
 
-Node.js applications scale by creating multiple processes that either 
-share a socket, or sit behind a load balancer.
+Node.js processes are supposed to be stateless.
+Application scale by starting multiple processes that either share a socket,
+or sit behind a load balancer.
 Node Foreman can help you test the parallel capabilities of your application
 by spawning multiple processes behind a round-robin proxy automatically.
 
@@ -199,9 +201,19 @@ across the servers started from ports `5000` - `5004`.
 If your application gets its port number from `process.env.PORT` the proxy
 setup will ocurr automatically.
 
-## Security
+### Multiple Proxies
 
-_This Section is Alpha_
+If you have multiple processes in your `Procfile` you can start multiple proxies.
+
+    $ nf start -x 8888,8080,9090
+
+This will start 3 separate proxies and bind each to a separate process group.
+Proxies are bound based on their order specified, their order in the Procfile,
+or by their order on the command line.
+
+    $ nf start -x 8888,9999 web,api
+
+### Security
 
 Node Foreman disallows applications from starting on privileged ports.
 It does however allow proxies to be bound to lower ports, such as port 80.
@@ -215,5 +227,11 @@ Your application will then be accessible via port 80.
 
 Your applications will _still_ be started in user space, and the proxy will
 drop its privileges after binding to the privileged port.
+
+
+
+
+
+
 
 

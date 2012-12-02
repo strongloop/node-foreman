@@ -55,7 +55,7 @@ program
 .option('-f, --forward <port>','start a forward proxy')
 .option('-h, --hostname <HOSTNAME>','set forward proxy to HOSTNAME',null)
 .option('-t, --trim <N>'    ,'trim logs to N characters',0)
-.option('-w, --wrap'        ,'wrap logs (negates trim)',false)
+.option('-w, --wrap'        ,'wrap logs (negates trim)')
 .description('Start the jobs in the Procfile')
 .action(function(command_left,command_right){
 	
