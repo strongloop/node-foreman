@@ -9,9 +9,9 @@ var program = require('commander');
 var display = require('./lib/console').Console
 
 program.version('0.0.8');
-program.option('-j, --procfile <file>', 'load profile FILE','Procfile');
-program.option('-e, --env <file>'  ,'use FILE to load environment','.env');
-program.option('-p, --port <port>' ,'start indexing ports at number PORT',5000);
+program.option('-j, --procfile <FILE>' , 'load profile FILE','Procfile');
+program.option('-e, --env      <FILE>' ,'use FILE to load environment','.env');
+program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',5000);
 
 var command;
 
@@ -50,12 +50,12 @@ process.once('SIGINT',function userkill(){
 program
 .command('start')
 .usage('[Options] [Processes] e.g. web=1,log=2,api')
-.option('-s, --showenvs'    ,'show ENV variables on start',false)
-.option('-x, --proxy <port>','start a load balancing proxy on PORT')
-.option('-f, --forward <port>','start a forward proxy')
-.option('-h, --hostname <HOSTNAME>','set forward proxy to HOSTNAME',null)
-.option('-t, --trim <N>'    ,'trim logs to N characters',0)
-.option('-w, --wrap'        ,'wrap logs (negates trim)')
+.option('-s, --showenvs'             ,'show ENV variables on start',false)
+.option('-x, --proxy     <PORT>'     ,'start a load balancing proxy on PORT')
+.option('-f, --forward   <PORT>'     ,'start a forward proxy on PORT')
+.option('-i, --intercept <HOSTNAME>' ,'set forward proxy to intercept HOSTNAME',null)
+.option('-t, --trim      <N>'        ,'trim logs to N characters',0)
+.option('-w, --wrap'                 ,'wrap logs (negates trim)')
 .description('Start the jobs in the Procfile')
 .action(function(command_left,command_right){
 	
@@ -88,7 +88,7 @@ program
 		}
 	}
 	
-	if(command.forward) startForward(command.forward,command.hostname,emitter)
+	if(command.forward) startForward(command.forward,command.intercept,emitter)
 	
 	startProxies(reqs,proc,command,emitter,program.port);
 	
@@ -105,9 +105,9 @@ var upstart       = _upstart.upstart
 
 program
 .command('export')
-.option('-a, --app <name>'  ,'export upstart application as NAME','foreman')
-.option('-u, --user <name>' ,'export upstart user as NAME','root')
-.option('-o, --out <dir>'   ,'export upstart files to DIR','.')
+.option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
+.option('-u, --user <NAME>' ,'export upstart user as NAME','root')
+.option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
 .description('Export to an upstart job independent of foreman')
 .action(function(command_left,command_right){
 	
@@ -218,4 +218,10 @@ program
 
 program.parse(process.argv);
 
-if(program.args.length==0) program.help();
+if(program.args.length==0) {
+	console.log('   _____                           '.cyan)
+	console.log('  |   __|___ ___ ___ _____ ___ ___ '.cyan)
+	console.log('  |   __| . |  _| -_|     |   |   |'.yellow)
+	console.log('  |__|  |___|_| |___|_|_|_|_^_|_|_|'.magenta)
+	program.help();
+}
