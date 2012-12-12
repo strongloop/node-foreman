@@ -108,6 +108,7 @@ program
 .option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
 .option('-u, --user <NAME>' ,'export upstart user as NAME','root')
 .option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
+.option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/logs')
 .description('Export to an upstart job independent of foreman')
 .action(function(command_left,command_right){
 	
@@ -125,6 +126,7 @@ program
         application : command.app,
         cwd         : process.cwd(),
         user        : command.user,
+        logs        : command.log,
         envs        : envs
     };
     
