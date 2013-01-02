@@ -97,11 +97,7 @@ program
     start(proc,reqs,envs,program.port,emitter);
 });
 
-var _upstart = require('./lib/upstart')
-var upstart_app_n = _upstart.upstart_app_n
-var upstart_app   = _upstart.upstart_app
-var upstart       = _upstart.upstart
-
+var upstart = require('./lib/upstart')
 
 program
 .command('export')
@@ -109,6 +105,7 @@ program
 .option('-u, --user <NAME>' ,'export upstart user as NAME','root')
 .option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
 .option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/log')
+.option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
 .description('Export to an upstart job independent of foreman')
 .action(function(command_left,command_right){
 	
@@ -130,6 +127,15 @@ program
         envs        : envs
     };
     
+    config.envfile = path.resolve(program.env)
+    
+    var writeout
+    if(upstart[command.type]){
+        writeout = upstart[command.type]
+    }else{
+        return display.Error("Unknown Export Format",command.type)
+    }
+    
     // Check for Upstart User
     // friendly warning - does not stop export
     var user_exists = false;
@@ -145,8 +151,7 @@ program
     // Must Match App Name and Out Directory
     fs.readdirSync(command.out).forEach(function(file){
         var x = file.indexOf(command.app);
-        var y = file.indexOf(".conf");
-        if(x==0 && y>0){
+        if(x==0){
             var p = path.join(command.out,file);
             display.Warn("Unlink : %s".yellow.bold,p);
             fs.unlinkSync(p);
@@ -187,8 +192,9 @@ program
                 conf[_] = c[_];
             }
 
-            conf.envs.PORT = baseport + baseport_i + baseport_j*100;
-
+            conf.port = conf.envs.PORT = baseport + baseport_i + baseport_j*100;
+            
+            
             var envl = [];
             for(key in envs){
                 envl.push({
@@ -200,21 +206,21 @@ program
             conf.envs = envl;
             
             // Write the APP-PROCESS-N.conf File
-            upstart_app_n(conf,command.out);
+            writeout.foreman_app_n(conf,command.out);
 
             baseport_i++;
 
         }
 
         // Write the APP-Process.conf File
-        upstart_app(c,command.out);
+        writeout.foreman_app(c,command.out);
 
         baseport_i=0;
         baseport_j++;
     }
 
     // Write the APP.conf File
-    upstart(config,command.out);
+    writeout.foreman(config,command.out);
 
 });
 

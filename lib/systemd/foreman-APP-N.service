@@ -1,0 +1,13 @@
+[Unit]
+Description={{application}}-{{process}}-{{number}}
+Before={{application}}-{{process}}.target
+
+[Service]
+Type=simple
+ExecStart={{command}} >> {{logs}}/{{application}}/{{process}}-{{number}}.log 2>&1
+WorkingDirectory={{cwd}}
+
+User={{user}}
+
+EnvironmentFile=-{{envfile}}
+Environment=PORT={{port}}
