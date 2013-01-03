@@ -1,0 +1,4 @@
+[Unit]
+Requires={{application}}.target
+{{#numbers}}Wants={{application}}-{{process}}-{{number}}.service
+{{/numbers}}

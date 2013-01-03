@@ -1,8 +1,0 @@
-[Unit]
-Description={{application}}-{{process}}
-Before={{application}}.target
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=mkdir -p {{logs}}/{{application}}; chown {{user}} {{logs}}/{{application}}

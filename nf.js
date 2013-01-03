@@ -162,6 +162,8 @@ program
     var baseport_i = 0;
     var baseport_j = 0;
     
+    config.processes=[]
+    
     // This is ugly because of shitty support for array copying
     // Cleanup is definitely required
     for(key in req){
@@ -174,6 +176,7 @@ program
             continue;
         }
         
+        config.processes.push({process:key})
         c.process=key;
         c.command=proc.command + " " + proc.args.join(' ');
 
@@ -182,12 +185,13 @@ program
         }
 
         var n = req[key];
-
+        
+        c.numbers = [];
         for(i=1;i<=n;i++){
 
             var conf = {};
             conf.number = i;
-
+            
             for(_ in c){
                 conf[_] = c[_];
             }
@@ -209,7 +213,7 @@ program
             writeout.foreman_app_n(conf,command.out);
 
             baseport_i++;
-
+            c.numbers.push({number:i})
         }
 
         // Write the APP-Process.conf File
