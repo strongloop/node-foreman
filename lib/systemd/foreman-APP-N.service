@@ -15,3 +15,4 @@ Environment=PORT={{port}}
 StandardInput=null
 StandardOutput=syslog
 StandardError=syslog
+Restart=always
