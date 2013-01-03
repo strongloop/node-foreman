@@ -169,6 +169,12 @@ Start and stop your jobs with
 The export will occur with whatever environmental variables are 
 listed in the .env file.
 
+### Systemd Support
+
+_This section is beta_
+
+Optionally specify a type `-t systemd` during export for [systemd](http://www.freedesktop.org/wiki/Software/systemd) support.
+
 ### Advanced Exports
 
 You can specify the type and number of processes exported using 
