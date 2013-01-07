@@ -1,16 +1,16 @@
 [Unit]
-Description={{application}}-{{process}}-{{number}}
-Requires={{application}}-{{process}}.target
+Description={{{application}}}-{{{process}}}-{{{number}}}
+Requires={{{application}}}-{{{process}}}.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/env {{command}}
-WorkingDirectory={{cwd}}
+ExecStart=/usr/bin/env {{{command}}}
+WorkingDirectory={{{cwd}}}
 
-User={{user}}
+User={{{user}}}
 
-EnvironmentFile=-{{envfile}}
-Environment=PORT={{port}}
+EnvironmentFile=-{{{envfile}}}
+Environment=PORT={{{port}}}
 
 StandardInput=null
 StandardOutput=syslog
