@@ -8,6 +8,7 @@ ExecStart=/usr/bin/env {{{command}}}
 WorkingDirectory={{{cwd}}}
 
 User={{{user}}}
+Group={{{group}}}
 
 EnvironmentFile=-{{{envfile}}}
 Environment=PORT={{{port}}}

@@ -104,6 +104,7 @@ program
 .option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
 .option('-u, --user <NAME>' ,'export upstart user as NAME','root')
 .option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
+.option('-g, --gid  <GID>'  ,'set gid of upstart config to GID')
 .option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/log')
 .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
 .description('Export to an upstart job independent of foreman')
@@ -124,7 +125,8 @@ program
         cwd         : process.cwd(),
         user        : command.user,
         logs        : command.log,
-        envs        : envs
+        envs        : envs,
+        group       : command.gid || command.user
     };
     
     config.envfile = path.resolve(program.env)
