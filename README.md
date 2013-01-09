@@ -98,6 +98,17 @@ Environmental variables are passed in fully capitalized.
 
 There is no need to specify which type of file you wish to use.
 
+#### The PATH environment variable
+
+The `PATH` variable is given special treament and is always read
+from the environment that the `nf` command has been executed from,
+rather than a `.env` file.  To set a different `PATH` execute
+`nf` with the `PATH` variable set appropriately.
+
+```bash
+PATH=/opt/foo:/opt/bar:$PATH nf export
+```
+
 #### Best Practices
 
 Generally you should not check your `.env` file into version control.
