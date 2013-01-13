@@ -8,7 +8,9 @@ var fs      = require('fs');
 var program = require('commander');
 var display = require('./lib/console').Console
 
-program.version('0.0.8');
+package = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+
+program.version(package.version);
 program.option('-j, --procfile <FILE>' , 'load profile FILE','Procfile');
 program.option('-e, --env      <FILE>' ,'use FILE to load environment','.env');
 program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',5000);
