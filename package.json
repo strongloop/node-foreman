@@ -19,7 +19,7 @@
   "dependencies": {
     "colors": "latest",
     "commander": "latest",
-    "mu2": "latest",
+    "dot": "latest",
     "http-proxy": "latest"
   },
   "repository": {
