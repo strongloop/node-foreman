@@ -8,7 +8,9 @@ var fs      = require('fs');
 var program = require('commander');
 var display = require('./lib/console').Console
 
-package = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+var package = JSON.parse(
+    fs.readFileSync(path.join(__dirname,'package.json'),'utf-8')
+);
 
 program.version(package.version);
 program.option('-j, --procfile <FILE>' , 'load profile FILE','Procfile');
