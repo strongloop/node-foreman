@@ -96,7 +96,7 @@ program
 	
 	startProxies(reqs,proc,command,emitter,program.port);
 	
-	if(process.getuid()==0) process.setuid(process.env.SUDO_USER);
+	if(process.getuid && process.getuid()==0) process.setuid(process.env.SUDO_USER);
 	
     start(proc,reqs,envs,program.port,emitter);
 });
