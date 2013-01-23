@@ -1,6 +1,6 @@
 {
   "name": "foreman",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "homepage": "http://nodefly.github.com/node-foreman/",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
