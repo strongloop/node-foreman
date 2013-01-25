@@ -201,7 +201,7 @@ permissions after binding.
 If you want to call your upstart job something other than foreman,
 use `-a <JOBNAME>` and manage your jobs with `sudo start <JOBNAME>`.
 
-## Proxy Servers
+## Reverse Proxy
 
 Node.js processes are supposed to be stateless.
 Application scale by starting multiple processes that either share a socket,
@@ -218,7 +218,7 @@ across the servers started from ports `5000` - `5004`.
 If your application gets its port number from `process.env.PORT` the proxy
 setup will ocurr automatically.
 
-### Multiple Proxies
+### Multiple Reverse Proxies
 
 If you have multiple processes in your `Procfile` you can start multiple proxies.
 
@@ -230,7 +230,7 @@ or by their order on the command line.
 
     $ nf start -x 8888,9999 web,api
 
-### Security
+### Privileged Ports
 
 Node Foreman disallows applications from starting on privileged ports.
 It does however allow proxies to be bound to lower ports, such as port 80.
