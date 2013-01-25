@@ -245,10 +245,20 @@ Your application will then be accessible via port 80.
 Your applications will _still_ be started in user space, and the proxy will
 drop its privileges after binding to the privileged port.
 
+## Forward Proxy
 
+Local development and testing has huge advantages,
+but sometimes one needs to test web applications agains their real-world domain name.
+Editing `/etc/hosts` is a pain however, and error prone.
 
+Node Foreman can start up an HTTP forward proxy which your browser can route requests through.
+The forward proxy will intercept requests based on domain name, and route them to the local application.
 
+    $ nf start -f 9999 -h nodefly.com
+    [OKAY] Forward Proxy Started in Port 9999
+    [OKAY] Intercepting requests to nodefly.com through forward proxy
 
+A forward proxy is useful when testing OAuth, or other external services with application callbacks.
 
-
+For users with Google Chrome, this can be paired with [Proxy Switch Sharp](http://switchy.samabox.com/) for great results.
 
