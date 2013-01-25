@@ -58,6 +58,10 @@ directly or export it to some other process management format.</p>
 <pre><code>$ npm install -g foreman
 </code></pre>
 
+<p>All of Foremans version dependencies have been set to use <code>latest</code>.
+If however you find a dependency should break it is possible to find out which dependency versions were last working with Foreman.
+The <code>npm-shrinkwrap.json</code> file is updated each time Foreman is published to npm.</p>
+
 <h3>How to Contribute</h3>
 
 <p>I encourage anyone and everyone to help.
@@ -142,6 +146,16 @@ Environmental variables are passed in fully capitalized.</p>
 
 <p>There is no need to specify which type of file you wish to use.</p>
 
+<h4>The PATH environment variable</h4>
+
+<p>The <code>PATH</code> variable is given special treament and is always read
+from the environment that the <code>nf</code> command has been executed from,
+rather than a <code>.env</code> file.  To set a different <code>PATH</code> execute
+<code>nf</code> with the <code>PATH</code> variable set appropriately.</p>
+
+<div class="highlight"><pre><span class="nv">PATH</span><span class="o">=</span>/opt/foo:/opt/bar:<span class="nv">$PATH</span> nf <span class="nb">export</span>
+</pre></div>
+
 <h4>Best Practices</h4>
 
 <p>Generally you should not check your <code>.env</code> file into version control.
@@ -151,9 +165,6 @@ is deployed.</p>
 
 <p>For example, good candiates for the <code>.env</code> file are MySQL connection information,
 port bindings, and other passwords.</p>
-
-<p>Bad candidates are default configurations that do not contain any location-specific
-information.</p>
 
 <h3>Advanced Usage</h3>
 
@@ -221,6 +232,12 @@ $ sudo stop foreman
 <p>The export will occur with whatever environmental variables are 
 listed in the .env file.</p>
 
+<h3>Systemd Support</h3>
+
+<p><em>This section is beta</em></p>
+
+<p>Optionally specify a type <code>-t systemd</code> during export for <a href="http://www.freedesktop.org/wiki/Software/systemd">systemd</a> support.</p>
+
 <h3>Advanced Exports</h3>
 
 <p>You can specify the type and number of processes exported using 
@@ -237,10 +254,11 @@ permissions after binding.</p>
 <p>If you want to call your upstart job something other than foreman,
 use <code>-a &lt;JOBNAME&gt;</code> and manage your jobs with <code>sudo start &lt;JOBNAME&gt;</code>.</p>
 
-<h2>Scalability</h2>
+<h2>Reverse Proxy</h2>
 
-<p>Node.js applications scale by creating multiple processes that either 
-share a socket, or sit behind a load balancer.
+<p>Node.js processes are supposed to be stateless.
+Application scale by starting multiple processes that either share a socket,
+or sit behind a load balancer.
 Node Foreman can help you test the parallel capabilities of your application
 by spawning multiple processes behind a round-robin proxy automatically.</p>
 
@@ -254,9 +272,21 @@ across the servers started from ports <code>5000</code> - <code>5004</code>.</p>
 <p>If your application gets its port number from <code>process.env.PORT</code> the proxy
 setup will ocurr automatically.</p>
 
-<h2>Security</h2>
+<h3>Multiple Reverse Proxies</h3>
 
-<p><em>This Section is Alpha</em></p>
+<p>If you have multiple processes in your <code>Procfile</code> you can start multiple proxies.</p>
+
+<pre><code>$ nf start -x 8888,8080,9090
+</code></pre>
+
+<p>This will start 3 separate proxies and bind each to a separate process group.
+Proxies are bound based on their order specified, their order in the Procfile,
+or by their order on the command line.</p>
+
+<pre><code>$ nf start -x 8888,9999 web,api
+</code></pre>
+
+<h3>Privileged Ports</h3>
 
 <p>Node Foreman disallows applications from starting on privileged ports.
 It does however allow proxies to be bound to lower ports, such as port 80.</p>
@@ -271,6 +301,24 @@ It does however allow proxies to be bound to lower ports, such as port 80.</p>
 
 <p>Your applications will <em>still</em> be started in user space, and the proxy will
 drop its privileges after binding to the privileged port.</p>
+
+<h2>Forward Proxy</h2>
+
+<p>Local development and testing has huge advantages,
+but sometimes one needs to test web applications agains their real-world domain name.
+Editing <code>/etc/hosts</code> is a pain however, and error prone.</p>
+
+<p>Node Foreman can start up an HTTP forward proxy which your browser can route requests through.
+The forward proxy will intercept requests based on domain name, and route them to the local application.</p>
+
+<pre><code>$ nf start -f 9999 -h nodefly.com
+[OKAY] Forward Proxy Started in Port 9999
+[OKAY] Intercepting requests to nodefly.com through forward proxy
+</code></pre>
+
+<p>A forward proxy is useful when testing OAuth, or other external services with application callbacks.</p>
+
+<p>For users with Google Chrome, this can be paired with <a href="http://switchy.samabox.com/">Proxy Switch Sharp</a> for great results.</p>
       </section>
 
     </div>
