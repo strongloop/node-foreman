@@ -62,25 +62,25 @@ program
 .option('-w, --wrap'                 ,'wrap logs (negates trim)')
 .description('Start the jobs in the Procfile')
 .action(function(command_left,command_right){
-	
+
 	command = command_right || command_left;
-	
-    var proc = loadProc(program.procfile);
-    
-    if(!proc) return;
-    
+
     var envs = loadEnvs(program.env);
-	
+
+    var proc = loadProc(program.procfile,envs);
+
+    if(!proc) return;
+
 	if(command.showenvs){
 		for(key in envs){
 			display.Alert("env %s=%s",key,envs[key]);
 		}
 	}
-	
+
     var reqs = getreqs(program.args[0],proc);
-    
+
     display.padding  = calculatePadding(reqs);
-	
+
 	if(command.wrap){
 		display.wrapline = process.stdout.columns - display.padding - 7
 		display.trimline = 0
@@ -91,13 +91,13 @@ program
 			display.Alert('Trimming display Output to %d Columns',display.trimline)
 		}
 	}
-	
+
 	if(command.forward) startForward(command.forward,command.intercept,emitter)
-	
+
 	startProxies(reqs,proc,command,emitter,program.port);
-	
+
 	if(process.getuid && process.getuid()==0) process.setuid(process.env.SUDO_USER);
-	
+
     start(proc,reqs,envs,program.port,emitter);
 });
 
@@ -113,16 +113,17 @@ program
 .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
 .description('Export to an upstart job independent of foreman')
 .action(function(command_left,command_right){
-	
+
 	command = command_right || command_left;
-	
-    var procs = loadProc(program.procfile);
+
+    var envs = loadEnvs(program.env);
+
+    var procs = loadProc(program.procfile,envs);
 
     if(!procs) return;
 
-    var envs = loadEnvs(program.env);
     var req  = getreqs(program.args[0],procs);
-    
+
     // Variables for Upstart Template
     var config = {
         application : command.app,
@@ -132,16 +133,16 @@ program
         envs        : envs,
         group       : command.gid || command.user
     };
-    
+
     config.envfile = path.resolve(program.env)
-    
+
     var writeout
     if(upstart[command.type]){
         writeout = upstart[command.type]
     }else{
         return display.Error("Unknown Export Format",command.type)
     }
-    
+
     // Check for Upstart User
     // friendly warning - does not stop export
     var user_exists = false;
@@ -152,7 +153,7 @@ program
         }
     })
     if(!user_exists) display.Warn(display.fmt("User %s Does Not Exist on System",config.user));
-    
+
     // Remove Old Upstart Files
     // Must Match App Name and Out Directory
     fs.readdirSync(command.out).forEach(function(file){
@@ -163,13 +164,13 @@ program
             fs.unlinkSync(p);
         }
     });
-    
+
     var baseport = parseInt(program.port);
     var baseport_i = 0;
     var baseport_j = 0;
-    
+
     config.processes=[]
-    
+
     // This is ugly because of shitty support for array copying
     // Cleanup is definitely required
     for(key in req){
@@ -181,7 +182,7 @@ program
             display.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
             continue;
         }
-        
+
         config.processes.push({process:key})
         c.process=key;
         c.command=proc.command + " " + proc.args.join(' ');
@@ -191,20 +192,20 @@ program
         }
 
         var n = req[key];
-        
+
         c.numbers = [];
         for(i=1;i<=n;i++){
 
             var conf = {};
             conf.number = i;
-            
+
             for(_ in c){
                 conf[_] = c[_];
             }
 
             conf.port = conf.envs.PORT = baseport + baseport_i + baseport_j*100;
-            
-            
+
+
             var envl = [];
             for(key in envs){
                 envl.push({
@@ -214,7 +215,7 @@ program
             }
 
             conf.envs = envl;
-            
+
             // Write the APP-PROCESS-N.conf File
             writeout.foreman_app_n(conf,command.out);
 
