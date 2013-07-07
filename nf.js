@@ -67,7 +67,7 @@ program
 
     var envs = loadEnvs(program.env);
 
-    var proc = loadProc(program.procfile,envs);
+    var proc = loadProc(program.procfile);
 
     if(!proc) return;
 
@@ -118,7 +118,7 @@ program
 
     var envs = loadEnvs(program.env);
 
-    var procs = loadProc(program.procfile,envs);
+    var procs = loadProc(program.procfile);
 
     if(!procs) return;
 
@@ -176,16 +176,16 @@ program
     for(key in req){
 
         var c = {};
-        var proc = procs[key];
+        var cmd = procs[key];
 
-        if (!proc){
+        if (!cmd){
             display.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
             continue;
         }
 
         config.processes.push({process:key})
         c.process=key;
-        c.command=proc.command + " " + proc.args.join(' ');
+        c.command=cmd;
 
         for(_ in config){
             c[_] = config[_];
