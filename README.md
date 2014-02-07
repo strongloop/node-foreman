@@ -40,11 +40,11 @@ processes and and a `.env` file to preload environmental variables.
 
 Your module directory should end up looking like the following:
 
-![List Foreman Directory](//raw.github.com/NodeFly/node-foreman/master/assets/foreman-ls.png)
+![List Foreman Directory](https://raw.github.com/strongloop/node-foreman/master/assets/foreman-ls.png)
 
 Once your Procfile is defined, run your application with `nf start`:
 
-![Start Foreman](//raw.github.com/NodeFly/node-foreman/master/assets/foreman-start.png)
+![Start Foreman](https://raw.github.com/strongloop/node-foreman/master/assets/foreman-start.png)
 
 Node Foreman _always_ starts in the foreground and expects your applications
 to do the same. If your processes exit, Node Foreman will assume an error
