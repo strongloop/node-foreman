@@ -1,10 +1,10 @@
 {
   "name": "foreman",
   "version": "0.0.25",
-  "homepage": "http://nodefly.github.com/node-foreman/",
+  "homepage": "http://strongloop.github.io/node-foreman/",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
-  "author": "Jacob Groundwater",
+  "author": "StrongLoop, Inc.",
   "license": "BSD",
   "keywords": [
     "foreman",
@@ -24,11 +24,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/NodeFly/node-foreman.git"
+    "url": "https://github.com/strongloop/node-foreman.git"
   },
   "bugs": {
-    "url": "https://github.com/NodeFly/node-foreman/issues",
-    "email": "jacob@nodefly.com"
+    "url": "https://github.com/strongloop/node-foreman/issues",
+    "email": "callback@strongloop.com"
   },
   "engines": {
     "node": ">=0.6.9"
