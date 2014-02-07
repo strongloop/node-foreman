@@ -1,6 +1,6 @@
 {
   "name": "foreman",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "homepage": "http://strongloop.github.io/node-foreman/",
   "description": "Node Implementation of Foreman",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "upstart",
     "commandline",
     "env",
-	"Procfile"
+    "Procfile"
   ],
   "bin": {
     "nf": "nf.js"
