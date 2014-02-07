@@ -5,7 +5,7 @@
   "description": "Node Implementation of Foreman",
   "main": "index.js",
   "author": "StrongLoop, Inc.",
-  "license": "BSD",
+  "license": "MIT",
   "keywords": [
     "foreman",
     "upstart",
