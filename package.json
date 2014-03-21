@@ -16,6 +16,9 @@
   "bin": {
     "nf": "nf.js"
   },
+  "scripts": {
+    "test": "tap test/*.test.js"
+  },
   "dependencies": {
     "colors": "latest",
     "commander": "latest",
@@ -33,5 +36,8 @@
   "engines": {
     "node": ">=0.6.9"
   },
-  "preferGlobal": true
+  "preferGlobal": true,
+  "devDependencies": {
+    "tap": "^0.4.8"
+  }
 }
