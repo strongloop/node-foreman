@@ -102,7 +102,7 @@ program
     start(proc,reqs,envs,program.port,emitter);
 });
 
-var upstart = require('./lib/upstart')
+var exporters = require('./lib/exporters')
 
 program
 .command('export')
@@ -138,8 +138,8 @@ program
     config.envfile = path.resolve(program.env)
 
     var writeout
-    if(upstart[command.type]){
-        writeout = upstart[command.type]
+    if(exporters[command.type]){
+        writeout = exporters[command.type]
     }else{
         return display.Error("Unknown Export Format",command.type)
     }
