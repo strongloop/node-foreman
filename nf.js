@@ -4,6 +4,7 @@ var util    = require('util');
 var path    = require('path');
 var events  = require('events');
 var fs      = require('fs');
+var colors  = require('./lib/colors')
 
 var program = require('commander');
 var display = require('./lib/console').Console
@@ -160,7 +161,7 @@ program
         var x = file.indexOf(command.app);
         if(x==0){
             var p = path.join(command.out,file);
-            display.Warn("Unlink : %s".yellow.bold,p);
+            display.Warn(colors.bright_yellow("Unlink : %s"),p);
             fs.unlinkSync(p);
         }
     });
@@ -238,9 +239,9 @@ program
 program.parse(process.argv);
 
 if(program.args.length==0) {
-	console.log('   _____                           '.cyan)
-	console.log('  |   __|___ ___ ___ _____ ___ ___ '.cyan)
-	console.log('  |   __| . |  _| -_|     |   |   |'.yellow)
-	console.log('  |__|  |___|_| |___|_|_|_|_^_|_|_|'.magenta)
+	console.log(colors.cyan('   _____                           '))
+	console.log(colors.cyan('  |   __|___ ___ ___ _____ ___ ___ '))
+	console.log(colors.yellow('  |   __| . |  _| -_|     |   |   |'))
+	console.log(colors.magenta('  |__|  |___|_| |___|_|_|_|_^_|_|_|'))
 	program.help();
 }
