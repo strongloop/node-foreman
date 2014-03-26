@@ -1,6 +1,16 @@
 Changes since 2014-03-18, Version v0.0.27
 =========================================
 
+ * test: Add basic tests for console logger (Ryan Graham)
+
+ * console: Parameterize console for better testing (Ryan Graham)
+
+ * src: replace dependency on colors module (Ryan Graham)
+
+ * src: refactor .env parsing/loading (Ryan Graham)
+
+ * test: Initial tests for .env parsing (Ryan Graham)
+
  * doc: Add CHANGES.md (Ryan Graham)
 
 2014-02-06, Version v0.0.27
