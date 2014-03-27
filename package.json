@@ -17,7 +17,7 @@
     "nf": "nf.js"
   },
   "scripts": {
-    "test": "tap test/*.test.js"
+    "test": "tap test"
   },
   "dependencies": {
     "commander": "latest",

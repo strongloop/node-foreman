@@ -1,0 +1,19 @@
+[Unit]
+Description=systemd-test-log-1
+Requires=systemd-test-log.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env node server.js 100000
+WorkingDirectory=/Users/ryan/work/node-foreman/test
+
+User=root
+Group=root
+
+EnvironmentFile=-/Users/ryan/work/node-foreman/test/fixtures/env.env
+Environment=PORT=5200
+
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+Restart=always
