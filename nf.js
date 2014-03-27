@@ -224,6 +224,16 @@ program
             c.numbers.push({number:i})
         }
 
+        var envl = [];
+        for(key in envs){
+            envl.push({
+                key: key,
+                value: envs[key]
+            })
+        }
+
+        c.envs = envl;
+
         // Write the APP-Process.conf File
         writeout.foreman_app(c,command.out);
 
