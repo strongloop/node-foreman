@@ -11,6 +11,7 @@ PATH=$(dirname $(which node)) $NF export \
   --out sandbox --type upstart \
   --env fixtures/env.env --procfile fixtures/Procfile
 
-$SED -i -e "s%$(pwd)%TEST_DIR%g" sandbox/*
+$SED -i -e "s%$(pwd)%TEST_DIR%g" \
+        -e "s%$(dirname $(which node))%TEST_PATH%g" sandbox/*
 
 diff -r -u fixtures/upstart sandbox 1>&2 || exit $?
