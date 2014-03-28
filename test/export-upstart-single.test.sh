@@ -1,6 +1,7 @@
 #!/bin/bash
 
 NF="node ../nf.js"
+SED=`which gsed || which sed`
 
 mkdir -p sandbox
 rm -rf sandbox/*
@@ -10,6 +11,6 @@ PATH=$(dirname $(which node)) $NF export \
   --out sandbox --type upstart-single \
   --env fixtures/env.env --procfile fixtures/Procfile
 
-gsed -i -e "s%$(pwd)%TEST_DIR%g" sandbox/*
+$SED -i -e "s%$(pwd)%TEST_DIR%g" sandbox/*
 
 diff -r -u fixtures/upstart-single sandbox 1>&2 || exit $?
