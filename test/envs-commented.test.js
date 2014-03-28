@@ -19,3 +19,12 @@ var loadedFlat = envs.KeyValue(expected)
 var dumpedFlat = envs.dumpEnv(loadedFlat)
 assert.equal(dumpedEnv, expected)
 assert.equal(dumpedFlat, expected)
+
+var parsedHash = envs.KeyValue(
+  '#commented heading. \n' +
+  'key = "quoted#hash" \n' +
+  'key2 = stripped#comment \n'
+)
+
+assert.equal(parsedHash['key'], 'quoted#hash')
+assert.equal(parsedHash['key2'], 'stripped')
