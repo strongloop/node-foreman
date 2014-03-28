@@ -1,6 +1,18 @@
 Changes since 2014-03-18, Version v0.0.27
 =========================================
 
+ * export: Don't auto-set PORT for upstart-single (Ryan Graham)
+
+ * export: Use system logger for upstart-single (Ryan Graham)
+
+ * export: Initial support for flattend upstart layout (Ryan Graham)
+
+ * test: use strict PATH for tests (Ryan Graham)
+
+ * test: Basic tests for current exporters (Ryan Graham)
+
+ * refactor: Rename lib/upstart.js to be more accurate (Ryan Graham)
+
  * test: Add basic tests for console logger (Ryan Graham)
 
  * console: Parameterize console for better testing (Ryan Graham)
