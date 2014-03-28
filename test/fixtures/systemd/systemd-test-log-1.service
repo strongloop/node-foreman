@@ -5,12 +5,12 @@ Requires=systemd-test-log.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/env node server.js 100000
-WorkingDirectory=/Users/ryan/work/node-foreman/test
+WorkingDirectory=TEST_DIR
 
-User=root
-Group=root
+User=test-user
+Group=test-user
 
-EnvironmentFile=-/Users/ryan/work/node-foreman/test/fixtures/env.env
+EnvironmentFile=-TEST_DIR/fixtures/env.env
 Environment=PORT=5200
 
 StandardInput=null
