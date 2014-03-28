@@ -2,3 +2,6 @@ node_modules
 generated-CHANGES.md
 test/sandbox
 foreman-*.tgz
+coverage/
+checkstyle.xml
+tests.tap
