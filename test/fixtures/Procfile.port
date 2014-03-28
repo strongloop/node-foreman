@@ -1,0 +1,3 @@
+app1: echo $PORT; sleep 1
+app2: echo $PORT; sleep 1
+app3: echo $PORT; sleep 1
