@@ -1,5 +1,7 @@
-Changes since 2014-03-27, Version v0.1.2
-========================================
+2014-03-27, Version v0.2.0
+==========================
+
+ * Disable colours if stdout is not a TTY (Ryan Graham)
 
  * procfile: Use real shell expansion for commands (Evan Owen)
 
