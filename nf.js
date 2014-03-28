@@ -204,7 +204,7 @@ program
                 conf[_] = c[_];
             }
 
-            conf.port = conf.envs.PORT = baseport + baseport_i + baseport_j*100;
+            conf.port = baseport + baseport_i + baseport_j*100;
 
 
             var envl = [];
@@ -214,6 +214,7 @@ program
                     value: envs[key]
                 })
             }
+            envl.push({ key: 'PORT', value: conf.port })
 
             conf.envs = envl;
 
