@@ -1,12 +1,12 @@
-# Node Foreman
+# Node Foreman [![Build Status](https://travis-ci.org/strongloop/node-foreman.svg)](https://travis-ci.org/strongloop/node-foreman)
 
-Node Foreman is a Node.js version of the popular 
+Node Foreman is a Node.js version of the popular
 [Foreman](http://ddollar.github.com/foreman/) tool,
 with a few Node specific changes.
 
-> Foreman is a manager for Procfile-based applications. 
-> Its aim is to abstract away the details of the Procfile 
-> format, and allow you to either run your application 
+> Foreman is a manager for Procfile-based applications.
+> Its aim is to abstract away the details of the Procfile
+> format, and allow you to either run your application
 > directly or export it to some other process management format.
 
 ## Install
@@ -20,9 +20,9 @@ Install the command line tool
 I encourage anyone and everyone to help.
 If you have a specific change in mind, open an issue; we can talk about it there.
 
-If you would like to make a code change, go ahead. 
-Fork the repository, open a pull request. 
-Do this early, and talk about the change you want to make. 
+If you would like to make a code change, go ahead.
+Fork the repository, open a pull request.
+Do this early, and talk about the change you want to make.
 Maybe we can work together on it.
 
 Refactor Refactor Refactor!
@@ -58,7 +58,7 @@ For more information try any of the following:
 ### Procfile
 
 The `Procfile` format is a simple `key : command` format:
-    
+
     web: node web_server.js
     api: node api_server.js
     log: node log_server.js
@@ -81,7 +81,7 @@ The equivalent `.env` file may alternatively be a valid JSON document:
         }
     }
 
-The above JSON document will be flattened into env variables by 
+The above JSON document will be flattened into env variables by
 concatenating the nested values with an underscore.
 Environmental variables are passed in fully capitalized.
 
@@ -120,7 +120,7 @@ port bindings, and other passwords.
 Node Foreman lets you start multiple jobs of the same type:
 
     $ nf start web=5
-    
+
     18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
     18:51:12: web.2     |  Web Server started listening on 0.0.0.0:5001
     18:51:12: web.3     |  Web Server started listening on 0.0.0.0:5002
@@ -128,12 +128,12 @@ Node Foreman lets you start multiple jobs of the same type:
     18:51:12: web.5     |  Web Server started listening on 0.0.0.0:5004
 
 Each job will be started as its own process, receiving a different `PORT`
-environmental variable. 
+environmental variable.
 The port number for processes of the same type will be offset by 1.
 The port number for processes of different types will be offset by 100.
 
     $ nf start web=2,api=2
-    
+
     18:51:12: web.1     |  Web Server started listening on 0.0.0.0:5000
     18:51:12: web.2     |  Web Server started listening on 0.0.0.0:5001
     18:51:12: api.1     |  Api Server started listening on 0.0.0.0:5100
@@ -173,7 +173,7 @@ Start and stop your jobs with
     $ sudo start foreman
     $ sudo stop foreman
 
-The export will occur with whatever environmental variables are 
+The export will occur with whatever environmental variables are
 listed in the .env file.
 
 ### Systemd Support
@@ -184,7 +184,7 @@ Optionally specify a type `-t systemd` during export for [systemd](http://www.fr
 
 ### Advanced Exports
 
-You can specify the type and number of processes exported using 
+You can specify the type and number of processes exported using
 the `type=num` syntax:
 
     $ nf export web=2,api=2
@@ -257,4 +257,3 @@ The forward proxy will intercept requests based on domain name, and route them t
 A forward proxy is useful when testing OAuth, or other external services with application callbacks.
 
 For users with Google Chrome, this can be paired with [Proxy Switch Sharp](http://switchy.samabox.com/) for great results.
-
