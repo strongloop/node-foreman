@@ -1,3 +1,8 @@
+2014-03-27, Version v0.1.1
+==========================
+
+ * env: Support #'s in quoted values in .env files (Ryan Graham)
+
 2014-03-18, Version v0.1.0
 ==========================
 
