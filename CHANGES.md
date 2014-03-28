@@ -1,7 +1,16 @@
+Changes since 2014-03-27, Version v0.1.2
+========================================
+
+ * export: Use runlevels in Upstart jobs (Ryan Graham)
+
+ * Version dependencies (Ryan Graham)
+
 2014-03-27, Version v0.1.2
 ==========================
 
  * re-release of v0.1.1 without extra files
+
+ * Ignore npm packed tarballs (Ryan Graham)
 
 2014-03-27, Version v0.1.1
 ==========================
