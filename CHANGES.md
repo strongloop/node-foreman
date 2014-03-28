@@ -1,6 +1,12 @@
 Changes since 2014-03-27, Version v0.1.2
 ========================================
 
+ * procfile: Use real shell expansion for commands (Evan Owen)
+
+ * Add Travis-CI (Ryan Graham)
+
+ * test: Improve test portability (Ryan Graham)
+
  * export: Use runlevels in Upstart jobs (Ryan Graham)
 
  * Version dependencies (Ryan Graham)
