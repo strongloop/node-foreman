@@ -15,10 +15,6 @@ Install the command line tool
 
     $ npm install -g foreman
 
-All of Foremans version dependencies have been set to use `latest`.
-If however you find a dependency should break it is possible to find out which dependency versions were last working with Foreman.
-The `npm-shrinkwrap.json` file is updated each time Foreman is published to npm.
-
 ### How to Contribute
 
 I encourage anyone and everyone to help.

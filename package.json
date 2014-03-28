@@ -20,9 +20,9 @@
     "test": "tap test"
   },
   "dependencies": {
-    "commander": "latest",
-    "mu2": "latest",
-    "http-proxy": "latest"
+    "commander": "~2.1.0",
+    "mu2": "~0.5.20",
+    "http-proxy": "~1.0.3"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
   },
   "preferGlobal": true,
   "devDependencies": {
-    "tap": "^0.4.8",
-    "chai": "^1.9.1"
+    "tap": "~0.4.8",
+    "chai": "~1.9.1"
   }
 }
