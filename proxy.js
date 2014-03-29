@@ -11,13 +11,14 @@ var upstream_size = parseInt(process.env.UPSTREAM_SIZE);
 var addresses = [];
 for(i=0;i<upstream_size;i++){
 	addresses.push({
-		host: upstream_host,
-		port: upstream_port + i
-	});
+    host: upstream_host,
+    port: upstream_port + i,
+    protocol: 'http',
+  });
 }
 
 // Proxy
-var proxy = new htproxy.RoutingProxy();
+var proxy = htproxy.createProxyServer();
 	
 // Hanle Error
 proxy.on('proxyError',function(err,req,res){
@@ -32,7 +33,7 @@ http.createServer(function (req, res) {
 	
 	var target = addresses.shift();
 	
-	proxy.proxyRequest(req, res, target);
+	proxy.web(req, res, {target: target});
 	
 	addresses.push(target);
 	
