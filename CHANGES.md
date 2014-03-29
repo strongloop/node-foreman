@@ -1,3 +1,8 @@
+2014-03-28, Version v0.2.1
+==========================
+
+ * proxy: Fix regression caused by http-proxy upgrade (Ryan Graham)
+
 2014-03-27, Version v0.2.0
 ==========================
 
