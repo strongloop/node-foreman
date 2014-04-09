@@ -112,7 +112,7 @@ The `.env` file contain _only_ parameters that depend on where the application
 gets deployed. It should not contain anything related to _how_ the application
 is deployed.
 
-For example, good candiates for the `.env` file are MySQL connection information,
+For example, good candidates for the `.env` file are MySQL connection information,
 port bindings, and other passwords.
 
 ### Advanced Usage
