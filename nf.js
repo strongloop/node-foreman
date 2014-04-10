@@ -214,7 +214,8 @@ program
                     value: envs[key]
                 })
             }
-            envl.push({ key: 'PORT', value: conf.port })
+            envl.push({ key: 'PORT', value: conf.port });
+            envl.push({ key: 'FOREMAN_WORKER_NAME', value: conf.process+'.'+conf.number });
 
             conf.envs = envl;
 

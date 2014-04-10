@@ -15,6 +15,12 @@ Install the command line tool
 
     $ npm install -g foreman
 
+## Deviations from the original Foreman
+
+ * Each worker has an additional automatic environment variable,
+   `FOREMAN_WORKER_NAME`, that contains the the process name and worker number.
+   * example: `web.1`, `worker.1`
+
 ### How to Contribute
 
 I encourage anyone and everyone to help.
