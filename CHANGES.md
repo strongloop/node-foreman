@@ -1,5 +1,5 @@
-Changes since 2014-03-28, Version v0.2.1
-========================================
+2014-04-10, Version v0.3.0
+==========================
 
  * Handle env values with = in them (Ryan Graham)
 
