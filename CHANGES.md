@@ -1,3 +1,22 @@
+Changes since 2014-03-28, Version v0.2.1
+========================================
+
+ * Handle env values with = in them (Ryan Graham)
+
+ * Add new FOREMAN_WORKER_NAME automatic variable (Ryan Graham)
+
+ * export: Improve comments in Upstart-single jobs (Ryan Graham)
+
+ * export: Don't export PATH env var to subjobs (Ryan Graham)
+
+ * env: Don't override PATH if set in .env (Ryan Graham)
+
+ * export: Quote env var values in Upstart jobs (Ryan Graham)
+
+ * upstart-single: Add coredump limits (Ryan Graham)
+
+ * Fixed typo (Brian Gonzalez)
+
 2014-03-28, Version v0.2.1
 ==========================
 
