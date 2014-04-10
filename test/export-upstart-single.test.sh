@@ -3,8 +3,8 @@
 NF="node ../nf.js"
 SED=`which gsed || which sed`
 
+rm -rf sandbox
 mkdir -p sandbox
-rm -rf sandbox/*
 
 PATH=$(dirname $(which node)) $NF export \
   --app upstart-single-test --user test-user \
