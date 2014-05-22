@@ -184,15 +184,15 @@ program
             continue;
         }
 
-        config.processes.push({process:key})
+        var n = req[key];
+
+        config.processes.push({process:key, n: n})
         c.process=key;
         c.command=cmd;
 
         for(_ in config){
             c[_] = config[_];
         }
-
-        var n = req[key];
 
         c.numbers = [];
         for(i=1;i<=n;i++){
