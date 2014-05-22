@@ -109,6 +109,7 @@ program
 .option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
 .option('-u, --user <NAME>' ,'export upstart user as NAME','root')
 .option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
+.option('-c, --cwd  <DIR>'  ,'change current working directory to DIR')
 .option('-g, --gid  <GID>'  ,'set gid of upstart config to GID')
 .option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/log')
 .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
@@ -128,7 +129,7 @@ program
     // Variables for Upstart Template
     var config = {
         application : command.app,
-        cwd         : process.cwd(),
+        cwd         : command.cwd || process.cwd(),
         user        : command.user,
         logs        : command.log,
         envs        : envs,
