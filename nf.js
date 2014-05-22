@@ -195,7 +195,7 @@ program
         }
 
         c.numbers = [];
-        for(i=1;i<=n;i++){
+        for(var i=1;i<=n;i++){
 
             var conf = {};
             conf.number = i;
