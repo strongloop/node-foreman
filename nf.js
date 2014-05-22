@@ -112,6 +112,7 @@ program
 .option('-g, --gid  <GID>'  ,'set gid of upstart config to GID')
 .option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/log')
 .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
+.option('-m, --template <DIR>' ,'use template folder')
 .description('Export to an upstart job independent of foreman')
 .action(function(command_left,command_right){
 
@@ -132,7 +133,8 @@ program
         user        : command.user,
         logs        : command.log,
         envs        : envs,
-        group       : command.gid || command.user
+        group       : command.gid || command.user,
+        template    : command.template
     };
 
     config.envfile = path.resolve(program.env)
