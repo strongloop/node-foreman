@@ -108,7 +108,7 @@ program
 .command('export')
 .option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
 .option('-u, --user <NAME>' ,'export upstart user as NAME','root')
-.option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
+.option('-o, --out  <DIR>'  ,'export upstart files to DIR')
 .option('-g, --gid  <GID>'  ,'set gid of upstart config to GID')
 .option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/log')
 .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
