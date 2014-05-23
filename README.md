@@ -188,6 +188,31 @@ _This section is beta_
 
 Optionally specify a type `-t systemd` during export for [systemd](http://www.freedesktop.org/wiki/Software/systemd) support.
 
+### Supervisord Support
+
+You can also use a type `-t supervisord` during export for [supervisord](http://www.supervisord.org) support.
+
+This will generate a `APP.conf` file grouping the application processes and a `APP-PROCESS-N.conf` file for each process.
+
+    $ nf export
+    Loaded ENV .env File as JSON Format
+    Wrote  :  ./foreman-web-1.conf
+    Wrote  :  ./foreman-api-1.conf
+    Wrote  :  ./foreman-log-1.conf
+    Wrote  :  ./foreman.conf
+
+You can start / stop / restart individual processes.
+
+    $ sudo supervisorctl start 'foreman:foreman-web-1'
+    $ sudo supervisorctl stop 'foreman:foreman-web-1'
+    $ sudo supervisorctl restart 'foreman:foreman-web-1'
+
+Or the entire group of processes
+
+    $ sudo supervisorctl start 'foreman:*'
+    $ sudo supervisorctl stop 'foreman:*'
+    $ sudo supervisorctl restart 'foreman:*'
+
 ### Advanced Exports
 
 You can specify the type and number of processes exported using
