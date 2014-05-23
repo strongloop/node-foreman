@@ -9,6 +9,7 @@ mkdir -p sandbox
 PATH=$(dirname $(which node)) $NF export \
   --app upstart-test --user test-user \
   --out sandbox --type upstart \
+  --cwd '/EXPORT/PATH' \
   --env fixtures/env.env --procfile fixtures/Procfile
 
 $SED -i -e "s%$(pwd)%TEST_DIR%g" \
