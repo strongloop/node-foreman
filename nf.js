@@ -130,7 +130,7 @@ program
     // Variables for Upstart Template
     var config = {
         application : command.app,
-        cwd         : command.cwd || process.cwd(),
+        cwd         : path.resolve(process.cwd(), command.cwd || ''),
         user        : command.user,
         logs        : command.log,
         envs        : envs,
