@@ -14,7 +14,7 @@ var package = JSON.parse(
 );
 
 program.version(package.version);
-program.option('-j, --procfile <FILE>' , 'load profile FILE','Procfile');
+program.option('-j, --procfile <FILE>' ,'load procfile FILE','Procfile');
 program.option('-e, --env      <FILE>' ,'use FILE to load environment','.env');
 program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',5000);
 
