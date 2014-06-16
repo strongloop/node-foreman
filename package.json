@@ -3,7 +3,6 @@
   "version": "0.3.0",
   "homepage": "http://strongloop.github.io/node-foreman/",
   "description": "Node Implementation of Foreman",
-  "main": "index.js",
   "author": "StrongLoop, Inc.",
   "license": "MIT",
   "keywords": [
