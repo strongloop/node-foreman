@@ -194,7 +194,7 @@ You can also use a type `-t supervisord` during export for [supervisord](http://
 
 This will generate a `APP.conf` file grouping the application processes and a `APP-PROCESS-N.conf` file for each process.
 
-    $ nf export
+    $ nf export --type supervisord
     Loaded ENV .env File as JSON Format
     Wrote  :  ./foreman-web-1.conf
     Wrote  :  ./foreman-api-1.conf
