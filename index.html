@@ -3,79 +3,82 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Node-foreman by NodeFly</title>
+    <title>node-foreman by strongloop</title>
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/NodeFly/node-foreman">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/NodeFly/node-foreman/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/NodeFly/node-foreman/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
-
     <div class="wrapper">
+      <header>
+        <h1>node-foreman</h1>
+        <p>A Node.js Version of Foreman</p>
 
+        <p class="view"><a href="https://github.com/strongloop/node-foreman">View the Project on GitHub <small>strongloop/node-foreman</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/strongloop/node-foreman/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/strongloop/node-foreman/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/strongloop/node-foreman">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
       <section>
-        <div id="title">
-          <h1>Node-foreman</h1>
-          <p>A Node.js Version of Foreman</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/NodeFly">NodeFly</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
-        </div>
+        <h1>
+<a name="node-foreman-" class="anchor" href="#node-foreman-"><span class="octicon octicon-link"></span></a>Node Foreman <a href="https://travis-ci.org/strongloop/node-foreman"><img src="https://travis-ci.org/strongloop/node-foreman.svg" alt="Build Status"></a>
+</h1>
 
-        <h1>Node Foreman</h1>
-
-<p>Node Foreman is a Node.js version of the popular 
+<p>Node Foreman is a Node.js version of the popular
 <a href="http://ddollar.github.com/foreman/">Foreman</a> tool,
 with a few Node specific changes.</p>
 
 <blockquote>
-<p>Foreman is a manager for Procfile-based applications. 
-Its aim is to abstract away the details of the Procfile 
-format, and allow you to either run your application 
+<p>Foreman is a manager for Procfile-based applications.
+Its aim is to abstract away the details of the Procfile
+format, and allow you to either run your application
 directly or export it to some other process management format.</p>
 </blockquote>
 
-<h2>Install</h2>
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h2>
 
 <p>Install the command line tool</p>
 
 <pre><code>$ npm install -g foreman
 </code></pre>
 
-<p>All of Foremans version dependencies have been set to use <code>latest</code>.
-If however you find a dependency should break it is possible to find out which dependency versions were last working with Foreman.
-The <code>npm-shrinkwrap.json</code> file is updated each time Foreman is published to npm.</p>
+<h2>
+<a name="deviations-from-the-original-foreman" class="anchor" href="#deviations-from-the-original-foreman"><span class="octicon octicon-link"></span></a>Deviations from the original Foreman</h2>
 
-<h3>How to Contribute</h3>
+<ul>
+<li>Each worker has an additional automatic environment variable,
+<code>FOREMAN_WORKER_NAME</code>, that contains the the process name and worker number.
+
+<ul>
+<li>example: <code>web.1</code>, <code>worker.1</code>
+</li>
+</ul>
+</li>
+</ul><h3>
+<a name="how-to-contribute" class="anchor" href="#how-to-contribute"><span class="octicon octicon-link"></span></a>How to Contribute</h3>
 
 <p>I encourage anyone and everyone to help.
 If you have a specific change in mind, open an issue; we can talk about it there.</p>
 
-<p>If you would like to make a code change, go ahead. 
-Fork the repository, open a pull request. 
-Do this early, and talk about the change you want to make. 
+<p>If you would like to make a code change, go ahead.
+Fork the repository, open a pull request.
+Do this early, and talk about the change you want to make.
 Maybe we can work together on it.</p>
 
 <p>Refactor Refactor Refactor!
 You are free to add features, or just help clean things up.</p>
 
-<h2>Usage</h2>
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
 <p>Node Foreman can be run with as little as <code>nf start</code>, as long as <code>npm start</code> has been defined.
 For more complicated applications you will want to define a <code>Procfile</code> for your various server
@@ -83,11 +86,11 @@ processes and and a <code>.env</code> file to preload environmental variables.</
 
 <p>Your module directory should end up looking like the following:</p>
 
-<p><img src="//raw.github.com/NodeFly/node-foreman/master/assets/foreman-ls.png" alt="List Foreman Directory"></p>
+<p><img src="https://raw.github.com/strongloop/node-foreman/master/assets/foreman-ls.png" alt="List Foreman Directory"></p>
 
 <p>Once your Procfile is defined, run your application with <code>nf start</code>:</p>
 
-<p><img src="//raw.github.com/NodeFly/node-foreman/master/assets/foreman-start.png" alt="Start Foreman"></p>
+<p><img src="https://raw.github.com/strongloop/node-foreman/master/assets/foreman-start.png" alt="Start Foreman"></p>
 
 <p>Node Foreman <em>always</em> starts in the foreground and expects your applications
 to do the same. If your processes exit, Node Foreman will assume an error
@@ -103,7 +106,8 @@ $ nf start --help
 $ nf export --help
 </code></pre>
 
-<h3>Procfile</h3>
+<h3>
+<a name="procfile" class="anchor" href="#procfile"><span class="octicon octicon-link"></span></a>Procfile</h3>
 
 <p>The <code>Procfile</code> format is a simple <code>key : command</code> format:</p>
 
@@ -114,7 +118,8 @@ log: node log_server.js
 
 <p>Each line should contain a separate process.</p>
 
-<h3>Environmental Variables</h3>
+<h3>
+<a name="environmental-variables" class="anchor" href="#environmental-variables"><span class="octicon octicon-link"></span></a>Environmental Variables</h3>
 
 <p>Create a <code>.env</code> file to pre-load environmental variables with the format:</p>
 
@@ -132,7 +137,7 @@ MYSQL_PASS=cryptonite
 }
 </code></pre>
 
-<p>The above JSON document will be flattened into env variables by 
+<p>The above JSON document will be flattened into env variables by
 concatenating the nested values with an underscore.
 Environmental variables are passed in fully capitalized.</p>
 
@@ -146,27 +151,30 @@ Environmental variables are passed in fully capitalized.</p>
 
 <p>There is no need to specify which type of file you wish to use.</p>
 
-<h4>The PATH environment variable</h4>
+<h4>
+<a name="the-path-environment-variable" class="anchor" href="#the-path-environment-variable"><span class="octicon octicon-link"></span></a>The PATH environment variable</h4>
 
 <p>The <code>PATH</code> variable is given special treament and is always read
 from the environment that the <code>nf</code> command has been executed from,
 rather than a <code>.env</code> file.  To set a different <code>PATH</code> execute
 <code>nf</code> with the <code>PATH</code> variable set appropriately.</p>
 
-<div class="highlight"><pre><span class="nv">PATH</span><span class="o">=</span>/opt/foo:/opt/bar:<span class="nv">$PATH</span> nf <span class="nb">export</span>
+<div class="highlight highlight-bash"><pre><span class="nv">PATH</span><span class="o">=</span>/opt/foo:/opt/bar:<span class="nv">$PATH</span> nf <span class="nb">export</span>
 </pre></div>
 
-<h4>Best Practices</h4>
+<h4>
+<a name="best-practices" class="anchor" href="#best-practices"><span class="octicon octicon-link"></span></a>Best Practices</h4>
 
 <p>Generally you should not check your <code>.env</code> file into version control.
 The <code>.env</code> file contain <em>only</em> parameters that depend on where the application
 gets deployed. It should not contain anything related to <em>how</em> the application
 is deployed.</p>
 
-<p>For example, good candiates for the <code>.env</code> file are MySQL connection information,
+<p>For example, good candidates for the <code>.env</code> file are MySQL connection information,
 port bindings, and other passwords.</p>
 
-<h3>Advanced Usage</h3>
+<h3>
+<a name="advanced-usage" class="anchor" href="#advanced-usage"><span class="octicon octicon-link"></span></a>Advanced Usage</h3>
 
 <p>Node Foreman lets you start multiple jobs of the same type:</p>
 
@@ -180,7 +188,7 @@ port bindings, and other passwords.</p>
 </code></pre>
 
 <p>Each job will be started as its own process, receiving a different <code>PORT</code>
-environmental variable. 
+environmental variable.
 The port number for processes of the same type will be offset by 1.
 The port number for processes of different types will be offset by 100.</p>
 
@@ -192,7 +200,8 @@ The port number for processes of different types will be offset by 100.</p>
 18:51:12: api.2     |  Api Server started listening on 0.0.0.0:5101
 </code></pre>
 
-<h2>Export to Production</h2>
+<h2>
+<a name="export-to-production" class="anchor" href="#export-to-production"><span class="octicon octicon-link"></span></a>Export to Production</h2>
 
 <p>Node Foreman is designed to be in a development environment,
 however it can export an Upstart job for use in production.
@@ -229,18 +238,49 @@ Wrote  :  /etc/init/foreman.conf
 $ sudo stop foreman
 </code></pre>
 
-<p>The export will occur with whatever environmental variables are 
+<p>The export will occur with whatever environmental variables are
 listed in the .env file.</p>
 
-<h3>Systemd Support</h3>
+<h3>
+<a name="systemd-support" class="anchor" href="#systemd-support"><span class="octicon octicon-link"></span></a>Systemd Support</h3>
 
 <p><em>This section is beta</em></p>
 
 <p>Optionally specify a type <code>-t systemd</code> during export for <a href="http://www.freedesktop.org/wiki/Software/systemd">systemd</a> support.</p>
 
-<h3>Advanced Exports</h3>
+<h3>
+<a name="supervisord-support" class="anchor" href="#supervisord-support"><span class="octicon octicon-link"></span></a>Supervisord Support</h3>
 
-<p>You can specify the type and number of processes exported using 
+<p>You can also use a type <code>-t supervisord</code> during export for <a href="http://www.supervisord.org">supervisord</a> support.</p>
+
+<p>This will generate a <code>APP.conf</code> file grouping the application processes and a <code>APP-PROCESS-N.conf</code> file for each process.</p>
+
+<pre><code>$ nf export --type supervisord
+Loaded ENV .env File as JSON Format
+Wrote  :  ./foreman-web-1.conf
+Wrote  :  ./foreman-api-1.conf
+Wrote  :  ./foreman-log-1.conf
+Wrote  :  ./foreman.conf
+</code></pre>
+
+<p>You can start / stop / restart individual processes.</p>
+
+<pre><code>$ sudo supervisorctl start 'foreman:foreman-web-1'
+$ sudo supervisorctl stop 'foreman:foreman-web-1'
+$ sudo supervisorctl restart 'foreman:foreman-web-1'
+</code></pre>
+
+<p>Or the entire group of processes</p>
+
+<pre><code>$ sudo supervisorctl start 'foreman:*'
+$ sudo supervisorctl stop 'foreman:*'
+$ sudo supervisorctl restart 'foreman:*'
+</code></pre>
+
+<h3>
+<a name="advanced-exports" class="anchor" href="#advanced-exports"><span class="octicon octicon-link"></span></a>Advanced Exports</h3>
+
+<p>You can specify the type and number of processes exported using
 the <code>type=num</code> syntax:</p>
 
 <pre><code>$ nf export web=2,api=2
@@ -254,7 +294,8 @@ permissions after binding.</p>
 <p>If you want to call your upstart job something other than foreman,
 use <code>-a &lt;JOBNAME&gt;</code> and manage your jobs with <code>sudo start &lt;JOBNAME&gt;</code>.</p>
 
-<h2>Reverse Proxy</h2>
+<h2>
+<a name="reverse-proxy" class="anchor" href="#reverse-proxy"><span class="octicon octicon-link"></span></a>Reverse Proxy</h2>
 
 <p>Node.js processes are supposed to be stateless.
 Application scale by starting multiple processes that either share a socket,
@@ -272,7 +313,8 @@ across the servers started from ports <code>5000</code> - <code>5004</code>.</p>
 <p>If your application gets its port number from <code>process.env.PORT</code> the proxy
 setup will ocurr automatically.</p>
 
-<h3>Multiple Reverse Proxies</h3>
+<h3>
+<a name="multiple-reverse-proxies" class="anchor" href="#multiple-reverse-proxies"><span class="octicon octicon-link"></span></a>Multiple Reverse Proxies</h3>
 
 <p>If you have multiple processes in your <code>Procfile</code> you can start multiple proxies.</p>
 
@@ -286,7 +328,8 @@ or by their order on the command line.</p>
 <pre><code>$ nf start -x 8888,9999 web,api
 </code></pre>
 
-<h3>Privileged Ports</h3>
+<h3>
+<a name="privileged-ports" class="anchor" href="#privileged-ports"><span class="octicon octicon-link"></span></a>Privileged Ports</h3>
 
 <p>Node Foreman disallows applications from starting on privileged ports.
 It does however allow proxies to be bound to lower ports, such as port 80.</p>
@@ -302,7 +345,8 @@ It does however allow proxies to be bound to lower ports, such as port 80.</p>
 <p>Your applications will <em>still</em> be started in user space, and the proxy will
 drop its privileges after binding to the privileged port.</p>
 
-<h2>Forward Proxy</h2>
+<h2>
+<a name="forward-proxy" class="anchor" href="#forward-proxy"><span class="octicon octicon-link"></span></a>Forward Proxy</h2>
 
 <p>Local development and testing has huge advantages,
 but sometimes one needs to test web applications agains their real-world domain name.
@@ -320,16 +364,19 @@ The forward proxy will intercept requests based on domain name, and route them t
 
 <p>For users with Google Chrome, this can be paired with <a href="http://switchy.samabox.com/">Proxy Switch Sharp</a> for great results.</p>
       </section>
-
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/strongloop">strongloop</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
           <script type="text/javascript">
             try {
-              var pageTracker = _gat._getTracker("UA-35761563-1");
+              var pageTracker = _gat._getTracker("UA-37775386-1");
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
