@@ -1,3 +1,48 @@
+2014-07-08, Version v0.4.0
+==========================
+
+ * Allow overriding supervisord templates (Ryan Graham)
+
+ * Update supervisord export instructions (Ryan Graham)
+
+ * Fix the tests (Bret Little)
+
+ * Add the ability to comment out tasks in a Procfile satisfying request #42 (Bret Little)
+
+ * Fix inconsistent indentation style (Sam Roberts)
+
+ * Remove package reference to non-existent index.js (Sam Roberts)
+
+ * test: Update to test --cwd option (Ryan Graham)
+
+ * export: Let --cwd accept absolute or relative path (Ryan Graham)
+
+ * Add informations on supervisord export to README.md (Paul d'Hubert)
+
+ * Allow cwd to be passed on CLI. (Paul d'Hubert)
+
+ * Add --template option to export command (Ryan Graham)
+
+ * Ignore ANSI escapes when doing line trimming (Ryan Graham)
+
+ * Expand tabs to spaces (Paul d'Hubert)
+
+ * Add test files for supervisord templates. (Paul d'Hubert)
+
+ * Do not set a default cwd to '.' (Paul d'Hubert)
+
+ * Fix an error when escaping numbers.. (Paul d'Hubert)
+
+ * Escape supervisord envs values (Paul d'Hubert)
+
+ * Correctly export supervisord group file (Paul d'Hubert)
+
+ * Scope the 'i' variable in export's foreman_app_n loop (Paul d'Hubert)
+
+ * Add 'n' to writeout.foreman's conf (Paul d'Hubert)
+
+ * Add supervisord exporter (Paul d'Hubert)
+
 2014-04-10, Version v0.3.0
 ==========================
 
