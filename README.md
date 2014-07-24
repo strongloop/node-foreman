@@ -15,6 +15,10 @@ Install the command line tool
 
     $ npm install -g foreman
 
+Get usage
+
+    $ nf --help
+
 ## Deviations from the original Foreman
 
  * Each worker has an additional automatic environment variable,
