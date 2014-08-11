@@ -43,6 +43,7 @@
 
  * Add supervisord exporter (Paul d'Hubert)
 
+
 2014-04-10, Version v0.3.0
 ==========================
 
@@ -62,19 +63,31 @@
 
  * Fixed typo (Brian Gonzalez)
 
+
 2014-03-28, Version v0.2.1
 ==========================
 
  * proxy: Fix regression caused by http-proxy upgrade (Ryan Graham)
 
-2014-03-27, Version v0.2.0
+
+2014-03-28, Version v0.2.0
 ==========================
+
+ * Release v0.2.0 (Ryan Graham)
+
+ * Ignore some CI files (Ryan Graham)
+
+ * test: Some useful example files (Ryan Graham)
 
  * Disable colours if stdout is not a TTY (Ryan Graham)
 
  * procfile: Use real shell expansion for commands (Evan Owen)
 
+ * test: Make PATH CI portable (Ryan Graham)
+
  * Add Travis-CI (Ryan Graham)
+
+ * test: Use sed as fallback because sed may === gsed (Ryan Graham)
 
  * test: Improve test portability (Ryan Graham)
 
@@ -82,20 +95,25 @@
 
  * Version dependencies (Ryan Graham)
 
+
 2014-03-27, Version v0.1.2
 ==========================
 
- * re-release of v0.1.1 without extra files
-
  * Ignore npm packed tarballs (Ryan Graham)
+
 
 2014-03-27, Version v0.1.1
 ==========================
 
- * env: Support #'s in quoted values in .env files (Ryan Graham)
+ * env: Ignore quoted #'s (Ryan Graham)
 
-2014-03-18, Version v0.1.0
+ * test: Failing test for # handling in .env (Ryan Graham)
+
+
+2014-03-27, Version v0.1.0
 ==========================
+
+ * git: Ignore test/sandbox (Ryan Graham)
 
  * export: Don't auto-set PORT for upstart-single (Ryan Graham)
 
@@ -109,6 +127,8 @@
 
  * refactor: Rename lib/upstart.js to be more accurate (Ryan Graham)
 
+ * fix: regression from colors replacement (Ryan Graham)
+
  * test: Add basic tests for console logger (Ryan Graham)
 
  * console: Parameterize console for better testing (Ryan Graham)
@@ -121,13 +141,17 @@
 
  * doc: Add CHANGES.md (Ryan Graham)
 
-2014-02-06, Version v0.0.27
+
+2014-03-18, Version v0.0.27
 ===========================
 
  * fix: Allow - in app-name in Procfile (Ryan Graham)
 
-2013-02-13, Version v0.0.26
+
+2014-02-06, Version v0.0.26
 ===========================
+
+ * Bump for license and home change (Ryan Graham)
 
  * Update imaage URLs in README (Ryan Graham)
 
@@ -135,8 +159,11 @@
 
  * Update owner and URLs (Ryan Graham)
 
-2013-02-01, Version v0.0.25
+
+2013-02-13, Version v0.0.25
 ===========================
+
+ * Version Bump (Jacob Groundwater)
 
  * Warn on Unmatched Variable Substitutions in Procfile (Jacob Groundwater)
 
@@ -144,8 +171,11 @@
 
  * Procfile can use environment variables from process.env, and any defined in the loaded env file. variables defined in a .env file take precendence over process.env vars. (Larz Conwell)
 
-2013-01-23, Version v0.0.24
+
+2013-02-01, Version v0.0.24
 ===========================
+
+ * Version Bump (Jacob Groundwater)
 
  * Add Forward Proxy Section to README (Jacob Groundwater)
 
@@ -153,17 +183,24 @@
 
  * Handles Windows Procfiles with CRLF (Ethan J. Brown)
 
+
 2013-01-23, Version v0.0.23
 ===========================
 
+ * Version Bump (Jacob Groundwater)
+
  * Fix My Foolishness (Jacob Groundwater)
 
-2013-01-22, Version v0.0.22
+
+2013-01-23, Version v0.0.22
 ===========================
+
+ * Version Bump (Jacob Groundwater)
 
  * Not being so precautious with quot marks (John Wright)
 
-2013-01-22, Version 0.0.21
-==========================
+
+2013-01-22, Version v0.0.21
+===========================
 
  * First release!
