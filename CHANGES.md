@@ -1,3 +1,13 @@
+2014-08-11, Version v0.4.1
+==========================
+
+ * Regen CHANGES.md with updated script (Ryan Graham)
+
+ * Use spawn for worker processes (Ryan Graham)
+
+ * Update README so CLI's name, `nf`, is prominent (Sam Roberts)
+
+
 2014-07-08, Version v0.4.0
 ==========================
 
