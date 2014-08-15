@@ -1,3 +1,9 @@
+2014-08-15, Version v0.4.2
+==========================
+
+ * Remove quotes from spawn on Windows (Ryan Graham)
+
+
 2014-08-11, Version v0.4.1
 ==========================
 
