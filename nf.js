@@ -30,6 +30,7 @@ emitter.setMaxListeners(50);
 
 var _proc = require('./lib/proc')
 var start = _proc.start
+var once = _proc.once
 
 var _procfile = require('./lib/procfile')
 var procs     = _procfile.procs
@@ -100,6 +101,37 @@ program
 	if(process.getuid && process.getuid()==0) process.setuid(process.env.SUDO_USER);
 
     start(proc,reqs,envs,program.port,emitter);
+});
+
+program
+.command('run')
+.usage('[Options]')
+.option('-s, --showenvs'             ,'show ENV variables on start',false)
+.description('Run a one off process using the ENV variables')
+.action(function(command_left,command_right){
+
+    command = command_right || command_left;
+
+    var envs = loadEnvs(program.env);
+    var arguments = Array.prototype.slice.apply(this.args);
+    arguments.pop();
+
+    if(!command) return;
+
+    var input = arguments.join(' ');
+
+	if(command.showenvs){
+		for(key in envs){
+			display.Alert("env %s=%s",key,envs[key]);
+		}
+	}
+
+        if(process.getuid && process.getuid()==0) process.setuid(process.env.SUDO_USER);
+
+        display.trimline = process.stdout.columns - 5;
+
+    once(input,envs);
+
 });
 
 var exporters = require('./lib/exporters')
