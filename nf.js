@@ -158,17 +158,6 @@ program
     })
     if(!user_exists) display.Warn(display.fmt("User %s Does Not Exist on System",config.user));
 
-    // Remove Old Upstart Files
-    // Must Match App Name and Out Directory
-    fs.readdirSync(command.out).forEach(function(file){
-        var x = file.indexOf(command.app);
-        if(x==0){
-            var p = path.join(command.out,file);
-            display.Warn(colors.bright_yellow("Unlink : %s"),p);
-            fs.unlinkSync(p);
-        }
-    });
-
     var baseport = parseInt(program.port);
     var baseport_i = 0;
     var baseport_j = 0;
