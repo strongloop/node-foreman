@@ -1,3 +1,11 @@
+2014-09-29, Version v1.0.0
+==========================
+
+ * Don't delete files (Ryan Graham)
+
+ * [api] SMF export (for Solaris, Illumos, SmartOS) (Charles Phillips)
+
+
 2014-08-15, Version v0.4.2
 ==========================
 
