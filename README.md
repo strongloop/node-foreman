@@ -63,6 +63,7 @@ For more information try any of the following:
 
 	$ nf --help
 	$ nf start --help
+	$ nf run --help
 	$ nf export --help
 
 ### Procfile
@@ -124,6 +125,12 @@ is deployed.
 
 For example, good candidates for the `.env` file are MySQL connection information,
 port bindings, and other passwords.
+
+### The Run Command
+
+Tasks or commands that require the environment variables from the `.env` file
+can be initiated by using `nf run <command>`.
+
 
 ### Advanced Usage
 

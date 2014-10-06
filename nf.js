@@ -5,6 +5,7 @@ var path    = require('path');
 var events  = require('events');
 var fs      = require('fs');
 var colors  = require('./lib/colors')
+var quote   = require('shell-quote').quote;
 
 var program = require('commander');
 var display = require('./lib/console').Console
@@ -118,15 +119,13 @@ program
 
     if(!command) return;
 
-    var input = arguments.join(' ');
+    var input = quote(arguments);
 
 	if(command.showenvs){
 		for(key in envs){
 			display.Alert("env %s=%s",key,envs[key]);
 		}
 	}
-
-        if(process.getuid && process.getuid()==0) process.setuid(process.env.SUDO_USER);
 
         display.trimline = process.stdout.columns - 5;
 
