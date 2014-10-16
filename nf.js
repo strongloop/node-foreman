@@ -117,6 +117,10 @@ program
     var arguments = Array.prototype.slice.apply(this.args);
     arguments.pop();
 
+    var callback = function(code) {
+        process.exit(code);
+    }
+
     if(!command) return;
 
     var input = quote(arguments);
@@ -129,7 +133,7 @@ program
 
         display.trimline = process.stdout.columns - 5;
 
-    once(input,envs);
+    once(input,envs,callback);
 
 });
 

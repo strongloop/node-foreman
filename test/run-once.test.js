@@ -4,6 +4,12 @@ var assert = require('assert')
   , once   = require('../lib/proc').once
 
 var envs = { FILENAME: "should-also-exist.txt" }
+var callbackCounter = 0;
+var callbackIncrementer = function(code){
+    if(code==0){
+        callbackCounter++;
+    }
+};
 
 rimraf.sync('./sandbox')
 fs.mkdirSync('./sandbox')
@@ -13,12 +19,12 @@ assert.equal(fs.existsSync('./should-exist.txt'), false);
 assert.equal(fs.existsSync('./should-also-exist.txt'), false);
 assert.equal(fs.existsSync('./should-not-exist.txt'), false);
 
-once("touch should-exist.txt", null, function() {
-    assert.equal(fs.existsSync('./should-exist.txt'), true);
-    assert.equal(fs.existsSync('./should-not-exist.txt'), false);
-});
+once("touch should-exist.txt", null, callbackIncrementer)
+once("touch $FILENAME", envs, callbackIncrementer)
 
-once("touch $FILENAME", envs, function() {
-    assert.equal(fs.existsSync(envs.FILENAME), true);
-    assert.equal(fs.existsSync('./should-not-exist.txt'), false);
-});
+process.on('exit', function() {
+    assert.equal(callbackCounter, 2)
+    assert.equal(fs.existsSync('./should-exist.txt'), true)
+    assert.equal(fs.existsSync('./should-not-exist.txt'), false)
+    assert.equal(fs.existsSync(envs.FILENAME), true)
+})
