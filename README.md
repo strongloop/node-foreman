@@ -82,14 +82,16 @@ Create a `.env` file to pre-load environmental variables with the format:
 
     MYSQL_NAME=superman
     MYSQL_PASS=cryptonite
+    REPO_NAME=strongloop/node-foreman
 
 The equivalent `.env` file may alternatively be a valid JSON document:
 
     {
         "mysql":{
             "name": "superman",
-            "pass": "cryptonite"
-        }
+            "pass": "cryptonite",
+        },
+        "repoName": "strongloop/node-foreman"
     }
 
 The above JSON document will be flattened into env variables by
@@ -98,9 +100,10 @@ Environmental variables are passed in fully capitalized.
 
     {
         "mysql":{
-            "name": "superman",     # => MYSQL_NAME=superman
-            "pass": "cryptonite"    # => MYSQL_PASS=cryptonite
-        }
+            "name": "superman",                 # => MYSQL_NAME=superman
+            "pass": "cryptonite"                # => MYSQL_PASS=cryptonite
+        },
+        "repoName": "strongloop/node-foreman"   # => REPO_NAME="strongloop/node-foreman"
     }
 
 There is no need to specify which type of file you wish to use.
