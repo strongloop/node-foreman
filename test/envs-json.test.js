@@ -8,6 +8,9 @@ var json = {
     },
     "other": [ "zero", "one", "two" ]
   },
+  "camelCase": {
+    "writtenContentPath": "value"
+  },
   "last": 42
 }
 var flattened = {
@@ -15,6 +18,7 @@ var flattened = {
   'TOP_OTHER_0': 'zero',
   'TOP_OTHER_1': 'one',
   'TOP_OTHER_2': 'two',
+  'CAMEL_CASE_WRITTEN_CONTENT_PATH':'value',
   'LAST': 42,
 }
 
@@ -23,6 +27,7 @@ var dumped = [
   'TOP_OTHER_0=zero',
   'TOP_OTHER_1=one',
   'TOP_OTHER_2=two',
+  'CAMEL_CASE_WRITTEN_CONTENT_PATH=value',
   'LAST=42',
 ].join('\n') + '\n'
 
