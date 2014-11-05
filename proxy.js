@@ -38,5 +38,7 @@ http.createServer(function (req, res) {
 	addresses.push(target);
 	
 }).listen(port,function(){
-	if(process.getuid()==0) process.setuid( process.env.SUDO_USER );
+	if (process.getuid && process.setuid &&
+	    process.env.SUDO_USER && process.getuid() == 0)
+		process.setuid(process.env.SUDO_USER);
 })
