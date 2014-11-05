@@ -1,19 +1,33 @@
-2014-09-29, Version v1.0.0
-==========================
+2014-11-05, Version 1.1.0
+=========================
+
+ * Propagate signals on exit (Ryan Graham)
+
+ * Fix proxy errors on Windows (Ryan Graham)
+
+ * Exit with non-zero on fatal error (Ryan Graham)
+
+ * Adds a run command for running one-off processes (Jeff Jewiss)
+
+ * Add contribution guidelines (Ryan Graham)
+
+
+2014-09-29, Version 1.0.0
+=========================
 
  * Don't delete files (Ryan Graham)
 
  * [api] SMF export (for Solaris, Illumos, SmartOS) (Charles Phillips)
 
 
-2014-08-15, Version v0.4.2
-==========================
+2014-08-15, Version 0.4.2
+=========================
 
  * Remove quotes from spawn on Windows (Ryan Graham)
 
 
-2014-08-11, Version v0.4.1
-==========================
+2014-08-11, Version 0.4.1
+=========================
 
  * Regen CHANGES.md with updated script (Ryan Graham)
 
@@ -22,8 +36,8 @@
  * Update README so CLI's name, `nf`, is prominent (Sam Roberts)
 
 
-2014-07-08, Version v0.4.0
-==========================
+2014-07-08, Version 0.4.0
+=========================
 
  * Allow overriding supervisord templates (Ryan Graham)
 
@@ -68,8 +82,8 @@
  * Add supervisord exporter (Paul d'Hubert)
 
 
-2014-04-10, Version v0.3.0
-==========================
+2014-04-10, Version 0.3.0
+=========================
 
  * Handle env values with = in them (Ryan Graham)
 
@@ -88,14 +102,14 @@
  * Fixed typo (Brian Gonzalez)
 
 
-2014-03-28, Version v0.2.1
-==========================
+2014-03-28, Version 0.2.1
+=========================
 
  * proxy: Fix regression caused by http-proxy upgrade (Ryan Graham)
 
 
-2014-03-28, Version v0.2.0
-==========================
+2014-03-28, Version 0.2.0
+=========================
 
  * Release v0.2.0 (Ryan Graham)
 
@@ -119,23 +133,26 @@
 
  * Version dependencies (Ryan Graham)
 
-
-2014-03-27, Version v0.1.2
-==========================
-
  * Ignore npm packed tarballs (Ryan Graham)
 
 
-2014-03-27, Version v0.1.1
-==========================
+2014-03-27, Version 0.1.1
+=========================
+
+
+
+2014-03-27, Version 0.1.2
+=========================
+
+ * Ignore npm packed tarballs (Ryan Graham)
 
  * env: Ignore quoted #'s (Ryan Graham)
 
  * test: Failing test for # handling in .env (Ryan Graham)
 
 
-2014-03-27, Version v0.1.0
-==========================
+2014-03-27, Version 0.1.0
+=========================
 
  * git: Ignore test/sandbox (Ryan Graham)
 
@@ -166,14 +183,14 @@
  * doc: Add CHANGES.md (Ryan Graham)
 
 
-2014-03-18, Version v0.0.27
-===========================
+2014-03-18, Version 0.0.27
+==========================
 
  * fix: Allow - in app-name in Procfile (Ryan Graham)
 
 
-2014-02-06, Version v0.0.26
-===========================
+2014-02-06, Version 0.0.26
+==========================
 
  * Bump for license and home change (Ryan Graham)
 
@@ -184,8 +201,8 @@
  * Update owner and URLs (Ryan Graham)
 
 
-2013-02-13, Version v0.0.25
-===========================
+2013-02-13, Version 0.0.25
+==========================
 
  * Version Bump (Jacob Groundwater)
 
@@ -196,8 +213,8 @@
  * Procfile can use environment variables from process.env, and any defined in the loaded env file. variables defined in a .env file take precendence over process.env vars. (Larz Conwell)
 
 
-2013-02-01, Version v0.0.24
-===========================
+2013-02-01, Version 0.0.24
+==========================
 
  * Version Bump (Jacob Groundwater)
 
@@ -208,23 +225,23 @@
  * Handles Windows Procfiles with CRLF (Ethan J. Brown)
 
 
-2013-01-23, Version v0.0.23
-===========================
+2013-01-23, Version 0.0.23
+==========================
 
  * Version Bump (Jacob Groundwater)
 
  * Fix My Foolishness (Jacob Groundwater)
 
 
-2013-01-23, Version v0.0.22
-===========================
+2013-01-23, Version 0.0.22
+==========================
 
  * Version Bump (Jacob Groundwater)
 
  * Not being so precautious with quot marks (John Wright)
 
 
-2013-01-22, Version v0.0.21
-===========================
+2013-01-22, Version 0.0.21
+==========================
 
  * First release!
