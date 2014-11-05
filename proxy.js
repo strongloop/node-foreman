@@ -38,5 +38,7 @@ http.createServer(function (req, res) {
 	addresses.push(target);
 	
 }).listen(port,function(){
-	if(process.getuid()==0) process.setuid( process.env.SUDO_USER );
+	if(process.platform !== 'win32') {
+		if(process.getuid()==0) process.setuid( process.env.SUDO_USER );
+	}
 })
