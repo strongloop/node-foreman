@@ -178,7 +178,8 @@ program
     if(exporters[command.type]){
         writeout = exporters[command.type]
     }else{
-        return display.Error("Unknown Export Format",command.type)
+        display.Error("Unknown Export Format",command.type)
+        process.exit(1);
     }
 
     // Check for Upstart User
@@ -281,5 +282,6 @@ if(program.args.length==0) {
 	console.log(colors.cyan('  |   __|___ ___ ___ _____ ___ ___ '))
 	console.log(colors.yellow('  |   __| . |  _| -_|     |   |   |'))
 	console.log(colors.magenta('  |__|  |___|_| |___|_|_|_|_^_|_|_|'))
-	program.help();
+	program.outputHelp();
+	process.exit(1);
 }
