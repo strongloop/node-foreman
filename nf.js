@@ -24,8 +24,8 @@ var command;
 // Foreman Event Bus/Emitter //
 
 var emitter = new events.EventEmitter();
-emitter.once('killall',function(){
-    display.Done("Killing All Processes");
+emitter.once('killall',function(signal){
+    display.Done("Killing all processes with signal ", signal);
 })
 emitter.setMaxListeners(50);
 
@@ -49,9 +49,9 @@ var startForward = require('./lib/forward').startForward
 
 // Kill All Child Processes on SIGINT
 process.once('SIGINT',function userkill(){
-	console.log()
-    display.Warn('Interrupted by User');
-    emitter.emit('killall');
+	console.log();
+	display.Warn('Interrupted by User');
+	emitter.emit('killall', 'SIGINT');
 });
 
 program
