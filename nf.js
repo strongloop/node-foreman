@@ -10,11 +10,9 @@ var quote   = require('shell-quote').quote;
 var program = require('commander');
 var display = require('./lib/console').Console
 
-var package = JSON.parse(
-    fs.readFileSync(path.join(__dirname,'package.json'),'utf-8')
-);
+var nf = require('./package.json');
 
-program.version(package.version);
+program.version(nf.version);
 program.option('-j, --procfile <FILE>' ,'load procfile FILE','Procfile');
 program.option('-e, --env      <FILE>' ,'use FILE to load environment','.env');
 program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',5000);
