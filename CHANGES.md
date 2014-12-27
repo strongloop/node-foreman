@@ -1,4 +1,12 @@
-2014-11-05, Version 1.1.0
+2014-12-27, Version 1.2.0
+=========================
+
+ * fix: honour PORT if set in .env file (Ryan Graham)
+
+ * cli: simplify version loading (Ryan Graham)
+
+
+2014-11-04, Version 1.1.0
 =========================
 
  * Propagate signals on exit (Ryan Graham)
@@ -133,18 +141,15 @@
 
  * Version dependencies (Ryan Graham)
 
- * Ignore npm packed tarballs (Ryan Graham)
-
-
-2014-03-27, Version 0.1.1
-=========================
-
-
 
 2014-03-27, Version 0.1.2
 =========================
 
  * Ignore npm packed tarballs (Ryan Graham)
+
+
+2014-03-27, Version 0.1.1
+=========================
 
  * env: Ignore quoted #'s (Ryan Graham)
 

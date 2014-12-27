@@ -10,14 +10,12 @@ var quote   = require('shell-quote').quote;
 var program = require('commander');
 var display = require('./lib/console').Console
 
-var package = JSON.parse(
-    fs.readFileSync(path.join(__dirname,'package.json'),'utf-8')
-);
+var nf = require('./package.json');
 
-program.version(package.version);
+program.version(nf.version);
 program.option('-j, --procfile <FILE>' ,'load procfile FILE','Procfile');
 program.option('-e, --env      <FILE>' ,'use FILE to load environment','.env');
-program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',5000);
+program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',0);
 
 var command;
 
@@ -97,11 +95,11 @@ program
 
 	if(command.forward) startForward(command.forward,command.intercept,emitter)
 
-	startProxies(reqs,proc,command,emitter,program.port);
+	startProxies(reqs,proc,command,emitter,program.port || envs.PORT || process.env.PORT || 5000);
 
 	if(process.getuid && process.getuid()==0) process.setuid(process.env.SUDO_USER);
 
-    start(proc,reqs,envs,program.port,emitter);
+    start(proc,reqs,envs,program.port || envs.PORT || process.env.PORT || 5000,emitter);
 });
 
 program
@@ -193,7 +191,7 @@ program
     })
     if(!user_exists) display.Warn(display.fmt("User %s Does Not Exist on System",config.user));
 
-    var baseport = parseInt(program.port);
+    var baseport = parseInt(program.port || envs.PORT || process.env.PORT || 5000);
     var baseport_i = 0;
     var baseport_j = 0;
 
