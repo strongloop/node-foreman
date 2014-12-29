@@ -14,7 +14,7 @@ Contributing to `foreman` is easy. In a few simple steps:
   * Adhere to code style outlined in the [Google C++ Style Guide][] and
     [Google Javascript Style Guide][].
 
-  * Sign the [Contributor License Agreement](https://cla.strongloop.com/strongloop/node-foreman)
+  * Sign the [Contributor License Agreement](https://cla.strongloop.com/agreements/strongloop/node-foreman)
 
   * Submit a pull request through Github.
 
