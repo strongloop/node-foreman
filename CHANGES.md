@@ -1,4 +1,10 @@
-2014-12-27, Version 1.2.0
+2015-01-13, Version 1.2.1
+=========================
+
+ * Fix bad CLA URL in CONTRIBUTING.md (Ryan Graham)
+
+
+2014-12-26, Version 1.2.0
 =========================
 
  * fix: honour PORT if set in .env file (Ryan Graham)
