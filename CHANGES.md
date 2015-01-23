@@ -1,4 +1,12 @@
-2015-01-13, Version 1.2.1
+2015-01-23, Version 1.3.0
+=========================
+
+ * Preserve indentation, but trim trailing whitespace (Ryan Graham)
+
+ * style: tabs to 2 spaces, clean up indentation only (Ryan Graham)
+
+
+2015-01-12, Version 1.2.1
 =========================
 
  * Fix bad CLA URL in CONTRIBUTING.md (Ryan Graham)
@@ -115,15 +123,18 @@
 
  * Fixed typo (Brian Gonzalez)
 
-
-2014-03-28, Version 0.2.1
-=========================
-
  * proxy: Fix regression caused by http-proxy upgrade (Ryan Graham)
 
 
 2014-03-28, Version 0.2.0
 =========================
+
+
+
+2014-03-28, Version 0.2.1
+=========================
+
+ * proxy: Fix regression caused by http-proxy upgrade (Ryan Graham)
 
  * Release v0.2.0 (Ryan Graham)
 
@@ -147,15 +158,18 @@
 
  * Version dependencies (Ryan Graham)
 
-
-2014-03-27, Version 0.1.2
-=========================
-
  * Ignore npm packed tarballs (Ryan Graham)
 
 
 2014-03-27, Version 0.1.1
 =========================
+
+
+
+2014-03-27, Version 0.1.2
+=========================
+
+ * Ignore npm packed tarballs (Ryan Graham)
 
  * env: Ignore quoted #'s (Ryan Graham)
 

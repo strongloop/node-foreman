@@ -1,6 +1,6 @@
 {
   "name": "foreman",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "homepage": "http://strongloop.github.io/node-foreman/",
   "description": "Node Implementation of Foreman",
   "author": "StrongLoop, Inc.",
