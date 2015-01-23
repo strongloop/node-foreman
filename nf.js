@@ -61,6 +61,7 @@ program
 .option('-i, --intercept <HOSTNAME>' ,'set forward proxy to intercept HOSTNAME',null)
 .option('-t, --trim      <N>'        ,'trim logs to N characters',0)
 .option('-w, --wrap'                 ,'wrap logs (negates trim)')
+.option('-d, --indent'               ,'preserve indentation in log output')
 .description('Start the jobs in the Procfile')
 .action(function(command_left,command_right){
 
@@ -92,6 +93,11 @@ program
 			display.Alert('Trimming display Output to %d Columns',display.trimline)
 		}
 	}
+
+  if(command.indent){
+    display.indent = true
+    display.Alert('Preserving indentation in Output')
+  }
 
 	if(command.forward) startForward(command.forward,command.intercept,emitter)
 
