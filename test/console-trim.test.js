@@ -18,3 +18,11 @@ assert.equal(Console.trim(colorLong, 50), Console.trim(long, 50))
 
 assert.equal(Console.trim(colorLong, long.length), colorLong,
              'trim() should leave colors intact if no trimming is performed')
+
+var indented = '       indented';
+assert.equal(Console.trim(indented, 100), indented,
+             'trim() should always preserve leading whitespace')
+var padded  = '    padded    ';
+var trimmed = '    padded';
+assert.equal(Console.trim(padded, 100), trimmed,
+             'trim() should always trim trailing whitespace')
