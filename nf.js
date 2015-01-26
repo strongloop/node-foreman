@@ -106,6 +106,7 @@ program
 .command('run')
 .usage('[Options]')
 .option('-s, --showenvs'             ,'show ENV variables on start',false)
+.option('-r, --process  <PROC>'      ,'run single instance of process from procfile')
 .description('Run a one off process using the ENV variables')
 .action(function(command_left,command_right){
 
@@ -123,6 +124,11 @@ program
 
     var input = quote(arguments);
 
+    if(command.process) {
+      input = _procfile.loadProc(program.procfile)[command.process];
+      display.Alert("Running command '%s'",input);
+    }
+
     if(command.showenvs){
         for(key in envs){
             display.Alert("env %s=%s",key,envs[key]);
@@ -131,7 +137,7 @@ program
 
     display.trimline = process.stdout.columns - 5;
 
-    once(input,envs,callback);
+    once(input,envs,program.port,callback);
 });
 
 var exporters = require('./lib/exporters')
