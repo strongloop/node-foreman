@@ -46,7 +46,7 @@ var startProxies = require('./lib/proxy').startProxies;
 var startForward = require('./lib/forward').startForward;
 
 // Kill All Child Processes on SIGINT
-process.once('SIGINT',function userkill(){
+process.once('SIGINT', function() {
   display.Warn('Interrupted by User');
   emitter.emit('killall', 'SIGINT');
 });
@@ -61,9 +61,9 @@ program
   .option('-t, --trim      <N>'        ,'trim logs to N characters',0)
   .option('-w, --wrap'                 ,'wrap logs (negates trim)')
   .description('Start the jobs in the Procfile')
-  .action(function(commandLeft,commandRight) {
+  .action(function(command_left, command_right) {
 
-    command = commandRight || commandLeft;
+    command = command_right || command_left;
 
     var envs = loadEnvs(program.env);
 
@@ -73,7 +73,7 @@ program
 
     if(command.showenvs){
       for(var key in envs){
-        display.Alert("env %s=%s",key,envs[key]);
+        display.Alert("env %s=%s", key, envs[key]);
       }
     }
 
@@ -84,35 +84,35 @@ program
     if(command.wrap) {
       display.wrapline = process.stdout.columns - display.padding - 7;
       display.trimline = 0;
-      display.Alert('Wrapping display Output to %d Columns',display.wrapline);
+      display.Alert('Wrapping display Output to %d Columns', display.wrapline);
     } else {
       display.trimline = command.trim || process.stdout.columns - display.padding - 5;
       if(display.trimline > 0){
-        display.Alert('Trimming display Output to %d Columns',display.trimline);
+        display.Alert('Trimming display Output to %d Columns', display.trimline);
       }
     }
 
     if(command.forward) {
-      startForward(command.forward,command.intercept,emitter);
+      startForward(command.forward, command.intercept, emitter);
     }
 
-    startProxies(reqs,proc,command,emitter,program.port || envs.PORT || process.env.PORT || 5000);
+    startProxies(reqs, proc, command, emitter, program.port || envs.PORT || process.env.PORT || 5000);
 
     if(process.getuid && process.getuid() === 0) {
       process.setuid(process.env.SUDO_USER);
     }
 
-    start(proc,reqs,envs,program.port || envs.PORT || process.env.PORT || 5000,emitter);
+    start(proc, reqs, envs, program.port || envs.PORT || process.env.PORT || 5000, emitter);
   });
 
 program
   .command('run')
   .usage('[Options]')
-  .option('-s, --showenvs'             ,'show ENV variables on start',false)
+  .option('-s, --showenvs', 'show ENV variables on start', false)
   .description('Run a one off process using the ENV variables')
-  .action(function(commandLeft,commandRight){
+  .action(function(command_left, command_right) {
 
-    command = commandRight || commandLeft;
+    command = command_right || command_left;
 
     var envs = loadEnvs(program.env);
     var args = Array.prototype.slice.apply(this.args);
@@ -126,7 +126,7 @@ program
 
     var input = quote(args);
 
-    if(command.showenvs){
+    if(command.showenvs) {
       for(var key in envs){
         display.Alert("env %s=%s",key,envs[key]);
       }
@@ -134,7 +134,7 @@ program
 
     display.trimline = process.stdout.columns - 5;
 
-    once(input,envs,callback);
+    once(input, envs, callback);
   });
 
 var exporters = require('./lib/exporters');
@@ -150,9 +150,9 @@ program
   .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
   .option('-m, --template <DIR>' ,'use template folder')
   .description('Export to an upstart job independent of foreman')
-  .action(function(commandLeft,commandRight){
+  .action(function(command_left, command_right) {
 
-    command = commandRight || commandLeft;
+    command = command_right || command_left;
 
     var envs = loadEnvs(program.env);
 
@@ -192,13 +192,14 @@ program
           userExists = true;
         }
       });
+
     if(!userExists) {
-      display.Warn(display.fmt("User %s Does Not Exist on System",config.user));
+      display.Warn(display.fmt("User %s Does Not Exist on System", config.user));
     }
 
     var baseport = parseInt(program.port || envs.PORT || process.env.PORT || 5000);
-    var baseportI = 0;
-    var baseportJ = 0;
+    var baseport_i = 0;
+    var baseport_j = 0;
 
     config.processes = [];
 
@@ -210,7 +211,7 @@ program
       var cmd = procs[key];
 
       if (!cmd){
-        display.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
+        display.Warn("Required Key '%s' Does Not Exist in Procfile Definition", key);
         continue;
       }
 
@@ -234,7 +235,7 @@ program
           conf[_] = c[_];
         }
 
-        conf.port = baseport + baseportI + baseportJ * 100;
+        conf.port = baseport + baseport_i + baseport_j * 100;
 
         var envl = [];
         for(key in envs) {
@@ -251,7 +252,7 @@ program
         // Write the APP-PROCESS-N.conf File
         writeout.foreman_app_n(conf,command.out);
 
-        baseportI++;
+        baseport_i++;
         c.numbers.push({number: i});
       }
 
@@ -268,8 +269,8 @@ program
       // Write the APP-Process.conf File
       writeout.foreman_app(c,command.out);
 
-      baseportI = 0;
-      baseportJ++;
+      baseport_i = 0;
+      baseport_j++;
     }
 
     // Write the APP.conf File
