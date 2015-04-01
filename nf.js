@@ -4,11 +4,11 @@ var util    = require('util');
 var path    = require('path');
 var events  = require('events');
 var fs      = require('fs');
-var colors  = require('./lib/colors')
+var colors  = require('./lib/colors');
 var quote   = require('shell-quote').quote;
 
 var program = require('commander');
-var display = require('./lib/console').Console
+var display = require('./lib/console').Console;
 
 var nf = require('./package.json');
 
@@ -23,139 +23,142 @@ var command;
 
 var emitter = new events.EventEmitter();
 emitter.once('killall',function(signal){
-    display.Done("Killing all processes with signal ", signal);
-})
+  display.Done("Killing all processes with signal ", signal);
+});
 emitter.setMaxListeners(50);
 
-var _proc = require('./lib/proc')
-var start = _proc.start
-var once = _proc.once
+var _proc = require('./lib/proc');
+var start = _proc.start;
+var once  = _proc.once;
 
-var _procfile = require('./lib/procfile')
-var procs     = _procfile.procs
-var loadProc  = _procfile.loadProc
+var _procfile = require('./lib/procfile');
+var procs     = _procfile.procs;
+var loadProc  = _procfile.loadProc;
 
-var _envs       = require('./lib/envs')
-var loadEnvs    = _envs.loadEnvs
+var _envs    = require('./lib/envs');
+var loadEnvs = _envs.loadEnvs;
 
-var _requirements     = require('./lib/requirements')
-var getreqs           = _requirements.getreqs
-var calculatePadding  = _requirements.calculatePadding
+var _requirements    = require('./lib/requirements');
+var getreqs          = _requirements.getreqs;
+var calculatePadding = _requirements.calculatePadding;
 
-var startProxies = require('./lib/proxy').startProxies
-var startForward = require('./lib/forward').startForward
+var startProxies = require('./lib/proxy').startProxies;
+var startForward = require('./lib/forward').startForward;
 
 // Kill All Child Processes on SIGINT
 process.once('SIGINT',function userkill(){
-	console.log();
-	display.Warn('Interrupted by User');
-	emitter.emit('killall', 'SIGINT');
+  display.Warn('Interrupted by User');
+  emitter.emit('killall', 'SIGINT');
 });
 
 program
-.command('start')
-.usage('[Options] [Processes] e.g. web=1,log=2,api')
-.option('-s, --showenvs'             ,'show ENV variables on start',false)
-.option('-x, --proxy     <PORT>'     ,'start a load balancing proxy on PORT')
-.option('-f, --forward   <PORT>'     ,'start a forward proxy on PORT')
-.option('-i, --intercept <HOSTNAME>' ,'set forward proxy to intercept HOSTNAME',null)
-.option('-t, --trim      <N>'        ,'trim logs to N characters',0)
-.option('-w, --wrap'                 ,'wrap logs (negates trim)')
-.description('Start the jobs in the Procfile')
-.action(function(command_left,command_right){
+  .command('start')
+  .usage('[Options] [Processes] e.g. web=1,log=2,api')
+  .option('-s, --showenvs'             ,'show ENV variables on start',false)
+  .option('-x, --proxy     <PORT>'     ,'start a load balancing proxy on PORT')
+  .option('-f, --forward   <PORT>'     ,'start a forward proxy on PORT')
+  .option('-i, --intercept <HOSTNAME>' ,'set forward proxy to intercept HOSTNAME',null)
+  .option('-t, --trim      <N>'        ,'trim logs to N characters',0)
+  .option('-w, --wrap'                 ,'wrap logs (negates trim)')
+  .description('Start the jobs in the Procfile')
+  .action(function(commandLeft,commandRight) {
 
-	command = command_right || command_left;
+    command = commandRight || commandLeft;
 
     var envs = loadEnvs(program.env);
 
     var proc = loadProc(program.procfile);
 
-    if(!proc) return;
+    if(!proc) { return; }
 
-	if(command.showenvs){
-		for(key in envs){
-			display.Alert("env %s=%s",key,envs[key]);
-		}
-	}
+    if(command.showenvs){
+      for(var key in envs){
+        display.Alert("env %s=%s",key,envs[key]);
+      }
+    }
 
     var reqs = getreqs(program.args[0],proc);
 
     display.padding  = calculatePadding(reqs);
 
-	if(command.wrap){
-		display.wrapline = process.stdout.columns - display.padding - 7
-		display.trimline = 0
-		display.Alert('Wrapping display Output to %d Columns',display.wrapline)
-	}else{
-		display.trimline = command.trim || process.stdout.columns - display.padding - 5
-		if(display.trimline>0){
-			display.Alert('Trimming display Output to %d Columns',display.trimline)
-		}
-	}
-
-	if(command.forward) startForward(command.forward,command.intercept,emitter)
-
-	startProxies(reqs,proc,command,emitter,program.port || envs.PORT || process.env.PORT || 5000);
-
-	if(process.getuid && process.getuid()==0) process.setuid(process.env.SUDO_USER);
-
-    start(proc,reqs,envs,program.port || envs.PORT || process.env.PORT || 5000,emitter);
-});
-
-program
-.command('run')
-.usage('[Options]')
-.option('-s, --showenvs'             ,'show ENV variables on start',false)
-.description('Run a one off process using the ENV variables')
-.action(function(command_left,command_right){
-
-    command = command_right || command_left;
-
-    var envs = loadEnvs(program.env);
-    var arguments = Array.prototype.slice.apply(this.args);
-    arguments.pop();
-
-    var callback = function(code) {
-        process.exit(code);
+    if(command.wrap) {
+      display.wrapline = process.stdout.columns - display.padding - 7;
+      display.trimline = 0;
+      display.Alert('Wrapping display Output to %d Columns',display.wrapline);
+    } else {
+      display.trimline = command.trim || process.stdout.columns - display.padding - 5;
+      if(display.trimline > 0){
+        display.Alert('Trimming display Output to %d Columns',display.trimline);
+      }
     }
 
-    if(!command) return;
+    if(command.forward) {
+      startForward(command.forward,command.intercept,emitter);
+    }
 
-    var input = quote(arguments);
+    startProxies(reqs,proc,command,emitter,program.port || envs.PORT || process.env.PORT || 5000);
+
+    if(process.getuid && process.getuid() === 0) {
+      process.setuid(process.env.SUDO_USER);
+    }
+
+    start(proc,reqs,envs,program.port || envs.PORT || process.env.PORT || 5000,emitter);
+  });
+
+program
+  .command('run')
+  .usage('[Options]')
+  .option('-s, --showenvs'             ,'show ENV variables on start',false)
+  .description('Run a one off process using the ENV variables')
+  .action(function(commandLeft,commandRight){
+
+    command = commandRight || commandLeft;
+
+    var envs = loadEnvs(program.env);
+    var args = Array.prototype.slice.apply(this.args);
+    args.pop();
+
+    var callback = function(code) {
+      process.exit(code);
+    };
+
+    if(!command) { return; }
+
+    var input = quote(args);
 
     if(command.showenvs){
-        for(key in envs){
-            display.Alert("env %s=%s",key,envs[key]);
-        }
+      for(var key in envs){
+        display.Alert("env %s=%s",key,envs[key]);
+      }
     }
 
     display.trimline = process.stdout.columns - 5;
 
     once(input,envs,callback);
-});
+  });
 
-var exporters = require('./lib/exporters')
+var exporters = require('./lib/exporters');
 
 program
-.command('export')
-.option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
-.option('-u, --user <NAME>' ,'export upstart user as NAME','root')
-.option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
-.option('-c, --cwd  <DIR>'  ,'change current working directory to DIR')
-.option('-g, --gid  <GID>'  ,'set gid of upstart config to GID')
-.option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/log')
-.option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
-.option('-m, --template <DIR>' ,'use template folder')
-.description('Export to an upstart job independent of foreman')
-.action(function(command_left,command_right){
+  .command('export')
+  .option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
+  .option('-u, --user <NAME>' ,'export upstart user as NAME','root')
+  .option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
+  .option('-c, --cwd  <DIR>'  ,'change current working directory to DIR')
+  .option('-g, --gid  <GID>'  ,'set gid of upstart config to GID')
+  .option('-l, --log  <DIR>'  ,'specify upstart log directory','/var/log')
+  .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
+  .option('-m, --template <DIR>' ,'use template folder')
+  .description('Export to an upstart job independent of foreman')
+  .action(function(commandLeft,commandRight){
 
-	command = command_right || command_left;
+    command = commandRight || commandLeft;
 
     var envs = loadEnvs(program.env);
 
     var procs = loadProc(program.procfile);
 
-    if(!procs) return;
+    if(!procs) { return; }
 
     var req  = getreqs(program.args[0],procs);
 
@@ -170,116 +173,117 @@ program
         template    : command.template
     };
 
-    config.envfile = path.resolve(program.env)
+    config.envfile = path.resolve(program.env);
 
-    var writeout
-    if(exporters[command.type]){
-        writeout = exporters[command.type]
-    }else{
-        display.Error("Unknown Export Format",command.type)
-        process.exit(1);
+    var writeout;
+    if(exporters[command.type]) {
+      writeout = exporters[command.type];
+    } else {
+      display.Error("Unknown Export Format", command.type);
+      process.exit(1);
     }
 
     // Check for Upstart User
     // friendly warning - does not stop export
-    var user_exists = false;
+    var userExists = false;
     fs.readFileSync('/etc/passwd')
-    .toString().split(/\n/).forEach(function(line){
+      .toString().split(/\n/).forEach(function(line) {
         if(line.match(/^[^:]*/)[0] == config.user){
-            user_exists = true;
+          userExists = true;
         }
-    })
-    if(!user_exists) display.Warn(display.fmt("User %s Does Not Exist on System",config.user));
+      });
+    if(!userExists) {
+      display.Warn(display.fmt("User %s Does Not Exist on System",config.user));
+    }
 
     var baseport = parseInt(program.port || envs.PORT || process.env.PORT || 5000);
-    var baseport_i = 0;
-    var baseport_j = 0;
+    var baseportI = 0;
+    var baseportJ = 0;
 
-    config.processes=[]
+    config.processes = [];
 
     // This is ugly because of shitty support for array copying
     // Cleanup is definitely required
-    for(key in req){
+    for(var key in req) {
 
-        var c = {};
-        var cmd = procs[key];
+      var c = {};
+      var cmd = procs[key];
 
-        if (!cmd){
-            display.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
-            continue;
+      if (!cmd){
+        display.Warn("Required Key '%s' Does Not Exist in Procfile Definition",key);
+        continue;
+      }
+
+      var n = req[key];
+
+      config.processes.push({process:key, n: n});
+      c.process = key;
+      c.command = cmd;
+
+      for(var _ in config){
+        c[_] = config[_];
+      }
+
+      c.numbers = [];
+      for(var i=1; i <= n; i++) {
+
+        var conf = {};
+        conf.number = i;
+
+        for(_ in c){
+          conf[_] = c[_];
         }
 
-        var n = req[key];
-
-        config.processes.push({process:key, n: n})
-        c.process=key;
-        c.command=cmd;
-
-        for(_ in config){
-            c[_] = config[_];
-        }
-
-        c.numbers = [];
-        for(var i=1;i<=n;i++){
-
-            var conf = {};
-            conf.number = i;
-
-            for(_ in c){
-                conf[_] = c[_];
-            }
-
-            conf.port = baseport + baseport_i + baseport_j*100;
-
-
-            var envl = [];
-            for(key in envs){
-                envl.push({
-                    key: key,
-                    value: envs[key]
-                })
-            }
-            envl.push({ key: 'PORT', value: conf.port });
-            envl.push({ key: 'FOREMAN_WORKER_NAME', value: conf.process+'.'+conf.number });
-
-            conf.envs = envl;
-
-            // Write the APP-PROCESS-N.conf File
-            writeout.foreman_app_n(conf,command.out);
-
-            baseport_i++;
-            c.numbers.push({number:i})
-        }
+        conf.port = baseport + baseportI + baseportJ * 100;
 
         var envl = [];
-        for(key in envs){
-            envl.push({
-                key: key,
-                value: envs[key]
-            })
+        for(key in envs) {
+          envl.push({
+            key: key,
+            value: envs[key]
+          });
         }
+        envl.push({ key: 'PORT', value: conf.port });
+        envl.push({ key: 'FOREMAN_WORKER_NAME', value: conf.process + '.' + conf.number });
 
-        c.envs = envl;
+        conf.envs = envl;
 
-        // Write the APP-Process.conf File
-        writeout.foreman_app(c,command.out);
+        // Write the APP-PROCESS-N.conf File
+        writeout.foreman_app_n(conf,command.out);
 
-        baseport_i=0;
-        baseport_j++;
+        baseportI++;
+        c.numbers.push({number: i});
+      }
+
+      envl = [];
+      for(key in envs){
+        envl.push({
+          key: key,
+          value: envs[key]
+        });
+      }
+
+      c.envs = envl;
+
+      // Write the APP-Process.conf File
+      writeout.foreman_app(c,command.out);
+
+      baseportI = 0;
+      baseportJ++;
     }
 
     // Write the APP.conf File
     writeout.foreman(config,command.out);
 
-});
+  });
 
 program.parse(process.argv);
 
-if(program.args.length==0) {
-	console.log(colors.cyan('   _____                           '))
-	console.log(colors.cyan('  |   __|___ ___ ___ _____ ___ ___ '))
-	console.log(colors.yellow('  |   __| . |  _| -_|     |   |   |'))
-	console.log(colors.magenta('  |__|  |___|_| |___|_|_|_|_^_|_|_|'))
-	program.outputHelp();
-	process.exit(1);
+if(program.args.length === 0) {
+  console.log(colors.cyan('   _____                           '));
+  console.log(colors.cyan('  |   __|___ ___ ___ _____ ___ ___ '));
+  console.log(colors.yellow('  |   __| . |  _| -_|     |   |   |'));
+  console.log(colors.magenta('  |__|  |___|_| |___|_|_|_|_^_|_|_|'));
+  program.outputHelp();
+  process.exit(1);
 }
