@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var util    = require('util');
 var path    = require('path');
 var events  = require('events');
 var fs      = require('fs');
@@ -32,7 +31,6 @@ var start = _proc.start;
 var once  = _proc.once;
 
 var _procfile = require('./lib/procfile');
-var procs     = _procfile.procs;
 var loadProc  = _procfile.loadProc;
 
 var _envs    = require('./lib/envs');
@@ -200,6 +198,7 @@ program
     var baseport = parseInt(program.port || envs.PORT || process.env.PORT || 5000);
     var baseport_i = 0;
     var baseport_j = 0;
+    var envl = [];
 
     config.processes = [];
 
@@ -237,7 +236,7 @@ program
 
         conf.port = baseport + baseport_i + baseport_j * 100;
 
-        var envl = [];
+        envl = [];
         for(key in envs) {
           envl.push({
             key: key,

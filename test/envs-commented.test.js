@@ -13,9 +13,9 @@ var input = '### This is a config file...\n' +
 
 var expected = 'setting=important\n'
 
-var loadedEnv = envs.KeyValue(input)
+var loadedEnv = envs.keyValue(input)
 var dumpedEnv = envs.dumpEnv(loadedEnv)
-var loadedFlat = envs.KeyValue(expected)
+var loadedFlat = envs.keyValue(expected)
 var dumpedFlat = envs.dumpEnv(loadedFlat)
 assert.equal(dumpedEnv, expected)
 assert.equal(dumpedFlat, expected)
