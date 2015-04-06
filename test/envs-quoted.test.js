@@ -1,7 +1,7 @@
 var assert = require('assert')
   , envs   = require('../lib/envs')
 
-var parsedHash = envs.KeyValue(
+var parsedHash = envs.keyValue(
   '#commented heading. \n' +
   'key = "quoted#hash" \n' +
   'key2 = stripped#comment \n' +

@@ -4,7 +4,7 @@ var assert = require('assert')
 var emptyEnvs = ['', '\n', ' \n \n \n']
 
 emptyEnvs.forEach(function (env) {
-  var loaded = envs.KeyValue(env)
+  var loaded = envs.keyValue(env)
   // {} == {}
   assert.equal(Object.keys(loaded).length, 0)
 })
