@@ -1,6 +1,5 @@
 var url  = require('url');
 var httpProxy = require('http-proxy');
-var dropsudo = require('drop-sudo');
 
 function startForward(proxy_port, proxy_host) {
 
@@ -38,7 +37,7 @@ function startForward(proxy_port, proxy_host) {
 
   });
 
-  proxy.listen(proxy_port, dropsudo);
+  proxy.listen(proxy_port);
 }
 
 startForward(process.env.PROXY_PORT, process.env.PROXY_HOST);

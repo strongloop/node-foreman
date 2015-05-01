@@ -1,6 +1,5 @@
 var http    = require('http');
 var htproxy = require('http-proxy');
-var dropsudo= require('drop-sudo');
 
 var port = parseInt(process.env.PORT);
 
@@ -37,4 +36,4 @@ http.createServer(function (req, res) {
 
   addresses.push(target);
 
-}).listen(port, dropsudo);
+}).listen(port);

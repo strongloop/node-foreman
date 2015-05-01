@@ -5,7 +5,6 @@ var events  = require('events');
 var fs      = require('fs');
 var colors  = require('./lib/colors');
 var quote   = require('shell-quote').quote;
-var dropsudo= require('drop-sudo');
 
 var program = require('commander');
 var display = require('./lib/console').Console;
@@ -96,8 +95,6 @@ program
     }
 
     startProxies(reqs, proc, command, emitter, program.port || envs.PORT || process.env.PORT || 5000);
-
-    dropsudo();
 
     start(proc, reqs, envs, program.port || envs.PORT || process.env.PORT || 5000, emitter);
   });
