@@ -1,3 +1,39 @@
+2015-06-03, Version 1.4.0
+=========================
+
+ * Lint in travis (jigsaw)
+
+ * fix iojs version (jigsaw)
+
+ * support node 0.12.x and iojs 1.6.x (jigsaw)
+
+ * refactor lib/requirements (jigsaw)
+
+ * refactor lib/proxy (jigsaw)
+
+ * refactor lib/procfile (jigsaw)
+
+ * refactor lib/proc (jigsaw)
+
+ * refactor lib/forward (jigsaw)
+
+ * refactor lib/exporters (jigsaw)
+
+ * refactor lib/envs (jigsaw)
+
+ * refactor console (jigsaw)
+
+ * refactor lib/colors.js (jigsaw)
+
+ * refactor forward.js (jigsaw)
+
+ * refactor proxy.js and allow snake case (jigsaw)
+
+ * refactor nf.js for jshint (jigsaw)
+
+ * add jshint configure file (jigsaw)
+
+
 2015-01-23, Version 1.3.0
 =========================
 
@@ -123,18 +159,15 @@
 
  * Fixed typo (Brian Gonzalez)
 
- * proxy: Fix regression caused by http-proxy upgrade (Ryan Graham)
-
-
-2014-03-28, Version 0.2.0
-=========================
-
-
 
 2014-03-28, Version 0.2.1
 =========================
 
  * proxy: Fix regression caused by http-proxy upgrade (Ryan Graham)
+
+
+2014-03-28, Version 0.2.0
+=========================
 
  * Release v0.2.0 (Ryan Graham)
 
@@ -158,18 +191,15 @@
 
  * Version dependencies (Ryan Graham)
 
- * Ignore npm packed tarballs (Ryan Graham)
-
-
-2014-03-27, Version 0.1.1
-=========================
-
-
 
 2014-03-27, Version 0.1.2
 =========================
 
  * Ignore npm packed tarballs (Ryan Graham)
+
+
+2014-03-27, Version 0.1.1
+=========================
 
  * env: Ignore quoted #'s (Ryan Graham)
 
