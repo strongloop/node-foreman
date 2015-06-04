@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "commander": "~2.1.0",
+    "drop-sudo": "0.0.1",
     "http-proxy": "~1.0.3",
     "mu2": "~0.5.20",
     "shell-quote": "~1.4.2"
