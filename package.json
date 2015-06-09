@@ -15,6 +15,12 @@
   "bin": {
     "nf": "nf.js"
   },
+  "files": [
+    "forward.js",
+    "nf.js",
+    "proxy.js",
+    "lib/"
+  ],
   "scripts": {
     "test": "tap test",
     "lint": "jshint *.js lib/*.js",
