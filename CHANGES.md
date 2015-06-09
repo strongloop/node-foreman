@@ -1,3 +1,11 @@
+2015-06-09, Version 1.4.1
+=========================
+
+ * package: don't include tests and fixtures (Ryan Graham)
+
+ * update `http-proxy` (Victor Kotseruba)
+
+
 2015-06-03, Version 1.4.0
 =========================
 
