@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "commander": "~2.1.0",
-    "http-proxy": "~1.0.3",
+    "http-proxy": "~1.11.1",
     "mu2": "~0.5.20",
     "shell-quote": "~1.4.2"
   },
