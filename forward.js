@@ -1,9 +1,12 @@
+var http = require('http');
 var url  = require('url');
 var httpProxy = require('http-proxy');
 
 function startForward(proxy_port, proxy_host) {
 
-  var proxy = httpProxy.createServer(function (req, res, proxy) {
+  var proxy = httpProxy.createProxyServer({});
+
+  var httpServer = http.createServer(function(req, res) {
 
     var _url  = url.parse(req.url);
 
@@ -33,11 +36,23 @@ function startForward(proxy_port, proxy_host) {
         port: port
       };
     }
-    proxy.proxyRequest(req, res, target);
+
+    proxy.web(req, res, {target: target});
 
   });
 
-  proxy.listen(proxy_port, function(){
+  proxy.on('upgrade', function (req, socket, head) {
+    proxy.ws(req, socket, head);
+  });
+
+  proxy.on('error', function(err, req, res){
+    console.error('Proxy Error: ', err);
+    res.writeHead(500);
+    res.write('Upstream Proxy Error');
+    res.end();
+  });
+
+  httpServer.listen(proxy_port, function() {
     if(process.getuid() === 0) {
       process.setuid(process.env.SUDO_USER);
     }
