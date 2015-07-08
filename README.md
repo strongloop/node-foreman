@@ -298,4 +298,4 @@ The forward proxy will intercept requests based on domain name, and route them t
 
 A forward proxy is useful when testing OAuth, or other external services with application callbacks.
 
-For users with Google Chrome, this can be paired with [Proxy Switch Sharp](http://switchy.samabox.com/) for great results.
+For users with Google Chrome, this can be paired with [FelisCatus SwitchyOmega](https://github.com/FelisCatus/SwitchyOmega) for great results.
