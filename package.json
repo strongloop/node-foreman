@@ -22,9 +22,8 @@
     "lib/"
   ],
   "scripts": {
-    "test": "tap test",
-    "lint": "jshint *.js lib/*.js",
-    "travis": "npm test && npm run lint"
+    "pretest": "jshint *.js lib/*.js",
+    "test": "tap test/*.test.*"
   },
   "dependencies": {
     "commander": "~2.1.0",
@@ -48,6 +47,6 @@
     "chai": "~1.9.1",
     "jshint": "^2.6.3",
     "rimraf": "~2.2.8",
-    "tap": "~0.4.8"
+    "tap": "^0.7.1"
   }
 }
