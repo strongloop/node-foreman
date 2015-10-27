@@ -13,7 +13,7 @@ var nf = require('./package.json');
 
 program.version(nf.version);
 program.option('-j, --procfile <FILE>' ,'load procfile FILE','Procfile');
-program.option('-e, --env      <FILE>' ,'use FILE to load environment','.env');
+program.option('-e, --env      <FILE>' ,'load environment from FILE, a comma-separated list','.env');
 program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',0);
 
 var command;
