@@ -1,4 +1,6 @@
+var fs      = require('fs');
 var http    = require('http');
+var https   = require('https');
 var htproxy = require('http-proxy');
 
 var port = parseInt(process.env.PORT);
@@ -6,6 +8,9 @@ var port = parseInt(process.env.PORT);
 var upstream_host = process.env.UPSTREAM_HOST;
 var upstream_port = parseInt(process.env.UPSTREAM_PORT);
 var upstream_size = parseInt(process.env.UPSTREAM_SIZE);
+var sslCert       = process.env.SSL_CERT;
+var sslKey        = process.env.SSL_KEY;
+var sslPort       = parseInt(process.env.SSL_PORT);
 
 var addresses = [];
 for(var i = 0; i < upstream_size; i++) {
@@ -16,8 +21,22 @@ for(var i = 0; i < upstream_size; i++) {
   });
 }
 
+function dropSudo() {
+  if (process.getuid &&
+      process.setuid &&
+      process.env.SUDO_USER &&
+      process.getuid() === 0) {
+    process.setuid(process.env.SUDO_USER);
+  }
+}
+
 // Proxy
-var proxy = htproxy.createProxyServer();
+var proxy = htproxy.createProxyServer({
+  // Set the x-forwarded- headers, because apps often need them to make
+  // decisions (such as about redirecting to SSL or a canonical host),
+  // and proxies often do this for you in the real world.
+  xfwd: true
+});
 
 // Hanle Error
 proxy.on('proxyError',function(err,req,res){
@@ -36,9 +55,20 @@ http.createServer(function (req, res) {
 
   addresses.push(target);
 
-}).listen(port,function(){
-  if (process.getuid && process.setuid && process.env.SUDO_USER && process.getuid() === 0) {
-    process.setuid(process.env.SUDO_USER);
-  }
+}).listen(port, dropSudo);
 
-});
+if (sslCert && sslKey) {
+  https.createServer({
+      key: fs.readFileSync(sslKey),
+      cert: fs.readFileSync(sslCert)
+    },
+    function (req, res) {
+
+    var target = addresses.shift();
+
+    proxy.web(req, res, {target: target});
+
+    addresses.push(target);
+
+  }).listen(sslPort, dropSudo);
+}

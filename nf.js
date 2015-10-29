@@ -54,6 +54,8 @@ program
   .usage('[Options] [Processes] e.g. web=1,log=2,api')
   .option('-s, --showenvs'             ,'show ENV variables on start',false)
   .option('-x, --proxy     <PORT>'     ,'start a load balancing proxy on PORT')
+  .option('--ssl-key       <KEY FILE>' ,'a key file to use when proxying SSL')
+  .option('--ssl-cert      <CERT FILE>','a cert file to use when proxying SSL')
   .option('-f, --forward   <PORT>'     ,'start a forward proxy on PORT')
   .option('-i, --intercept <HOSTNAME>' ,'set forward proxy to intercept HOSTNAME',null)
   .option('-t, --trim      <N>'        ,'trim logs to N characters',0)
