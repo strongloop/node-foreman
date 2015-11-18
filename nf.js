@@ -98,10 +98,6 @@ program
 
     startProxies(reqs, proc, command, emitter, program.port || envs.PORT || process.env.PORT || 5000);
 
-    if(process.getuid && process.getuid() === 0) {
-      process.setuid(process.env.SUDO_USER);
-    }
-
     start(proc, reqs, envs, program.port || envs.PORT || process.env.PORT || 5000, emitter);
   });
 

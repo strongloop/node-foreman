@@ -52,11 +52,7 @@ function startForward(proxy_port, proxy_host) {
     res.end();
   });
 
-  httpServer.listen(proxy_port, function() {
-    if(process.getuid() === 0) {
-      process.setuid(process.env.SUDO_USER);
-    }
-  });
+  httpServer.listen(proxy_port);
 }
 
 startForward(process.env.PROXY_PORT, process.env.PROXY_HOST);
