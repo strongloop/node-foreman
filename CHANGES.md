@@ -1,3 +1,21 @@
+2015-11-19, Version 2.0.0-0
+===========================
+
+ * Dont' drop sudo (Vasiliy Yorkin)
+
+ * Cleanup: No need to duplicate the color keys, can use Object.keys() to ext from colors object (Sathish Kumar)
+
+ * Adds support for SSL proxy (Jeff Kolesky)
+
+ * update package scripts to be more portable (Ryan Graham)
+
+ * Fix README to reflect Proxy SwitchSharp is no longer mantained (Leo Gallucci)
+
+ * fix forward proxy `http-proxy` usage (Victor Kotseruba)
+
+ * fix spawning multiple proxies (Victor Kotseruba)
+
+
 2015-06-09, Version 1.4.1
 =========================
 
