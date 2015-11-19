@@ -21,15 +21,6 @@ for(var i = 0; i < upstream_size; i++) {
   });
 }
 
-function dropSudo() {
-  if (process.getuid &&
-      process.setuid &&
-      process.env.SUDO_USER &&
-      process.getuid() === 0) {
-    process.setuid(process.env.SUDO_USER);
-  }
-}
-
 // Proxy
 var proxy = htproxy.createProxyServer({
   // Set the x-forwarded- headers, because apps often need them to make
@@ -55,7 +46,7 @@ http.createServer(function (req, res) {
 
   addresses.push(target);
 
-}).listen(port, dropSudo);
+}).listen(port);
 
 if (sslCert && sslKey) {
   https.createServer({
@@ -70,5 +61,5 @@ if (sslCert && sslKey) {
 
     addresses.push(target);
 
-  }).listen(sslPort, dropSudo);
+  }).listen(sslPort);
 }
