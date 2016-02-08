@@ -35,6 +35,12 @@ c.Error('such an error')
 assertLogged('error', /\[FAIL\]/)
 assertLogged('error', /such an error/)
 
+resetLogs()
+c.raw = true;
+c.log('a key', null, 'a log message');
+assertLogged('log', /^a log message$/);
+c.raw = false;
+
 assert.lengthOf(c.trim('a very long string this is!', 5), 6)
 
 function makeLogger(collector) {
