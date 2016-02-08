@@ -57,6 +57,7 @@ program
   .option('--ssl-cert      <CERT FILE>','a cert file to use when proxying SSL')
   .option('-f, --forward   <PORT>'     ,'start a forward proxy on PORT')
   .option('-i, --intercept <HOSTNAME>' ,'set forward proxy to intercept HOSTNAME',null)
+  .option('-r, --raw'                  ,'raw log output with no app name, timestamp, wrap or trim', false)
   .option('-t, --trim      <N>'        ,'trim logs to N characters',0)
   .option('-w, --wrap'                 ,'wrap logs (negates trim)')
   .description('Start the jobs in the Procfile')
@@ -79,6 +80,8 @@ program
     var reqs = getreqs(args, proc);
 
     display.padding  = calculatePadding(reqs);
+
+    display.raw = command.raw;
 
     if(command.wrap) {
       display.wrapline = process.stdout.columns - display.padding - 7;
