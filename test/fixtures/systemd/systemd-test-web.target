@@ -1,3 +1,3 @@
 [Unit]
 Requires=systemd-test.target
-Wants=systemd-test-web-.service
+Wants=systemd-test-web-1.service 
