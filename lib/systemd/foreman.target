@@ -1,3 +1,5 @@
 [Unit]
-{{{#processes}}}Wants={{{application}}}-{{{process}}}.target
-{{{/processes}}}
+Wants={{#processes}} {{{application}}}-{{{process}}}.target{{/processes}}
+
+[Install]
+WantedBy=multi-user.target
