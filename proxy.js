@@ -30,7 +30,7 @@ var proxy = htproxy.createProxyServer({
 });
 
 // Hanle Error
-proxy.on('proxyError',function(err,req,res){
+proxy.on('error',function(err,req,res){
   console.error("Proxy Error: ",err);
   res.writeHead(500);
   res.write("Upstream Proxy Error");
