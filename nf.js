@@ -59,7 +59,8 @@ program
   .option('-f, --forward   <PORT>'     ,'start a forward proxy on PORT')
   .option('-i, --intercept <HOSTNAME>' ,'set forward proxy to intercept HOSTNAME',null)
   .option('-t, --trim      <N>'        ,'trim logs to N characters',0)
-  .option('-w, --wrap'                 ,'wrap logs (negates trim)')
+  .option('-w, --wrap'                 ,'wrap logs (negates trim)',0)
+  .option('--wrap-width    <N>'        ,'wrap logs to N characters')
   .description('Start the jobs in the Procfile')
   .action(function(command_left, command_right) {
 
@@ -81,8 +82,8 @@ program
 
     display.padding  = calculatePadding(reqs);
 
-    if(command.wrap) {
-      display.wrapline = process.stdout.columns - display.padding - 7;
+    if(command.wrap || command.wrapWidth) {
+      display.wrapline = command.wrapWidth || process.stdout.columns - display.padding - 7;
       display.trimline = 0;
       display.Alert('Wrapping display Output to %d Columns', display.wrapline);
     } else {
