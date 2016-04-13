@@ -1,5 +1,5 @@
-var assert = require('assert')
-  , envs   = require('../lib/envs')
+var assert = require('assert');
+var envs   = require('../lib/envs');
 
 var input = '### This is a config file...\n' +
             '   \n' +
@@ -9,13 +9,13 @@ var input = '### This is a config file...\n' +
             '# Dangerous, we should commend this out: \n' +
             '# DANGER = HIGH VOLTAGE   \n' +
             '    \n' +
-            '# end \n'
+            '# end \n';
 
-var expected = 'setting=important\n'
+var expected = 'setting=important\n';
 
-var loadedEnv = envs.keyValue(input)
-var dumpedEnv = envs.dumpEnv(loadedEnv)
-var loadedFlat = envs.keyValue(expected)
-var dumpedFlat = envs.dumpEnv(loadedFlat)
-assert.equal(dumpedEnv, expected)
-assert.equal(dumpedFlat, expected)
+var loadedEnv = envs.keyValue(input);
+var dumpedEnv = envs.dumpEnv(loadedEnv);
+var loadedFlat = envs.keyValue(expected);
+var dumpedFlat = envs.dumpEnv(loadedFlat);
+assert.equal(dumpedEnv, expected);
+assert.equal(dumpedFlat, expected);
