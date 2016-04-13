@@ -22,7 +22,7 @@
     "lib/"
   ],
   "scripts": {
-    "pretest": "jshint *.js lib/*.js",
+    "pretest": "jshint .",
     "test": "tap test/*.test.*"
   },
   "dependencies": {
