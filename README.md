@@ -278,10 +278,7 @@ If you require access to a privileged port, start Node Foreman with `sudo`:
 	$ sudo nf start -x 80 web=5
 	[OKAY] Starting Proxy Server 80 -> 5000-5004
 
-Your application will then be accessible via port 80.
-
-Your applications will _still_ be started in user space, and the proxy will
-drop its privileges after binding to the privileged port.
+Your application will then be accessible via port 80, but it will be running as root.
 
 ## Forward Proxy
 
