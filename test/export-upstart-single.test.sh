@@ -11,7 +11,7 @@ PATH=$(dirname $(which node)) $NF export \
   --out sandbox --type upstart-single \
   --env fixtures/env.env --procfile fixtures/Procfile
 
-$SED -i -e "s%$(pwd)%TEST_DIR%g" \
+$SED -i '' -e "s%$(pwd)%TEST_DIR%g" \
         -e "s%$(dirname $(which node))%TEST_PATH%g" sandbox/*
 
 # Fixtures can be updated to match output by running `npm test --update-fixtures`
