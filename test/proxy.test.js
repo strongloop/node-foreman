@@ -7,6 +7,13 @@ var tap    = require('tap');
 var events = require('events');
 var http   = require('http');
 
+var Console = require('../lib/console');
+Console.Console = new Console({
+  log: tap.comment,
+  warn: tap.comment,
+  error: tap.comment,
+});
+
 var startServer  = require('./server').startServer;
 var startProxies = require('../lib/proxy').startProxies;
 
