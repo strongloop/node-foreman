@@ -86,7 +86,7 @@ program
       display.trimline = 0;
       display.Alert('Wrapping display Output to %d Columns', display.wrapline);
     } else {
-      display.trimline = command.trim || process.stdout.columns - display.padding - 5;
+      display.trimline = command.trim;
       if(display.trimline > 0){
         display.Alert('Trimming display Output to %d Columns', display.trimline);
       }
