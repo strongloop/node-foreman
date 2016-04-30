@@ -11,19 +11,19 @@ var json = {
   "last": 42
 };
 var flattened = {
+  'LAST': 42,
   'TOP_MIDDLE_BOTTOM': 'value',
   'TOP_OTHER_0': 'zero',
   'TOP_OTHER_1': 'one',
   'TOP_OTHER_2': 'two',
-  'LAST': 42,
 };
 
 var dumped = [
+  'LAST=42',
   'TOP_MIDDLE_BOTTOM=value',
   'TOP_OTHER_0=zero',
   'TOP_OTHER_1=one',
   'TOP_OTHER_2=two',
-  'LAST=42',
 ].join('\n') + '\n';
 
 assert.deepEqual(envs.flattenJSON(json), flattened);
