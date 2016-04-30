@@ -26,5 +26,5 @@ process.on('exit', function() {
     assert.equal(callbackCounter, 2);
     assert.equal(fs.existsSync('./should-exist.txt'), true);
     assert.equal(fs.existsSync('./should-not-exist.txt'), false);
-    assert.equal(fs.existsSync(envs.FILENAME), true);
+    assert.equal(fs.existsSync(envs.FILENAME), true, 'should exist: ' + envs.FILENAME);
 });
