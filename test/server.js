@@ -19,6 +19,7 @@ module.exports.startServer = function startServer(port, emitter) {
     // Send back the request headers so the test can validate that the
     // x-forwarded-* headers were set.
     response.write(JSON.stringify({
+      server: server.address(),
       request: {
         headers: request.headers
       }

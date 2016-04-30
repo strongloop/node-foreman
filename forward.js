@@ -57,7 +57,9 @@ function startForward(proxy_port, proxy_host) {
     res.end();
   });
 
-  httpServer.listen(proxy_port);
+  httpServer.listen(proxy_port, '127.0.0.1', function() {
+    process.send({http: this.address().port});
+  });
 }
 
 startForward(process.env.PROXY_PORT, process.env.PROXY_HOST);
