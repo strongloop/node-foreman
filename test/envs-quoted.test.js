@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('assert');
+var tap    = require('tap');
 var envs   = require('../lib/envs');
 
 var parsedHash = envs.keyValue(
@@ -13,6 +13,6 @@ var parsedHash = envs.keyValue(
   'key3 = base64=== \n'
 );
 
-assert.equal(parsedHash.key, 'quoted#hash');
-assert.equal(parsedHash.key2, 'stripped');
-assert.equal(parsedHash.key3, 'base64===');
+tap.equal(parsedHash.key, 'quoted#hash');
+tap.equal(parsedHash.key2, 'stripped');
+tap.equal(parsedHash.key3, 'base64===');

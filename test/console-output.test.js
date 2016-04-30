@@ -6,6 +6,7 @@
 var assert = require('chai').assert;
 var util = require('util');
 var Console = require('../lib/console');
+var tap = require('tap');
 
 var logs = { log: [], warn: [], error: [] };
 var logger = {
@@ -14,40 +15,42 @@ var logger = {
   error: makeLogger(logs.error)
 };
 
-var c = new Console(logger);
-resetLogs();
+tap.doesNotThrow(function() {
+  var c = new Console(logger);
+  resetLogs();
 
-assert.equal(logs.log.length, 0);
-assert.equal(logs.warn.length, 0);
-assert.equal(logs.error.length, 0);
+  assert.equal(logs.log.length, 0);
+  assert.equal(logs.warn.length, 0);
+  assert.equal(logs.error.length, 0);
 
-resetLogs();
-c.Alert('ze message');
-assertLogged('log', /\[OKAY\]/);
-assertLogged('log', /ze message/);
+  resetLogs();
+  c.Alert('ze message');
+  assertLogged('log', /\[OKAY\]/);
+  assertLogged('log', /ze message/);
 
-resetLogs();
-c.Done('ze message');
-assertLogged('log', /\[DONE\]/);
-assertLogged('log', /ze message/);
+  resetLogs();
+  c.Done('ze message');
+  assertLogged('log', /\[DONE\]/);
+  assertLogged('log', /ze message/);
 
-resetLogs();
-c.Warn('ze warning');
-assertLogged('warn', /\[WARN\]/);
-assertLogged('warn', /ze warning/);
+  resetLogs();
+  c.Warn('ze warning');
+  assertLogged('warn', /\[WARN\]/);
+  assertLogged('warn', /ze warning/);
 
-resetLogs();
-c.Error('such an error');
-assertLogged('error', /\[FAIL\]/);
-assertLogged('error', /such an error/);
+  resetLogs();
+  c.Error('such an error');
+  assertLogged('error', /\[FAIL\]/);
+  assertLogged('error', /such an error/);
 
-resetLogs();
-c.raw = true;
-c.log('a key', null, 'a log message');
-assertLogged('log', /^a log message$/);
-c.raw = false;
+  resetLogs();
+  c.raw = true;
+  c.log('a key', null, 'a log message');
+  assertLogged('log', /^a log message$/);
+  c.raw = false;
 
-assert.lengthOf(c.trim('a very long string this is!', 5), 6);
+  assert.lengthOf(c.trim('a very long string this is!', 5), 6);
+});
 
 function makeLogger(collector) {
   return function() {

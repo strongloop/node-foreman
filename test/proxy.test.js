@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('assert');
+var tap    = require('tap');
 var events = require('events');
 var http   = require('http');
 
@@ -13,6 +13,7 @@ var startProxies = require('../lib/proxy').startProxies;
 var emitter = new events.EventEmitter();
 
 var proxy_port  = 0;
+var server_port = 0;
 
 var reqs = {
   'test-web': 1
@@ -24,20 +25,29 @@ var command = {
   proxy: proxy_port.toString()
 };
 
-startServer(0, emitter).on('listening', function() {
-  console.error('test server listening:', this.address());
-  startProxies(reqs, proc, command, emitter, this.address().port);
-  emitter.once('http', function(port) {
-    proxy_port = port;
-    test_proxy();
+tap.test('start server', function(t) {
+  startServer(0, emitter).on('listening', function() {
+    t.comment('test server listening:', this.address());
+    t.assert(this.address());
+    server_port = this.address().port;
+    t.end();
   });
 });
 
-function test_proxy() {
+tap.test('start proxies', function(t) {
+  emitter.once('http', function(port) {
+    t.assert(port, 'listening');
+    proxy_port = port;
+    t.end();
+  });
+  startProxies(reqs, proc, command, emitter, server_port);
+});
+
+tap.test('test proxies', function(t) {
   http.get({
     port: proxy_port
   }, function (response) {
-    assert.equal(response.statusCode, 200);
+    t.equal(response.statusCode, 200);
 
     var body = '';
     response.setEncoding('utf8');
@@ -46,10 +56,11 @@ function test_proxy() {
     });
     response.on('end', function () {
       body = JSON.parse(body);
-      assert.equal(body.request.headers['x-forwarded-proto'], 'http');
+      t.equal(body.request.headers['x-forwarded-proto'], 'http');
 
       // Only after the response has been returned can we shut down properly
       emitter.emit('killall', 'SIGINT');
+      t.end();
     });
   });
-}
+});

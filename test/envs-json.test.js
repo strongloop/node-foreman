@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('assert');
+var tap    = require('tap');
 var envs   = require('../lib/envs');
 
 var json = {
@@ -31,5 +31,5 @@ var dumped = [
   'TOP_OTHER_2=two',
 ].join('\n') + '\n';
 
-assert.deepEqual(envs.flattenJSON(json), flattened);
-assert.equal(envs.dumpEnv(flattened), dumped);
+tap.deepEqual(envs.flattenJSON(json), flattened);
+tap.equal(envs.dumpEnv(flattened), dumped);
