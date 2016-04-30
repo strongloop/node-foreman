@@ -1,4 +1,58 @@
-2015-11-19, Version 2.0.0-0
+2016-04-30, Version 2.0.0-1
+===========================
+
+ * output environment varialbes in predicatable order (Ryan Graham)
+
+ * Allow loading multiple ENV files. (Joe Esposito)
+
+ * add --raw option to suppress log decorations (Andrew Herrington)
+
+ * Changed handler name to error instead of proxyError (Nazar Hussain)
+
+ * improve error messages when loading a procfile (toastynerd)
+
+ * fix exported systemd unit dependencies (Guten Ye)
+
+ * test: refactor tests to use ephemeral ports (Ryan Graham)
+
+ * clean up CLI argument handling (Ryan Graham)
+
+ * deps: upgrade commander (Ryan Graham)
+
+ * fix padding of keys (Jeff Dickey)
+
+ * fix 'nf' command name (Jeff Dickey)
+
+ * disable trimming by default (Jeff Dickey)
+
+ * reorderd colors (Jeff Dickey)
+
+ * disable black/white colors (Jeff Dickey)
+
+ * display exit code (Jeff Dickey)
+
+ * test: use OS-specific env expansion (Ryan Graham)
+
+ * test: improve assertion message (Ryan Graham)
+
+ * disable node 6.x in Travis and Appveyor (Ryan Graham)
+
+ * update Travis config and add Appveyor (Ryan Graham)
+
+ * Remove note about dropping privileges (#108) (Ari Pollak)
+
+ * fix jshint issues (Jeff Dickey)
+
+ * jshint all local js files (Jeff Dickey)
+
+ * added jshintignore (Jeff Dickey)
+
+ * Add '' argument to sed -i to fix mac os tests (Ransom Briggs)
+
+ * Small typo fix in README (Simon Taranto)
+
+
+2015-11-18, Version 2.0.0-0
 ===========================
 
  * Dont' drop sudo (Vasiliy Yorkin)
