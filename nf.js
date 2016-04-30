@@ -16,7 +16,6 @@ program.option('-j, --procfile <FILE>' ,'load procfile FILE','Procfile');
 program.option('-e, --env      <FILE>' ,'use FILE to load environment','.env');
 program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',0);
 
-var command;
 
 // Foreman Event Bus/Emitter //
 
@@ -50,7 +49,7 @@ process.once('SIGINT', function() {
 });
 
 program
-  .command('start')
+  .command('start [procs]')
   .usage('[Options] [Processes] e.g. web=1,log=2,api')
   .option('-s, --showenvs'             ,'show ENV variables on start',false)
   .option('-x, --proxy     <PORT>'     ,'start a load balancing proxy on PORT')
@@ -61,9 +60,9 @@ program
   .option('-t, --trim      <N>'        ,'trim logs to N characters',0)
   .option('-w, --wrap'                 ,'wrap logs (negates trim)')
   .description('Start the jobs in the Procfile')
-  .action(function(command_left, command_right) {
+  .action(function(args) {
 
-    command = command_right || command_left;
+    var command = this;
 
     var envs = loadEnvs(program.env);
 
@@ -77,7 +76,7 @@ program
       }
     }
 
-    var reqs = getreqs(program.args[0],proc);
+    var reqs = getreqs(args, proc);
 
     display.padding  = calculatePadding(reqs);
 
@@ -102,23 +101,21 @@ program
   });
 
 program
-  .command('run')
+  .command('run <COMMAND...>')
   .usage('[Options]')
   .option('-s, --showenvs', 'show ENV variables on start', false)
   .description('Run a one off process using the ENV variables')
-  .action(function(command_left, command_right) {
+  .action(function(args) {
 
-    command = command_right || command_left;
+    var command = this;
 
     var envs = loadEnvs(program.env);
-    var args = Array.prototype.slice.apply(this.args);
-    args.pop();
 
     var callback = function(code) {
       process.exit(code);
     };
 
-    if(!command) { return; }
+    if(!args || !args.length) { return; }
 
     var input = quote(args);
 
@@ -136,7 +133,7 @@ program
 var exporters = require('./lib/exporters');
 
 program
-  .command('export')
+  .command('export [PROCS]')
   .option('-a, --app  <NAME>' ,'export upstart application as NAME','foreman')
   .option('-u, --user <NAME>' ,'export upstart user as NAME','root')
   .option('-o, --out  <DIR>'  ,'export upstart files to DIR','.')
@@ -146,9 +143,9 @@ program
   .option('-t, --type <TYPE>' ,'export file to TYPE (default upstart)','upstart')
   .option('-m, --template <DIR>' ,'use template folder')
   .description('Export to an upstart job independent of foreman')
-  .action(function(command_left, command_right) {
+  .action(function(procArgs) {
 
-    command = command_right || command_left;
+    var command = this;
 
     var envs = loadEnvs(program.env);
 
@@ -156,7 +153,7 @@ program
 
     if(!procs) { return; }
 
-    var req  = getreqs(program.args[0],procs);
+    var req  = getreqs(procArgs, procs);
 
     // Variables for Upstart Template
     var config = {
@@ -277,7 +274,7 @@ program
 
 program.parse(process.argv);
 
-if(program.args.length === 0) {
+if (!process.argv.slice(2).length) {
   console.log(colors.cyan('   _____                           '));
   console.log(colors.cyan('  |   __|___ ___ ___ _____ ___ ___ '));
   console.log(colors.yellow('  |   __| . |  _| -_|     |   |   |'));
