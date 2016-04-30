@@ -7,3 +7,5 @@ checkstyle.xml
 tests.tap
 .travis.yml
 appveyor.yml
+.nyc_output
+sandbox

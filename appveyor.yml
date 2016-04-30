@@ -1,4 +1,6 @@
 environment:
+  COVERALLS_REPO_TOKEN:
+    secure: sxoCWFzAUW5WrH5KKKY38kZo1oB3Bu+WWJDshymilkDq/rKR4j9qXmrf6Ae/ekt8
   matrix:
     - nodejs_version: '6'
     - nodejs_version: '5'

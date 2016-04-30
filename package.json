@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "pretest": "jshint .",
-    "test": "tap test/*.test.*"
+    "test": "tap --coverage test/*.test.*"
   },
   "dependencies": {
     "commander": "~2.9.0",
