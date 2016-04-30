@@ -7,12 +7,14 @@ var tap    = require('tap');
 var rimraf = require('rimraf');
 var fs     = require('fs');
 var once   = require('../lib/proc').once;
+var path   = require('path');
 
 var envs = { FILENAME: "should-also-exist.txt" };
 
-rimraf.sync('./sandbox');
-fs.mkdirSync('./sandbox');
-process.chdir('./sandbox');
+var SANDBOX = path.resolve(__dirname, 'sandbox');
+rimraf.sync(SANDBOX);
+fs.mkdirSync(SANDBOX);
+process.chdir(SANDBOX);
 
 tap.test('preconditions', function(t) {
   t.equal(fs.existsSync('./should-exist.txt'), false);

@@ -45,7 +45,7 @@
   "preferGlobal": true,
   "devDependencies": {
     "jshint": "^2.6.3",
-    "rimraf": "~2.2.8",
+    "rimraf": "^2.5.2",
     "tap": "^5.7.1"
   }
 }
