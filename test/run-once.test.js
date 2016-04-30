@@ -20,7 +20,13 @@ assert.equal(fs.existsSync('./should-also-exist.txt'), false);
 assert.equal(fs.existsSync('./should-not-exist.txt'), false);
 
 once("touch should-exist.txt", null, callbackIncrementer);
-once("touch $FILENAME", envs, callbackIncrementer);
+// TODO: this is currently OS dependent, but we should probably do the
+// expansion ourselves
+if (process.platform === 'win32') {
+  once("touch %FILENAME%", envs, callbackIncrementer);
+} else {
+  once("touch $FILENAME", envs, callbackIncrementer);
+}
 
 process.on('exit', function() {
     assert.equal(callbackCounter, 2);
