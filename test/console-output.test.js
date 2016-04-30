@@ -3,7 +3,6 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('chai').assert;
 var util = require('util');
 var Console = require('../lib/console');
 var tap = require('tap');
@@ -15,41 +14,43 @@ var logger = {
   error: makeLogger(logs.error)
 };
 
-tap.doesNotThrow(function() {
+tap.test('log methods', function(t) {
   var c = new Console(logger);
   resetLogs();
 
-  assert.equal(logs.log.length, 0);
-  assert.equal(logs.warn.length, 0);
-  assert.equal(logs.error.length, 0);
+  t.equal(logs.log.length, 0);
+  t.equal(logs.warn.length, 0);
+  t.equal(logs.error.length, 0);
 
   resetLogs();
   c.Alert('ze message');
-  assertLogged('log', /\[OKAY\]/);
-  assertLogged('log', /ze message/);
+  assertLogged(t, 'log', /\[OKAY\]/);
+  assertLogged(t, 'log', /ze message/);
 
   resetLogs();
   c.Done('ze message');
-  assertLogged('log', /\[DONE\]/);
-  assertLogged('log', /ze message/);
+  assertLogged(t, 'log', /\[DONE\]/);
+  assertLogged(t, 'log', /ze message/);
 
   resetLogs();
   c.Warn('ze warning');
-  assertLogged('warn', /\[WARN\]/);
-  assertLogged('warn', /ze warning/);
+  assertLogged(t, 'warn', /\[WARN\]/);
+  assertLogged(t, 'warn', /ze warning/);
 
   resetLogs();
   c.Error('such an error');
-  assertLogged('error', /\[FAIL\]/);
-  assertLogged('error', /such an error/);
+  assertLogged(t, 'error', /\[FAIL\]/);
+  assertLogged(t, 'error', /such an error/);
 
   resetLogs();
   c.raw = true;
   c.log('a key', null, 'a log message');
-  assertLogged('log', /^a log message$/);
+  assertLogged(t, 'log', /^a log message$/);
   c.raw = false;
 
-  assert.lengthOf(c.trim('a very long string this is!', 5), 6);
+  t.equal(c.trim('a very long string this is!', 5).length, 6);
+
+  t.end();
 });
 
 function makeLogger(collector) {
@@ -64,12 +65,12 @@ function resetLogs() {
   logs.error.splice(0, logs.error.length);
 }
 
-function assertLogged(logName, pattern) {
+function assertLogged(t, logName, pattern) {
   var actual = logs[logName][logs[logName].length - 1];
 
   Object.keys(logs).forEach(function (log) {
-    assert.lengthOf(logs[log], logName === log ? 1 : 0);
+    t.equal(logs[log].length, logName === log ? 1 : 0);
   });
 
-  assert.match(actual, pattern);
+  t.match(actual, pattern);
 }

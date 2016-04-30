@@ -44,7 +44,6 @@
   },
   "preferGlobal": true,
   "devDependencies": {
-    "chai": "~1.9.1",
     "jshint": "^2.6.3",
     "rimraf": "~2.2.8",
     "tap": "^5.7.1"
