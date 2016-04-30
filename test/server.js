@@ -34,7 +34,7 @@ module.exports.startServer = function startServer(port, emitter) {
     });
   });
 
-  server.listen(port);
+  server.listen(port, '127.0.0.1');
 
   emitter.once('killall', function () {
     server.close();

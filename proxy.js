@@ -46,7 +46,9 @@ http.createServer(function (req, res) {
 
   addresses.push(target);
 
-}).listen(port);
+}).listen(port, function() {
+  process.send({http: this.address().port});
+});
 
 if (sslCert && sslKey) {
   https.createServer({
@@ -61,5 +63,7 @@ if (sslCert && sslKey) {
 
     addresses.push(target);
 
-  }).listen(sslPort);
+  }).listen(sslPort, function() {
+    process.send({https: this.address().port});
+  });
 }

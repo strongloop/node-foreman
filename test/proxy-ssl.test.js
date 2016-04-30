@@ -7,8 +7,7 @@ var startProxies = require('../lib/proxy').startProxies;
 
 var emitter = new events.EventEmitter();
 
-var proxy_port  = 3000;
-var server_port = 5000;
+var proxy_port  = 0;
 
 var reqs = {
   'test-web': 1
@@ -22,15 +21,18 @@ var command = {
   sslKey: './fixtures/certs/my-server.key.pem'
 };
 
-startServer(server_port, emitter);
-startProxies(reqs, proc, command, emitter, server_port);
-
-// Artificially wait a bit for the server and proxy to start up
-setTimeout(test_proxy, 200);
+startServer(0, emitter).on('listening', function() {
+  console.error('test server listening:', this.address());
+  startProxies(reqs, proc, command, emitter, this.address().port);
+  emitter.once('https', function(port) {
+    proxy_port = port;
+    test_proxy();
+  });
+});
 
 function test_proxy() {
   https.get({
-    port: proxy_port + 443,
+    port: proxy_port,
     rejectUnauthorized: false
   }, function (response) {
     assert.equal(response.statusCode, 200);

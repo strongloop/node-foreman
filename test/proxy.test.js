@@ -7,8 +7,7 @@ var startProxies = require('../lib/proxy').startProxies;
 
 var emitter = new events.EventEmitter();
 
-var proxy_port  = 3000;
-var server_port = 5000;
+var proxy_port  = 0;
 
 var reqs = {
   'test-web': 1
@@ -20,11 +19,14 @@ var command = {
   proxy: proxy_port.toString()
 };
 
-startServer(server_port, emitter);
-startProxies(reqs, proc, command, emitter, server_port);
-
-// Artificially wait a bit for the server and proxy to start up
-setTimeout(test_proxy, 200);
+startServer(0, emitter).on('listening', function() {
+  console.error('test server listening:', this.address());
+  startProxies(reqs, proc, command, emitter, this.address().port);
+  emitter.once('http', function(port) {
+    proxy_port = port;
+    test_proxy();
+  });
+});
 
 function test_proxy() {
   http.get({
