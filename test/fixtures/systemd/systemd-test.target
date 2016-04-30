@@ -1,2 +1,5 @@
 [Unit]
-Wants=systemd-test-.target
+Wants=systemd-test-web.target systemd-test-api.target systemd-test-log.target 
+
+[Install]
+WantedBy=multi-user.target
