@@ -33,8 +33,16 @@ function comment() {
 
 function assert_exit() {
   expected="$1"
-  shift
-  cmd="$*"
+  case $expected in
+    ''|*[!0-9]*)
+      expected=0
+      cmd="$*"
+      ;;
+    *)
+      shift
+      cmd="$*"
+      ;;
+  esac
   output=`$cmd 2>&1`
   result=$?
   report="exit $result should be $expected: '$cmd'"
