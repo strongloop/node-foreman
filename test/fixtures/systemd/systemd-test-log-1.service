@@ -10,7 +10,7 @@ WorkingDirectory=TEST_DIR
 User=test-user
 Group=test-user
 
-EnvironmentFile=-TEST_DIR/fixtures/env.env
+EnvironmentFile=-TEST_DIR/test/fixtures/env.env
 Environment=PORT=5200
 
 StandardInput=null

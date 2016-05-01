@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
-<service_bundle type="manifest" name="{{{application}}}">
-  <service name="site/{{{application}}}" type="service" version="1">
+<service_bundle type="manifest" name="smf-test">
+  <service name="site/smf-test" type="service" version="1">
 
     <create_default_instance enabled="true"/>
 
@@ -15,18 +15,22 @@
       <service_fmri value="svc:/system/filesystem/local"/>
     </dependency>
 
-    <method_context working_directory="{{{cwd}}}">
-      <method_credential user="{{{user}}}" group="{{{group}}}" privileges="basic,net_privaddr"/>
+    <method_context working_directory="TEST_DIR">
+      <method_credential user="test-user" group="test-user" privileges="basic,net_privaddr"/>
       <method_environment>
-        {{#envs}}<envvar name="{{{key}}}" value="{{{value}}}"/>
-        {{/envs}}
+        <envvar name="PATH" value="TEST_PATH"/>
+<envvar name="bind" value="0.0.0.0"/>
+<envvar name="mysql_host" value="localhost"/>
+<envvar name="mysql_pass" value="peanutbutter"/>
+<envvar name="mysql_user" value="toast"/>
+<envvar name="port" value="80"/>
       </method_environment>
     </method_context>
 
     <exec_method
       type="method"
       name="start"
-      exec="{{{command}}}"
+      exec="node server.js 5000"
       timeout_seconds="60"/>
 
     <exec_method
@@ -49,7 +53,7 @@
 
     <template>
       <common_name>
-        <loctext xml:lang="C">{{{application}}}</loctext>
+        <loctext xml:lang="C">smf-test</loctext>
       </common_name>
     </template>
 
