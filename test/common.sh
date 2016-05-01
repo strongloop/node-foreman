@@ -113,7 +113,6 @@ function assert_report() {
 }
 
 echo 'TAP version 13'
-export PATH=$(dirname $(pwd))/node_modules/.bin:$PATH
 
 # make fd 3 the new fd 1 and redirect original fd 1 to fd 2
 # this allows us to completely isolate the TAP output from these helpers

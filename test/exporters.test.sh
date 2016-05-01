@@ -2,7 +2,7 @@
 DIR=$(dirname "${BASH_SOURCE[0]}")
 source $DIR/common.sh
 
-NODE=$(which node)
+NODE=node
 NF="$DIR/../nf.js"
 SED=`which gsed || which sed`
 
@@ -12,8 +12,8 @@ assert_sandbox_contents() {
   fixture=$1
 
   $SED -i '' -e "s%/EXPORT/PATH%TEST_DIR%g" \
-          -e "s%$(pwd)%TEST_DIR%g" \
-          -e "s%$(dirname $NODE)%TEST_PATH%g" $DIR/sandbox/*
+    -e "s%$(pwd)%TEST_DIR%g" \
+    $DIR/sandbox/*
 
   # Fixtures can be updated to match output by running `npm test --update-fixtures`
   if test -n "$npm_config_update_fixtures"; then
@@ -30,7 +30,7 @@ test_exporter() {
   args=$3
   rm -rf $DIR/sandbox
   mkdir -p $DIR/sandbox
-  PATH=$(dirname $NODE) assert_exit $NODE $NF export \
+  assert_exit $NODE $NF export \
     --app $type-test --user test-user \
     --out $DIR/sandbox --type $type \
     $args \
