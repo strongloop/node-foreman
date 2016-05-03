@@ -1,3 +1,8 @@
+// Copyright IBM Corp. 2012,2016. All Rights Reserved.
+// Node module: foreman
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
+
 var fs      = require('fs');
 var http    = require('http');
 var https   = require('https');
