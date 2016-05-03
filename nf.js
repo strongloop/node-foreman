@@ -5,7 +5,6 @@ var events  = require('events');
 var fs      = require('fs');
 var colors  = require('./lib/colors');
 var quote   = require('shell-quote').quote;
-var exec    = require('child_process').exec;
 
 var program = require('commander');
 var display = require('./lib/console').Console;
@@ -127,7 +126,7 @@ program
   .description('Stop the current running jobs')
   .action(function() {
     fs.readFile(pidPath, function(err, pid){
-      exec('kill -INT ' + pid);
+      process.kill(pid, 'SIGINT');
     });
   });
 
@@ -136,7 +135,7 @@ program
   .description('Restart the current running jobs')
   .action(function() {
     fs.readFile(pidPath, function(err, pid){
-      exec('kill -HUP ' + pid);
+      process.kill(pid, 'SIGHUP');
     });
   });
 
