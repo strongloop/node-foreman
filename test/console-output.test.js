@@ -1,3 +1,8 @@
+// Copyright IBM Corp. 2014,2016. All Rights Reserved.
+// Node module: foreman
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
+
 var assert = require('chai').assert;
 var util = require('util');
 var Console = require('../lib/console');

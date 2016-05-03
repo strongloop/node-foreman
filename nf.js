@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// Copyright IBM Corp. 2012,2015. All Rights Reserved.
+// Node module: foreman
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
 
 var path    = require('path');
 var events  = require('events');
