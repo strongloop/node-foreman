@@ -64,7 +64,7 @@ fs.open(pidPath, 'r', function(err) {
   }
 });
 
-var kickstart = function() {
+var kickstart = function(args) {
   var command = this;
 
   var envs = loadEnvs(program.env);
@@ -119,7 +119,7 @@ program
   .option('-w, --wrap'                 ,'wrap logs (negates trim)')
   .description('Start the jobs in the Procfile')
   .action(function(args) {
-    kickstart().bind(this);
+    kickstart.bind(this)(args);
   });
 
 program
