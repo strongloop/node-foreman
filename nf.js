@@ -5,6 +5,7 @@ var events  = require('events');
 var fs      = require('fs');
 var colors  = require('./lib/colors');
 var quote   = require('shell-quote').quote;
+var exec    = require('child_process').exec;
 
 var program = require('commander');
 var display = require('./lib/console').Console;
@@ -20,7 +21,7 @@ program.option('-p, --port     <PORT>' ,'start indexing ports at number PORT',0)
 // Foreman Event Bus/Emitter //
 
 var emitter = new events.EventEmitter();
-emitter.once('killall',function(signal){
+emitter.once('killall', function(signal) {
   display.Done("Killing all processes with signal ", signal);
 });
 emitter.setMaxListeners(50);
@@ -42,11 +43,67 @@ var calculatePadding = _requirements.calculatePadding;
 var startProxies = require('./lib/proxy').startProxies;
 var startForward = require('./lib/forward').startForward;
 
+var pidPath = path.resolve(process.env.PWD, './.nf.run');
+
 // Kill All Child Processes on SIGINT
 process.once('SIGINT', function() {
   display.Warn('Interrupted by User');
+  fs.unlink(pidPath);
   emitter.emit('killall', 'SIGINT');
 });
+
+process.on('SIGHUP', function() {
+  display.Alert('Restart by User');
+  emitter.emit('restart', 'SIGINT');
+  kickstart();
+});
+
+fs.open(pidPath, 'r', function(err) {
+  if(err !== null) {
+    fs.writeFile(pidPath, process.pid);
+  }
+});
+
+var kickstart = function() {
+  var command = this;
+
+  var envs = loadEnvs(program.env);
+
+  var proc = loadProc(program.procfile);
+
+  if(!proc) { return; }
+
+  if(command.showenvs){
+    for(var key in envs){
+      display.Alert("env %s=%s", key, envs[key]);
+    }
+  }
+
+  var reqs = getreqs(args, proc);
+
+  display.padding  = calculatePadding(reqs);
+
+  display.raw = command.raw;
+
+  if(command.wrap) {
+    display.wrapline = process.stdout.columns - display.padding - 7;
+    display.trimline = 0;
+    display.Alert('Wrapping display Output to %d Columns', display.wrapline);
+  } else {
+    display.trimline = command.trim;
+    if(display.trimline > 0){
+      display.Alert('Trimming display Output to %d Columns', display.trimline);
+    }
+  }
+
+  if(command.forward) {
+    startForward(command.forward, command.intercept, emitter);
+  }
+
+  startProxies(reqs, proc, command, emitter, program.port || envs.PORT || process.env.PORT || 5000);
+
+  start(proc, reqs, envs, program.port || envs.PORT || process.env.PORT || 5000, emitter);
+};
 
 program
   .command('start [procs]')
@@ -62,45 +119,25 @@ program
   .option('-w, --wrap'                 ,'wrap logs (negates trim)')
   .description('Start the jobs in the Procfile')
   .action(function(args) {
+    kickstart().bind(this);
+  });
 
-    var command = this;
+program
+  .command('stop')
+  .description('Stop the current running jobs')
+  .action(function() {
+    fs.readFile(pidPath, function(err, pid){
+      exec('kill -INT ' + pid);
+    });
+  });
 
-    var envs = loadEnvs(program.env);
-
-    var proc = loadProc(program.procfile);
-
-    if(!proc) { return; }
-
-    if(command.showenvs){
-      for(var key in envs){
-        display.Alert("env %s=%s", key, envs[key]);
-      }
-    }
-
-    var reqs = getreqs(args, proc);
-
-    display.padding  = calculatePadding(reqs);
-
-    display.raw = command.raw;
-
-    if(command.wrap) {
-      display.wrapline = process.stdout.columns - display.padding - 7;
-      display.trimline = 0;
-      display.Alert('Wrapping display Output to %d Columns', display.wrapline);
-    } else {
-      display.trimline = command.trim;
-      if(display.trimline > 0){
-        display.Alert('Trimming display Output to %d Columns', display.trimline);
-      }
-    }
-
-    if(command.forward) {
-      startForward(command.forward, command.intercept, emitter);
-    }
-
-    startProxies(reqs, proc, command, emitter, program.port || envs.PORT || process.env.PORT || 5000);
-
-    start(proc, reqs, envs, program.port || envs.PORT || process.env.PORT || 5000, emitter);
+program
+  .command('restart')
+  .description('Restart the current running jobs')
+  .action(function() {
+    fs.readFile(pidPath, function(err, pid){
+      exec('kill -HUP ' + pid);
+    });
   });
 
 program
