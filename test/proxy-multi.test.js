@@ -88,6 +88,8 @@ tap.test('cleanup', function(t) {
   servers[0].close(t.ifErr);
   servers[1].close(t.ifErr);
   emitter.on('exit', function(code, signal) {
+    // to ensure process lives long enough to finish logging
+    setTimeout(function noop(){}, 200);
     t.ok(code || signal);
   });
   emitter.emit('killall', 'SIGINT');

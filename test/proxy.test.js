@@ -94,6 +94,8 @@ tap.test('test proxy failure', function(t) {
 
 tap.test('cleanup', function(t) {
   emitter.on('exit', function(code, signal) {
+    // to ensure process lives long enough to finish logging
+    setTimeout(function noop(){}, 200);
     t.pass('proxy exitted');
     t.end();
   });
