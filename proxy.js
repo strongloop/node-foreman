@@ -26,6 +26,22 @@ for(var i = 0; i < upstream_size; i++) {
   });
 }
 
+var servers = [];
+process.on('message', function(msg) {
+  if (msg === 'shutdown') {
+    servers.forEach(function(s) {
+      s.close();
+      if (s.unref) {
+        s.unref();
+      }
+    });
+    process.removeListener('disconnect', process.exit);
+    process.disconnect();
+  }
+});
+
+process.on('disconnect', process.exit);
+
 // Proxy
 var proxy = htproxy.createProxyServer({
   // Set the x-forwarded- headers, because apps often need them to make
@@ -33,6 +49,7 @@ var proxy = htproxy.createProxyServer({
   // and proxies often do this for you in the real world.
   xfwd: true
 });
+servers.push(proxy);
 
 // Hanle Error
 proxy.on('error',function(err,req,res){
@@ -43,7 +60,7 @@ proxy.on('error',function(err,req,res){
 });
 
 // Main HTTP Server
-http.createServer(function (req, res) {
+var httpServer = http.createServer(function (req, res) {
 
   var target = addresses.shift();
 
@@ -54,9 +71,11 @@ http.createServer(function (req, res) {
 }).listen(port, function() {
   process.send({http: this.address().port});
 });
+servers.push(httpServer);
 
+var httpsServer;
 if (sslCert && sslKey) {
-  https.createServer({
+  httpsServer = https.createServer({
       key: fs.readFileSync(sslKey),
       cert: fs.readFileSync(sslCert)
     },
@@ -71,4 +90,5 @@ if (sslCert && sslKey) {
   }).listen(sslPort, function() {
     process.send({https: this.address().port});
   });
+  servers.push(httpsServer);
 }
