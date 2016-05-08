@@ -18,6 +18,7 @@ var startServer  = require('./server').startServer;
 var startProxies = require('../lib/proxy').startProxies;
 
 var emitter = new events.EventEmitter();
+var server = null;
 
 var proxy_port  = 0;
 var server_port = 0;
@@ -33,7 +34,7 @@ var command = {
 };
 
 tap.test('start server', function(t) {
-  startServer(0, emitter).on('listening', function() {
+  server = startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
     server_port = this.address().port;
@@ -68,6 +69,27 @@ tap.test('test proxies', function(t) {
       t.end();
     });
   });
+});
+
+tap.test('test proxy failure', function(t) {
+  server.close();
+  http.get({
+    port: proxy_port,
+    path: 'http://foreman.com:' + server_port + '/',
+  }, verify);
+  function verify(response) {
+    t.equal(response.statusCode, 500);
+
+    var body = '';
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      body += chunk;
+    });
+    response.on('end', function () {
+      t.match(body, /Upstream Proxy Error/i);
+      t.end();
+    });
+  }
 });
 
 tap.test('cleanup', function(t) {
