@@ -65,9 +65,15 @@ tap.test('test proxies', function(t) {
       body = JSON.parse(body);
       t.equal(body.request.headers['x-forwarded-proto'], 'http');
 
-      // Only after the response has been returned can we shut down properly
-      emitter.emit('killall', 'SIGINT');
       t.end();
     });
   });
+});
+
+tap.test('cleanup', function(t) {
+  emitter.on('exit', function(code, signal) {
+    t.pass('proxy exitted');
+    t.end();
+  });
+  emitter.emit('killall', 'SIGINT');
 });
