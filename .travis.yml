@@ -7,4 +7,5 @@ node_js:
 - '0.10'
 env:
   global:
-    secure: rxAxzXc6ff4UQIMYD46SZQP37fIDdZ2IlMtPx34dp61sIQj9dKAYmjtwr4J7Ra+qiisdia+szvfNLaPa6ThCWj6OOhdwNMd/vRsoGQGHHYMf2qU+uMwA+8TP9WzjLlEVtu3TiU+gNb8YEfMW6TzTRKSHGwC1aNYOa14PhhAygYY=
+    - COVERALLS_PARALLEL=true
+    - secure: rxAxzXc6ff4UQIMYD46SZQP37fIDdZ2IlMtPx34dp61sIQj9dKAYmjtwr4J7Ra+qiisdia+szvfNLaPa6ThCWj6OOhdwNMd/vRsoGQGHHYMf2qU+uMwA+8TP9WzjLlEVtu3TiU+gNb8YEfMW6TzTRKSHGwC1aNYOa14PhhAygYY=
