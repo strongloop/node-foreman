@@ -1,6 +1,8 @@
 environment:
   COVERALLS_REPO_TOKEN:
     secure: sxoCWFzAUW5WrH5KKKY38kZo1oB3Bu+WWJDshymilkDq/rKR4j9qXmrf6Ae/ekt8
+  COVERALLS_PARALLEL: true
+  CI: true
   matrix:
     - nodejs_version: '6'
     - nodejs_version: '5'
@@ -21,6 +23,4 @@ build: off
 deploy: off
 version: '{build}'
 test_script:
-  - set CI=true
-  - set COVERALLS_PARALLEL=true
   - npm test -- --reporter=tap
