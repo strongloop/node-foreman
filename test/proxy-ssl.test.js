@@ -17,6 +17,7 @@ Console.Console = new Console({
 
 var startServer  = require('./server').startServer;
 var startProxies = require('../lib/proxy').startProxies;
+var server = null;
 
 var emitter = new events.EventEmitter();
 
@@ -36,7 +37,7 @@ var command = {
 };
 
 tap.test('start server', function(t) {
-  startServer(0, emitter).on('listening', function() {
+  server = startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
     server_port = this.address().port;
@@ -68,10 +69,16 @@ tap.test('test proxies', function(t) {
     response.on('end', function () {
       body = JSON.parse(body);
       t.equal(body.request.headers['x-forwarded-proto'], 'https');
-
-      // Only after the response has been returned can we shut down properly
-      emitter.emit('killall', 'SIGINT');
       t.end();
     });
+  });
+});
+
+tap.test('cleanup', function(t) {
+  t.plan(2);
+  server.close(t.ifErr);
+  emitter.emit('killall', 'SIGINT');
+  emitter.on('exit', function(code, signal) {
+    t.pass('proxy exitted');
   });
 });

@@ -16,6 +16,7 @@ Console.Console = new Console({
 
 var startServer  = require('./server').startServer;
 var startProxies = require('../lib/proxy').startProxies;
+var servers = [];
 
 var emitter = new events.EventEmitter();
 
@@ -35,7 +36,7 @@ var command = {
 };
 
 tap.test('start server 1', function(t) {
-  startServer(0, emitter).on('listening', function() {
+  servers[0] = startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
     server_port[0] = this.address().port;
@@ -44,7 +45,7 @@ tap.test('start server 1', function(t) {
 });
 
 tap.test('start server 2', function(t) {
-  startServer(0, emitter).on('listening', function() {
+  servers[1] = startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
     server_port[1] = this.address().port;
@@ -83,7 +84,9 @@ tap.test('test proxies', function(t) {
 });
 
 tap.test('cleanup', function(t) {
-  t.plan(2);
+  t.plan(4);
+  servers[0].close(t.ifErr);
+  servers[1].close(t.ifErr);
   emitter.on('exit', function(code, signal) {
     t.ok(code || signal);
   });
