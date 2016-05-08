@@ -19,43 +19,57 @@ var startProxies = require('../lib/proxy').startProxies;
 
 var emitter = new events.EventEmitter();
 
-var proxy_port  = 0;
-var server_port = 0;
+var proxy_port  = [];
+var server_port = [];
 
 var reqs = {
-  'test-web': 1
+  'test-web': 1,
+  'test-api': 1,
 };
 var proc = {
-  'test-web': '<command>'
+  'test-web': '<command>',
+  'test-api': '<command>'
 };
 var command = {
-  proxy: proxy_port.toString()
+  proxy: '0,0',
 };
 
-tap.test('start server', function(t) {
+tap.test('start server 1', function(t) {
   startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
-    server_port = this.address().port;
+    server_port[0] = this.address().port;
+    t.end();
+  });
+});
+
+tap.test('start server 2', function(t) {
+  startServer(0, emitter).on('listening', function() {
+    t.comment('test server listening:', this.address());
+    t.assert(this.address());
+    server_port[1] = this.address().port;
     t.end();
   });
 });
 
 tap.test('start proxies', function(t) {
-  emitter.once('http', function(port) {
-    t.assert(port, 'listening');
-    proxy_port = port;
-    t.end();
+  t.plan(2);
+  emitter.on('http', function(port) {
+    proxy_port.push(port);
+    t.assert(port, 'listening: ' + port);
+    t.comment('proxy ports: ', proxy_port);
   });
   startProxies(reqs, proc, command, emitter, server_port);
 });
 
 tap.test('test proxies', function(t) {
-  http.get({
-    port: proxy_port
-  }, function (response) {
+  t.plan(2*2);
+  t.comment('testing proxy on port ' + proxy_port[0]);
+  http.get({ port: proxy_port[0] }, verifyResponse).on('error', t.ifErr);
+  t.comment('testing proxy on port ' + proxy_port[1]);
+  http.get({ port: proxy_port[1] }, verifyResponse).on('error', t.ifErr);
+  function verifyResponse(response) {
     t.equal(response.statusCode, 200);
-
     var body = '';
     response.setEncoding('utf8');
     response.on('data', function (chunk) {
@@ -64,10 +78,14 @@ tap.test('test proxies', function(t) {
     response.on('end', function () {
       body = JSON.parse(body);
       t.equal(body.request.headers['x-forwarded-proto'], 'http');
-
-      // Only after the response has been returned can we shut down properly
-      emitter.emit('killall', 'SIGINT');
-      t.end();
     });
+  }
+});
+
+tap.test('cleanup', function(t) {
+  t.plan(2);
+  emitter.on('exit', function(code, signal) {
+    t.ok(code || signal);
   });
+  emitter.emit('killall', 'SIGINT');
 });
