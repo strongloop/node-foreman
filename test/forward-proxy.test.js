@@ -39,10 +39,17 @@ tap.test('start proxy', function(t) {
 
 
 tap.test('test proxies', function(t) {
+  t.plan(2*2);
   http.get({
     port: proxy_port,
     path: 'http://foreman.com:' + server_port + '/',
-  }, function (response) {
+  }, verify);
+  t.comment('ensuring proxy handles missing path');
+  http.get({
+    port: proxy_port,
+    path: 'http://foreman.com:' + server_port,
+  }, verify);
+  function verify(response) {
     t.equal(response.statusCode, 200);
 
     var body = '';
@@ -62,10 +69,14 @@ tap.test('test proxies', function(t) {
           }
         }
       });
-
-      // Only after the response has been returned can we shut down properly
-      emitter.emit('killall', 'SIGINT');
-      t.end();
     });
+  }
+});
+
+tap.test('cleanup', function(t) {
+  emitter.emit('killall', 'SIGINT');
+  emitter.on('exit', function(code, signal) {
+    t.pass('forward proxy exited');
+    t.end();
   });
 });
