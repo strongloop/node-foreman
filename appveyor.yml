@@ -32,7 +32,8 @@ after_test:
       $url = "https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)"
       $file = 'xunit-results.xml'
       $xml = Get-Content $file
-      Set-Content $file '<?xml version="1.0" encoding="UTF-8"?>`n'
+      Set-Content $file '<?xml version="1.0" encoding="UTF-8"?>'
+      Add-Content $file "`n"
       Add-Content $file $xml
       (New-Object 'System.Net.WebClient').UploadFile($url, (Resolve-Path $file))
 artifacts:
