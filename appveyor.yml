@@ -16,6 +16,8 @@ install:
   - npm install
 matrix:
   fast_finish: true
+  allow_failures:
+    - nodejs_version: '0.10'
 branches:
   only:
   - master
@@ -23,6 +25,10 @@ build: off
 deploy: off
 version: '{build}'
 test_script:
-  - npm run test-appveyor || exit 0
+  - npm run test:tap || exit 0
+  - npm run tap:xunit || exit 0
+artifacts:
+  - path: tap-results.txt
+  - path: xunit-results.xml
 after_test:
-  - ps: $wc = New-Object 'System.Net.WebClient'; $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-results.xml))
+  - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-results.xml))
