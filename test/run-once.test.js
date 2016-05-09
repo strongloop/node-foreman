@@ -16,11 +16,18 @@ rimraf.sync(SANDBOX);
 fs.mkdirSync(SANDBOX);
 process.chdir(SANDBOX);
 
+tap.test('setup', function(t) {
+  t.plan(3);
+  fs.unlink('should-exist.txt', t.pass);
+  fs.unlink('should-also-exist.txt', t.pass);
+  fs.unlink('should-not-exist.txt', t.pass);
+});
+
 tap.test('preconditions', function(t) {
-  t.equal(fs.existsSync('./should-exist.txt'), false);
-  t.equal(fs.existsSync('./should-also-exist.txt'), false);
-  t.equal(fs.existsSync('./should-not-exist.txt'), false);
-  t.end();
+  t.plan(3);
+  fs.access('./should-exist.txt', fs.F_OK, t.ok);
+  fs.access('./should-also-exist.txt', fs.F_OK, t.ok);
+  fs.access('./should-not-exist.txt', fs.F_OK, t.ok);
 });
 
 tap.test('literal', function(t) {
@@ -45,8 +52,8 @@ tap.test('expansion', function(t) {
 });
 
 tap.test('verification', function(t) {
-  t.equal(fs.existsSync('./should-exist.txt'), true);
-  t.equal(fs.existsSync('./should-not-exist.txt'), false);
-  t.equal(fs.existsSync(envs.FILENAME), true, 'should exist: ' + envs.FILENAME);
-  t.end();
+  t.plan(3);
+  fs.access('./should-exist.txt', fs.F_OK, t.ifErr);
+  fs.access('./should-also-exist.txt', fs.F_OK, t.ifErr);
+  fs.access('./should-not-exist.txt', fs.F_OK, t.ok);
 });
