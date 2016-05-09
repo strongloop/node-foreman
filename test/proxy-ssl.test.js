@@ -7,6 +7,7 @@ var tap    = require('tap');
 var events = require('events');
 var https  = require('https');
 var path   = require('path');
+var help   = require('./helpers');
 
 var Console = require('../lib/console');
 Console.Console = new Console({
@@ -36,7 +37,7 @@ var command = {
   sslKey: path.resolve(__dirname, 'fixtures', 'certs', 'my-server.key.pem'),
 };
 
-tap.test('start server', function(t) {
+tap.test('start server', help.skipWindowsNode10(), function(t) {
   server = startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
@@ -45,7 +46,7 @@ tap.test('start server', function(t) {
   });
 });
 
-tap.test('start proxies', function(t) {
+tap.test('start proxies', help.skipWindowsNode10(), function(t) {
   emitter.once('https', function(port) {
     t.assert(port, 'listening');
     proxy_port = port;
@@ -54,7 +55,7 @@ tap.test('start proxies', function(t) {
   startProxies(reqs, proc, command, emitter, server_port);
 });
 
-tap.test('test proxies', function(t) {
+tap.test('test proxies', help.skipWindowsNode10(), function(t) {
   https.get({
     port: proxy_port,
     rejectUnauthorized: false
@@ -74,7 +75,7 @@ tap.test('test proxies', function(t) {
   });
 });
 
-tap.test('cleanup', function(t) {
+tap.test('cleanup', help.skipWindowsNode10(), function(t) {
   t.plan(2);
   server.close(t.ifErr);
   emitter.emit('killall', 'SIGINT');

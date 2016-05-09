@@ -6,6 +6,7 @@
 var tap    = require('tap');
 var events = require('events');
 var http   = require('http');
+var help   = require('./helpers');
 
 var Console = require('../lib/console');
 Console.Console = new Console({
@@ -33,7 +34,7 @@ var command = {
   proxy: proxy_port.toString()
 };
 
-tap.test('start server', function(t) {
+tap.test('start server', help.skipWindowsNode10(), function(t) {
   server = startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
@@ -42,7 +43,7 @@ tap.test('start server', function(t) {
   });
 });
 
-tap.test('start proxies', function(t) {
+tap.test('start proxies', help.skipWindowsNode10(), function(t) {
   emitter.once('http', function(port) {
     t.assert(port, 'listening');
     proxy_port = port;
@@ -51,7 +52,7 @@ tap.test('start proxies', function(t) {
   startProxies(reqs, proc, command, emitter, server_port);
 });
 
-tap.test('test proxies', function(t) {
+tap.test('test proxies', help.skipWindowsNode10(), function(t) {
   http.get({
     port: proxy_port
   }, function (response) {
@@ -71,7 +72,7 @@ tap.test('test proxies', function(t) {
   });
 });
 
-tap.test('test proxy failure', function(t) {
+tap.test('test proxy failure', help.skipWindowsNode10(), function(t) {
   server.close();
   http.get({
     port: proxy_port,
@@ -92,7 +93,7 @@ tap.test('test proxy failure', function(t) {
   }
 });
 
-tap.test('cleanup', function(t) {
+tap.test('cleanup', help.skipWindowsNode10(), function(t) {
   emitter.on('exit', function(code, signal) {
     // to ensure process lives long enough to finish logging
     setTimeout(function noop(){}, 200);

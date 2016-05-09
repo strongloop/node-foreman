@@ -1,6 +1,7 @@
 var tap    = require('tap');
 var events = require('events');
 var http   = require('http');
+var help   = require('./helpers');
 
 var Console = require('../lib/console');
 Console.Console = new Console({
@@ -18,7 +19,7 @@ var proxy_port  = 0;
 var server_port = 0;
 var server = null;
 
-tap.test('start server', function(t) {
+tap.test('start server', help.skipWindowsNode10(), function(t) {
   server = startServer(0, emitter).on('listening', function() {
     t.comment('test server listening:', this.address());
     t.assert(this.address());
@@ -27,7 +28,7 @@ tap.test('start server', function(t) {
   });
 });
 
-tap.test('start proxy', function(t) {
+tap.test('start proxy', help.skipWindowsNode10(), function(t) {
   emitter.once('http', function(port) {
     t.comment('test proxy listening:', port);
     t.assert(port, 'listening');
@@ -39,7 +40,7 @@ tap.test('start proxy', function(t) {
 });
 
 
-tap.test('test proxies', function(t) {
+tap.test('test proxies', help.skipWindowsNode10(), function(t) {
   t.plan(2*2);
   http.get({
     port: proxy_port,
@@ -74,7 +75,7 @@ tap.test('test proxies', function(t) {
   }
 });
 
-tap.test('test proxy failure', function(t) {
+tap.test('test proxy failure', help.skipWindowsNode10(), function(t) {
   server.close();
   http.get({
     port: proxy_port,
@@ -95,7 +96,7 @@ tap.test('test proxy failure', function(t) {
   }
 });
 
-tap.test('cleanup', function(t) {
+tap.test('cleanup', help.skipWindowsNode10(), function(t) {
   emitter.emit('killall', 'SIGINT');
   emitter.on('exit', function(code, signal) {
     // to ensure process lives long enough to finish logging
