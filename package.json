@@ -24,8 +24,7 @@
   "scripts": {
     "pretest": "jshint .",
     "test": "tap --coverage test/*.test.*",
-    "test-tap": "tap --coverage test/*.test.js > tap-results.txt",
-    "test-xunit": "tap-mocha-reporter xunit < tap-resultx.txt > xunit-results.xml"
+    "test-appveyor": "tap --coverage test/*.test.js | tap-mocha-reporter xunit > xunit-results.xml"
   },
   "dependencies": {
     "commander": "^2.9.0",

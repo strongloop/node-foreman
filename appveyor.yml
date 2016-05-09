@@ -23,9 +23,6 @@ build: off
 deploy: off
 version: '{build}'
 test_script:
-  - npm run test-tap || exit 0
-  - npm run test-xunit
+  - npm run test-appveyor || exit 0
 after_test:
-  - ps: >
-        $wc = New-Object 'System.Net.WebClient'
-        $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-results.xml))
+  - ps: $wc = New-Object 'System.Net.WebClient'; $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-results.xml))
