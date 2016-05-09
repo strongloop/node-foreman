@@ -9,3 +9,4 @@ tests.tap
 appveyor.yml
 .nyc_output
 sandbox
+xunit-results.xml

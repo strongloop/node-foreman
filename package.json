@@ -23,7 +23,8 @@
   ],
   "scripts": {
     "pretest": "jshint .",
-    "test": "tap --coverage test/*.test.*"
+    "test": "tap --coverage test/*.test.*",
+    "test-appveyor": "tap --coverage test/*.test.js | tap-mocha-reporter xunit > xunit-results.xml"
   },
   "dependencies": {
     "commander": "^2.9.0",
