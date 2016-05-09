@@ -23,7 +23,8 @@ build: off
 deploy: off
 version: '{build}'
 test_script:
-  - npm run test-appveyor
+  - npm run test-tap
+  - npm run test-xunit
 after_test:
   - ps: >
         $wc = New-Object 'System.Net.WebClient'
