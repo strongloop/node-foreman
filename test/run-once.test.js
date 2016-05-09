@@ -25,9 +25,9 @@ tap.test('setup', function(t) {
 
 tap.test('preconditions', function(t) {
   t.plan(3);
-  fs.access('./should-exist.txt', fs.F_OK, t.ok);
-  fs.access('./should-also-exist.txt', fs.F_OK, t.ok);
-  fs.access('./should-not-exist.txt', fs.F_OK, t.ok);
+  fileDoesNotExist(t, './should-exist.txt');
+  fileDoesNotExist(t, './should-also-exist.txt');
+  fileDoesNotExist(t, './should-not-exist.txt');
 });
 
 tap.test('literal', function(t) {
@@ -53,7 +53,19 @@ tap.test('expansion', function(t) {
 
 tap.test('verification', function(t) {
   t.plan(3);
-  fs.access('./should-exist.txt', fs.F_OK, t.ifErr);
-  fs.access('./should-also-exist.txt', fs.F_OK, t.ifErr);
-  fs.access('./should-not-exist.txt', fs.F_OK, t.ok);
+  fileExists(t, './should-exist.txt');
+  fileExists(t, './should-also-exist.txt');
+  fileDoesNotExist(t, './should-not-exist.txt');
 });
+
+function fileExists(t, f) {
+  fs.stat(f, function(err, _stat) {
+    t.ifErr(err, 'file should exist: ' + f);
+  });
+}
+
+function fileDoesNotExist(t, f) {
+  fs.stat(f, function(err, _stat) {
+    t.ok(err, 'file should NOT exist: ' + f);
+  });
+}
