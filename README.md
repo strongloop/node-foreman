@@ -54,7 +54,7 @@ Once your Procfile is defined, run your application with `nf start`:
 
 Node Foreman _always_ starts in the foreground and expects your applications
 to do the same. If your processes exit, Node Foreman will assume an error
-has ocurred and shut your application down.
+has occurred and shut your application down.
 
 Instead of daemonizing, you should use `nf export` to ready your application
 for production.
