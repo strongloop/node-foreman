@@ -1,3 +1,15 @@
+2016-08-25, Version 2.0.0
+=========================
+
+ * Update URLs in CONTRIBUTING.md (#123) (Ryan Graham)
+
+ * update copyright statements (Ryan Graham)
+
+ * replace mu2 with mustache (Ryan Graham)
+
+ * enable node v6 on CI (Ryan Graham)
+
+
 2016-04-30, Version 2.0.0-1
 ===========================
 
