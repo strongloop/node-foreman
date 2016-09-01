@@ -1,8 +1,3 @@
-// Copyright IBM Corp. 2015,2016. All Rights Reserved.
-// Node module: foreman
-// This file is licensed under the MIT License.
-// License text available at https://opensource.org/licenses/MIT
-
 var tap    = require('tap');
 var events = require('events');
 var http   = require('http');
@@ -16,23 +11,13 @@ Console.Console = new Console({
 });
 
 var startServer  = require('./server').startServer;
-var startProxies = require('../lib/proxy').startProxies;
+var startProxy = require('../lib/forward').startForward;
 
 var emitter = new events.EventEmitter();
-var server = null;
 
 var proxy_port  = 0;
 var server_port = 0;
-
-var reqs = {
-  'test-web': 1
-};
-var proc = {
-  'test-web': '<command>'
-};
-var command = {
-  proxy: proxy_port.toString()
-};
+var server = null;
 
 tap.test('start server', help.skipWindowsNode10(), function(t) {
   server = startServer(0, emitter).on('listening', function() {
@@ -43,19 +28,30 @@ tap.test('start server', help.skipWindowsNode10(), function(t) {
   });
 });
 
-tap.test('start proxies', help.skipWindowsNode10(), function(t) {
+tap.test('start proxy', help.skipWindowsNode10(), function(t) {
   emitter.once('http', function(port) {
+    t.comment('test proxy listening:', port);
     t.assert(port, 'listening');
+
     proxy_port = port;
     t.end();
   });
-  startProxies(reqs, proc, command, emitter, server_port);
+  startProxy(0, 'foreman.com', emitter);
 });
 
+
 tap.test('test proxies', help.skipWindowsNode10(), function(t) {
+  t.plan(2*2);
   http.get({
-    port: proxy_port
-  }, function (response) {
+    port: proxy_port,
+    path: 'http://foreman.com:' + server_port + '/',
+  }, verify);
+  t.comment('ensuring proxy handles missing path');
+  http.get({
+    port: proxy_port,
+    path: 'http://foreman.com:' + server_port,
+  }, verify);
+  function verify(response) {
     t.equal(response.statusCode, 200);
 
     var body = '';
@@ -65,11 +61,18 @@ tap.test('test proxies', help.skipWindowsNode10(), function(t) {
     });
     response.on('end', function () {
       body = JSON.parse(body);
-      t.equal(body.request.headers['x-forwarded-proto'], 'http');
-
-      t.end();
+      t.match(body, {
+        server: {
+          port: server_port,
+        },
+        request: {
+          headers: {
+            host: 'localhost:' + proxy_port,
+          }
+        }
+      });
     });
-  });
+  }
 });
 
 tap.test('test proxy failure', help.skipWindowsNode10(), function(t) {
@@ -94,11 +97,11 @@ tap.test('test proxy failure', help.skipWindowsNode10(), function(t) {
 });
 
 tap.test('cleanup', help.skipWindowsNode10(), function(t) {
+  emitter.emit('killall', 'SIGINT');
   emitter.on('exit', function(code, signal) {
     // to ensure process lives long enough to finish logging
     setTimeout(function noop(){}, 200);
     t.notOk(code || signal, 'proxy exitted');
     t.end();
   });
-  emitter.emit('killall', 'SIGINT');
 });

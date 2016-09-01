@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('assert');
+var tap    = require('tap');
 var envs   = require('../lib/envs');
 
 var input = '### This is a config file...\n' +
@@ -22,5 +22,6 @@ var loadedEnv = envs.keyValue(input);
 var dumpedEnv = envs.dumpEnv(loadedEnv);
 var loadedFlat = envs.keyValue(expected);
 var dumpedFlat = envs.dumpEnv(loadedFlat);
-assert.equal(dumpedEnv, expected);
-assert.equal(dumpedFlat, expected);
+
+tap.equal(dumpedEnv, expected);
+tap.equal(dumpedFlat, expected);

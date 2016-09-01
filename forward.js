@@ -7,9 +7,25 @@ var http = require('http');
 var url  = require('url');
 var httpProxy = require('http-proxy');
 
+var servers = [];
+process.on('message', function(msg) {
+  if (msg === 'shutdown') {
+    servers.forEach(function(s) {
+      s.close();
+      if (s.unref) {
+        s.unref();
+      }
+    });
+    process.removeListener('disconnect', process.exit);
+    process.disconnect();
+  }
+});
+process.on('disconnect', process.exit);
+
 function startForward(proxy_port, proxy_host) {
 
   var proxy = httpProxy.createProxyServer({});
+  servers.push(proxy);
 
   var httpServer = http.createServer(function(req, res) {
 
@@ -45,6 +61,7 @@ function startForward(proxy_port, proxy_host) {
     proxy.web(req, res, {target: target});
 
   });
+  servers.push(httpServer);
 
   proxy.on('upgrade', function (req, socket, head) {
     proxy.ws(req, socket, head);
@@ -57,7 +74,9 @@ function startForward(proxy_port, proxy_host) {
     res.end();
   });
 
-  httpServer.listen(proxy_port);
+  httpServer.listen(proxy_port, '127.0.0.1', function() {
+    process.send({http: this.address().port});
+  });
 }
 
 startForward(process.env.PROXY_PORT, process.env.PROXY_HOST);

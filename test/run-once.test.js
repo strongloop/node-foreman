@@ -3,39 +3,69 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('assert');
+var tap    = require('tap');
 var rimraf = require('rimraf');
 var fs     = require('fs');
 var once   = require('../lib/proc').once;
+var path   = require('path');
 
 var envs = { FILENAME: "should-also-exist.txt" };
-var callbackCounter = 0;
-var callbackIncrementer = function(code){
-    if(code === 0) {
-        callbackCounter++;
-    }
-};
 
-rimraf.sync('./sandbox');
-fs.mkdirSync('./sandbox');
-process.chdir('./sandbox');
+var SANDBOX = path.resolve(__dirname, 'sandbox');
+rimraf.sync(SANDBOX);
+fs.mkdirSync(SANDBOX);
+process.chdir(SANDBOX);
 
-assert.equal(fs.existsSync('./should-exist.txt'), false);
-assert.equal(fs.existsSync('./should-also-exist.txt'), false);
-assert.equal(fs.existsSync('./should-not-exist.txt'), false);
+tap.test('setup', function(t) {
+  t.plan(3);
+  fs.unlink('should-exist.txt', t.pass);
+  fs.unlink('should-also-exist.txt', t.pass);
+  fs.unlink('should-not-exist.txt', t.pass);
+});
 
-once("touch should-exist.txt", null, callbackIncrementer);
-// TODO: this is currently OS dependent, but we should probably do the
-// expansion ourselves
-if (process.platform === 'win32') {
-  once("touch %FILENAME%", envs, callbackIncrementer);
-} else {
-  once("touch $FILENAME", envs, callbackIncrementer);
+tap.test('preconditions', function(t) {
+  t.plan(3);
+  fileDoesNotExist(t, './should-exist.txt');
+  fileDoesNotExist(t, './should-also-exist.txt');
+  fileDoesNotExist(t, './should-not-exist.txt');
+});
+
+tap.test('literal', function(t) {
+  once("touch should-exist.txt", null, function(code) {
+    t.equal(code, 0);
+    t.end();
+  });
+});
+
+tap.test('expansion', function(t) {
+  // TODO: this is currently OS dependent, but we should probably do the
+  // expansion ourselves
+  if (process.platform === 'win32') {
+    once("touch %FILENAME%", envs, exitsCleanly);
+  } else {
+    once("touch $FILENAME", envs, exitsCleanly);
+  }
+  function exitsCleanly(code) {
+    t.equal(code, 0);
+    t.end();
+  }
+});
+
+tap.test('verification', function(t) {
+  t.plan(3);
+  fileExists(t, './should-exist.txt');
+  fileExists(t, './should-also-exist.txt');
+  fileDoesNotExist(t, './should-not-exist.txt');
+});
+
+function fileExists(t, f) {
+  fs.stat(f, function(err, _stat) {
+    t.ifErr(err, 'file should exist: ' + f);
+  });
 }
 
-process.on('exit', function() {
-    assert.equal(callbackCounter, 2);
-    assert.equal(fs.existsSync('./should-exist.txt'), true);
-    assert.equal(fs.existsSync('./should-not-exist.txt'), false);
-    assert.equal(fs.existsSync(envs.FILENAME), true, 'should exist: ' + envs.FILENAME);
-});
+function fileDoesNotExist(t, f) {
+  fs.stat(f, function(err, _stat) {
+    t.ok(err, 'file should NOT exist: ' + f);
+  });
+}

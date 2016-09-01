@@ -19,6 +19,7 @@ module.exports.startServer = function startServer(port, emitter) {
     // Send back the request headers so the test can validate that the
     // x-forwarded-* headers were set.
     response.write(JSON.stringify({
+      server: server.address(),
       request: {
         headers: request.headers
       }
@@ -42,7 +43,6 @@ module.exports.startServer = function startServer(port, emitter) {
   server.listen(port, '127.0.0.1');
 
   emitter.once('killall', function () {
-    server.close();
     for (var socketId in sockets) {
       sockets[socketId].destroy();
     }
