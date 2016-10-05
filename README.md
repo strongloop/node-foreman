@@ -289,7 +289,7 @@ Editing `/etc/hosts` is a pain however, and error prone.
 Node Foreman can start up an HTTP forward proxy which your browser can route requests through.
 The forward proxy will intercept requests based on domain name, and route them to the local application.
 
-    $ nf start -f 9999 -h nodefly.com
+    $ nf start -f 9999 -i nodefly.com
     [OKAY] Forward Proxy Started in Port 9999
     [OKAY] Intercepting requests to nodefly.com through forward proxy
 
