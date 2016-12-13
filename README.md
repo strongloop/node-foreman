@@ -107,7 +107,7 @@ There is no need to specify which type of file you wish to use.
 
 #### The PATH environment variable
 
-The `PATH` variable is given special treament and is always read
+The `PATH` variable is given special treatment and is always read
 from the environment that the `nf` command has been executed from,
 rather than a `.env` file.  To set a different `PATH` execute
 `nf` with the `PATH` variable set appropriately.
@@ -242,10 +242,10 @@ use `-a <JOBNAME>` and manage your jobs with `sudo start <JOBNAME>`.
 ## Reverse Proxy
 
 Node.js processes are supposed to be stateless.
-Application scale by starting multiple processes that either share a socket,
+Applications scale by starting multiple processes that either share a socket,
 or sit behind a load balancer.
 Node Foreman can help you test the parallel capabilities of your application
-by spawning multiple processes behind a round-robin proxy automatically.
+by automatically spawning multiple processes behind a round-robin proxy.
 
 	$ nf start -x 8888 web=5
 	[OKAY] Starting Proxy Server 8888 -> 5000-5004
@@ -254,7 +254,7 @@ Access your application from port `8888` and the connections will be balanced
 across the servers started from ports `5000` - `5004`.
 
 If your application gets its port number from `process.env.PORT` the proxy
-setup will ocurr automatically.
+setup will occur automatically.
 
 ### Multiple Reverse Proxies
 
@@ -283,7 +283,7 @@ Your application will then be accessible via port 80, but it will be running as 
 ## Forward Proxy
 
 Local development and testing has huge advantages,
-but sometimes one needs to test web applications agains their real-world domain name.
+but sometimes one needs to test web applications against their real-world domain name.
 Editing `/etc/hosts` is a pain however, and error prone.
 
 Node Foreman can start up an HTTP forward proxy which your browser can route requests through.
