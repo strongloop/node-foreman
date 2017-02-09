@@ -29,7 +29,7 @@
     "commander": "~2.9.0",
     "http-proxy": "~1.11.1",
     "mustache": "^2.2.1",
-    "shell-quote": "~1.4.2"
+    "shell-quote": "~1.6.1"
   },
   "repository": {
     "type": "git",
