@@ -52,6 +52,13 @@ process.once('SIGINT', function() {
   emitter.emit('killall', 'SIGINT');
 });
 
+// Kill All Child Processes & Exit on SIGTERM
+process.once('SIGTERM', function() {
+  display.Warn('Received SIGTERM');
+  emitter.emit('killall', 'SIGTERM');
+  process.exit()
+});
+
 program
   .command('start [procs]')
   .usage('[Options] [Processes] e.g. web=1,log=2,api')
