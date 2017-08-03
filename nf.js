@@ -56,7 +56,7 @@ process.once('SIGINT', function() {
 process.once('SIGTERM', function() {
   display.Warn('Received SIGTERM');
   emitter.emit('killall', 'SIGTERM');
-  process.exit()
+  process.exit();
 });
 
 program
