@@ -202,6 +202,7 @@ Optionally specify a type `-t systemd` during export for [systemd](http://www.fr
 ### Supervisord Support
 
 You can also use a type `-t supervisord` during export for [supervisord](http://www.supervisord.org) support.
+You can provide the group name using `-g <group>` as an override of application name.
 
 This will generate a `APP.conf` file grouping the application processes and a `APP-PROCESS-N.conf` file for each process.
 
