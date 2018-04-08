@@ -42,7 +42,7 @@ You are free to add features, or just help clean things up.
 
 Node Foreman can be run with as little as `nf start`, as long as `npm start` has been defined.
 For more complicated applications you will want to define a `Procfile` for your various server
-processes and and a `.env` file to preload environmental variables.
+processes and add an `.env` file to preload environmental variables.
 
 Your module directory should end up looking like the following:
 
