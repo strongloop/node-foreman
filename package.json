@@ -40,7 +40,7 @@
     "email": "callback@strongloop.com"
   },
   "engines": {
-    "node": ">=0.6.9"
+    "node": ">=6"
   },
   "preferGlobal": true,
   "devDependencies": {
