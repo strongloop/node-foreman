@@ -26,10 +26,10 @@
     "test": "tap test/*.test.*"
   },
   "dependencies": {
-    "commander": "~2.9.0",
-    "http-proxy": "~1.11.1",
+    "commander": "^2.15.1",
+    "http-proxy": "^1.17.0",
     "mustache": "^2.2.1",
-    "shell-quote": "~1.4.2"
+    "shell-quote": "^1.6.1"
   },
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "email": "callback@strongloop.com"
   },
   "engines": {
-    "node": ">=0.6.9"
+    "node": ">=6"
   },
   "preferGlobal": true,
   "devDependencies": {
