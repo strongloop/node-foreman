@@ -1,3 +1,13 @@
+2018-05-21, Version 3.0.0
+=========================
+
+ * Update outdated dependencies to latest (Miroslav Bajtoš)
+
+ * Fix error "Unknown signal: null" (Kaspar Schiess)
+
+ * Update supported Node.js versions (Miroslav Bajtoš)
+
+
 2016-08-25, Version 2.0.0
 =========================
 
