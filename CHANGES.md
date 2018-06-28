@@ -1,3 +1,15 @@
+2018-06-28, Version 3.0.1
+=========================
+
+ * remove unnecessary use of regex (Ryan Graham)
+
+ * Fixed typo on forward proxy (Cemal Eker)
+
+ * Fixed typo (Leopold Bradley)
+
+ * don't log warning if env file doesn't exist (Ryan Graham)
+
+
 2018-05-21, Version 3.0.0
 =========================
 
