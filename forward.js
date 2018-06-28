@@ -26,14 +26,7 @@ function startForward(proxy_port, proxy_host) {
         host: host,
         port: port
       };
-
-      var urlmatch = req.url.match(/http:\/\/[^/]*:?[0-9]*(\/.*)$/);
-
-      if(urlmatch) {
-        req.url = urlmatch[1];
-      } else {
-        req.url = '/';
-      }
+      req.url = _url.path;
 
     } else {
       target = {
