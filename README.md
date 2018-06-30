@@ -13,17 +13,17 @@ with a few Node specific changes.
 
 Install the command line tool
 
-    $ npm install -g foreman
+    npm install -g foreman
 
 Get usage
 
-    $ nf --help
+    nf --help
 
 ## Deviations from the original Foreman
 
- * Each worker has an additional automatic environment variable,
-   `FOREMAN_WORKER_NAME`, that contains the process name and worker number.
-   * example: `web.1`, `worker.1`
+* Each worker has an additional automatic environment variable,
+  `FOREMAN_WORKER_NAME`, that contains the process name and worker number.
+  * example: `web.1`, `worker.1`
 
 ### How to Contribute
 
@@ -42,13 +42,13 @@ You are free to add features, or just help clean things up.
 
 Node Foreman can be run with as little as `nf start`, as long as `npm start` has been defined.
 For more complicated applications you will want to define a `Procfile` for your various server
-processes and and a `.env` file to preload environmental variables.
+processes and an `.env` file to pre-load environmental variables.
 
 Your module directory should end up looking like the following:
 
 ![List Foreman Directory](https://raw.github.com/strongloop/node-foreman/master/assets/foreman-ls.png)
 
-Once your Procfile is defined, run your application with `nf start`:
+Once your `Procfile` is defined, run your application with `nf start`:
 
 ![Start Foreman](https://raw.github.com/strongloop/node-foreman/master/assets/foreman-start.png)
 
@@ -107,9 +107,9 @@ There is no need to specify which type of file you wish to use.
 
 #### The PATH environment variable
 
-The `PATH` variable is given special treament and is always read
+The `PATH` variable is given special treatment and is always read
 from the environment that the `nf` command has been executed from,
-rather than a `.env` file.  To set a different `PATH` execute
+rather than your `.env` file.  To set a different `PATH` execute
 `nf` with the `PATH` variable set appropriately.
 
 ```bash
@@ -130,7 +130,6 @@ port bindings, and other passwords.
 
 Tasks or commands that require the environment variables from the `.env` file
 can be initiated by using `nf run <command>`.
-
 
 ### Advanced Usage
 
@@ -188,12 +187,13 @@ directory, or have foreman do it for you:
 Start and stop your jobs with
 
     $ sudo start foreman
+    Starting foreman... ok
     $ sudo stop foreman
 
 The export will occur with whatever environmental variables are
 listed in the .env file.
 
-### Systemd Support
+### systemd Support
 
 _This section is beta_
 
@@ -242,19 +242,19 @@ use `-a <JOBNAME>` and manage your jobs with `sudo start <JOBNAME>`.
 ## Reverse Proxy
 
 Node.js processes are supposed to be stateless.
-Application scale by starting multiple processes that either share a socket,
+Applications scale by starting multiple processes that either share a socket,
 or sit behind a load balancer.
 Node Foreman can help you test the parallel capabilities of your application
-by spawning multiple processes behind a round-robin proxy automatically.
+by spawning multiple processes behind a round-robin proxy.
 
-	$ nf start -x 8888 web=5
-	[OKAY] Starting Proxy Server 8888 -> 5000-5004
+    $ nf start -x 8888 web=5
+    [OKAY] Starting Proxy Server 8888 -> 5000-5004
 
 Access your application from port `8888` and the connections will be balanced
 across the servers started from ports `5000` - `5004`.
 
 If your application gets its port number from `process.env.PORT` the proxy
-setup will ocurr automatically.
+setup will happen automatically.
 
 ### Multiple Reverse Proxies
 
@@ -275,15 +275,15 @@ It does however allow proxies to be bound to lower ports, such as port 80.
 
 If you require access to a privileged port, start Node Foreman with `sudo`:
 
-	$ sudo nf start -x 80 web=5
-	[OKAY] Starting Proxy Server 80 -> 5000-5004
+    $ sudo nf start -x 80 web=5
+    [OKAY] Starting Proxy Server 80 -> 5000-5004
 
 Your application will then be accessible via port 80, but it will be running as root.
 
 ## Forward Proxy
 
 Local development and testing has huge advantages,
-but sometimes one needs to test web applications agains their real-world domain name.
+but sometimes one needs to test web applications against their real-world domain name.
 Editing `/etc/hosts` is a pain however, and error prone.
 
 Node Foreman can start up an HTTP forward proxy which your browser can route requests through.
