@@ -193,7 +193,7 @@ Start and stop your jobs with
 The export will occur with whatever environmental variables are
 listed in the .env file.
 
-### systemd Support
+### Systemd Support
 
 _This section is beta_
 
