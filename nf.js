@@ -46,8 +46,12 @@ var calculatePadding = _requirements.calculatePadding;
 var startProxies = require('./lib/proxy').startProxies;
 var startForward = require('./lib/forward').startForward;
 
+var interrupted = false;
+
 // Kill All Child Processes on SIGINT
-process.once('SIGINT', function() {
+process.on('SIGINT', function() {
+  if (interrupted) return;
+  interrupted = true;
   display.Warn('Interrupted by User');
   emitter.emit('killall', 'SIGINT');
 });
