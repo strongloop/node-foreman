@@ -1,7 +1,7 @@
 # Node Foreman [![Build Status](https://travis-ci.org/strongloop/node-foreman.svg)](https://travis-ci.org/strongloop/node-foreman)
 
 Node Foreman is a Node.js version of the popular
-[Foreman](http://ddollar.github.com/foreman/) tool,
+[Foreman](http://ddollar.github.io/foreman/) tool,
 with a few Node specific changes.
 
 > Foreman is a manager for Procfile-based applications.
